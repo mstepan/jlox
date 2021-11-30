@@ -1,12 +1,12 @@
-var x = 10;
+var x = 10.33;
 var y = 20;
 
-var maxValue = x;
-
-var str1 = "hello ,world!!!"
+var str = "hello, world!!!";
 
 // some single line comment here
 
-if ( y > x ){
+var maxValue = x;
+
+if ( y >= x ){
 	maxValue = y;
 }

@@ -26,8 +26,7 @@ public class Lexer {
             scanToken();
         }
 
-        tokens.add(new Token(TokenType.EOF, null, null, lineNumber));
-
+        addToken(TokenType.EOF);
         return tokens;
     }
 
@@ -110,14 +109,25 @@ public class Lexer {
                 readString();
                 break;
 
-            // handle lexical errors here
             default:
-                Lox.error(lineNumber, "Unexpected character " + ch);
+                // number
+                if (isDigit(ch)) {
+                    readNumber();
+                }
+                // identifier or reserved word
+                else if (isAlpha(ch)) {
+                    readIdentifier();
+                }
+                // handle lexical errors here
+                else {
+                    Lox.error(lineNumber, "Unexpected character " + ch);
+                }
                 break;
         }
 
     }
 
+    // read string literal
     private void readString() {
 
         final int initialLineNumber = lineNumber;
@@ -144,11 +154,57 @@ public class Lexer {
         addToken(TokenType.STRING, value);
     }
 
+    // read number as double value
+    private void readNumber() {
+
+        // read first part of number
+        while (isDigit(peek())) {
+            advance();
+        }
+
+        char ch = peek();
+
+        // read fractional part if any
+        if (ch == '.' && isDigit(peekNext())) {
+
+            advance();
+
+            while (isDigit(peek())) {
+                advance();
+            }
+        }
+
+        addToken(TokenType.NUMBER, Double.parseDouble(source.substring(start, cur)));
+    }
+
+    //read identifier or reserved keyword
+    private void readIdentifier() {
+        while (isAlphaNumeric(peek())) {
+            advance();
+        }
+
+        addToken(TokenType.IDENTIFIER, source.substring(start, cur));
+    }
+
+    private boolean isDigit(char ch) {
+        return ch >= '0' && ch <= '9';
+    }
+
+    private boolean isAlpha(char ch) {
+        return ch == '_' ||
+                (ch >= 'a' && ch <= 'z') ||
+                (ch >= 'A' && ch <= 'Z');
+    }
+
+    private boolean isAlphaNumeric(char ch) {
+        return isAlpha(ch) || isDigit(ch);
+    }
+
     private void addToken(TokenType type) {
         tokens.add(new Token(type, null, null, lineNumber));
     }
 
-    private void addToken(TokenType type, String value) {
+    private void addToken(TokenType type, Object value) {
         tokens.add(new Token(type, null, value, lineNumber));
     }
 
@@ -160,6 +216,12 @@ public class Lexer {
                 break;
             }
         }
+    }
+
+    private char advance() {
+        char curCh = source.charAt(cur);
+        ++cur;
+        return curCh;
     }
 
     private boolean matchNext(char expectedNextCh) {
@@ -175,9 +237,19 @@ public class Lexer {
         return true;
     }
 
-    private char advance() {
-        char curCh = source.charAt(cur);
-        ++cur;
-        return curCh;
+    // return cur character and do NOT advance cursor
+    private char peek() {
+        if (cur >= source.length()) {
+            return '\0';
+        }
+        return source.charAt(cur);
+    }
+
+    // return cur+1 character and do NOT advance cursor
+    private char peekNext() {
+        if ((cur + 1) >= source.length()) {
+            return '\0';
+        }
+        return source.charAt(cur + 1);
     }
 }
