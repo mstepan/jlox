@@ -48,6 +48,6 @@ public class Token {
 
     @Override
     public String toString() {
-        return type + " " + (lexeme == null ? "" : lexeme) + " " + (literal == null ? "" : literal);
+        return type + " " + (lexeme == null ? "" : lexeme) + " " + (literal == null ? "" : literal) + ", line: " + lineNumber;
     }
 }

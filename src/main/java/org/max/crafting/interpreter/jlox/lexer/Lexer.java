@@ -185,9 +185,13 @@ public class Lexer {
 
         String identifierName = source.substring(start, cur);
 
-        //TODO: check if 'identifierName' is some reserved keyword
-
-        addToken(TokenType.IDENTIFIER, identifierName);
+        TokenType keywordType = TokenType.findReservedKeyword(identifierName);
+        if (keywordType != null) {
+            addToken(keywordType);
+        }
+        else {
+            addToken(TokenType.IDENTIFIER, identifierName);
+        }
     }
 
     private boolean isDigit(char ch) {

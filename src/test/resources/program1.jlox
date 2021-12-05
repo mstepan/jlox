@@ -3,3 +3,11 @@ var y = 20;
 
 // some long one line comments
 
+var str = "hello, world";
+
+var z = x;
+
+if(y > z){
+	z = y;
+}
+print z;
