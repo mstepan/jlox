@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,96 +24,143 @@ public class LexerTest {
 
         final int tokensCount = 39;
 
+        Token[] expectedTokens = new TokenBuilder().
+
+                //var x = 10.33;    line 1
+                        var().identifier("x").eq().number(10.33).semicolon().
+                        newLine().
+
+                //var y = 20;   line 2
+                        var().identifier("y").eq().number(20).semicolon().
+                        newLine().
+                        newLine().
+                        newLine().
+                        newLine().
+
+                //var str = "hello, world"; line 6
+                        var().identifier("str").eq().string("hello, world").semicolon().
+                        newLine().
+                        newLine().
+
+                // var z = x;   line 8
+                        var().identifier("z").eq().identifier("x").semicolon().
+                        newLine().
+                        newLine().
+
+                //if(y > z){    line 10
+                        ifKeyword().leftParen().identifier("y").greater().identifier("z").rightParen().leftBrace().
+                        newLine().
+
+                // z = y;   line 11
+                        identifier("z").eq().identifier("y").semicolon().
+                        newLine().
+
+                // }    line 12
+                        rightBrace().
+                        newLine().
+
+                //print z;  line 13
+                        print().identifier("z").semicolon().
+                        newLine().
+                        newLine().
+
+                // var printMe; line 15
+                        var().identifier("printMe").semicolon().
+                        newLine().
+
+                // line 16
+                        eof().
+
+                        build();
+
         assertThat(tokens).
                 isNotEmpty().
                 hasSize(tokensCount).
-                containsExactly(
-                        //var x = 10.33;    line 1
-                        var(1), identifier("x", 1), eq(1), number(10.33, 1), semicolon(1),
-
-                        //var y = 20;   line 2
-                        var(2), identifier("y", 2), eq(2), number(20, 2), semicolon(2),
-
-                        //var str = "hello, world"; line 6
-                        var(6), identifier("str", 6), eq(6), string("hello, world", 6), semicolon(6),
-
-                        // var z = x;   line 8
-                        var(8), identifier("z", 8), eq(8), identifier("x", 8), semicolon(8),
-
-                        //if(y > z){    line 10
-                        ifKeyword(10), leftParen(10), identifier("y", 10), greater(10), identifier("z", 10),
-                        rightParen(10), leftBrace(10),
-
-                        // z = y;   line 11
-                        identifier("z", 11), eq(11), identifier("y", 11), semicolon(11),
-
-                        // }    line 12
-                        rightBrace(12),
-
-                        //print z;  line 13
-                        print(13), identifier("z", 13), semicolon(13),
-
-                        // var printMe; line 15
-                        var(15), identifier("printMe", 15), semicolon(15),
-
-                        // line 16
-                        eof(16)
-                );
+                containsExactly(expectedTokens);
     }
 
-    private static Token identifier(String name, int lineNumber) {
-        return new Token(TokenType.IDENTIFIER, null, name, lineNumber);
-    }
+    public static final class TokenBuilder {
 
-    private static Token var(int lineNumber) {
-        return new Token(TokenType.VAR, null, null, lineNumber);
-    }
+        final List<Token> tokens = new ArrayList<>();
+        int lineNumber = 1;
 
-    private static Token leftBrace(int lineNumber) {
-        return new Token(TokenType.LEFT_BRACE, null, null, lineNumber);
-    }
+        TokenBuilder var() {
+            tokens.add(new Token(TokenType.VAR, null, null, lineNumber));
+            return this;
+        }
 
-    private static Token rightBrace(int lineNumber) {
-        return new Token(TokenType.RIGHT_BRACE, null, null, lineNumber);
-    }
+        TokenBuilder ifKeyword() {
+            tokens.add(new Token(TokenType.IF, null, null, lineNumber));
+            return this;
+        }
 
-    private static Token leftParen(int lineNumber) {
-        return new Token(TokenType.LEFT_PAREN, null, null, lineNumber);
-    }
+        TokenBuilder identifier(String name) {
+            tokens.add(new Token(TokenType.IDENTIFIER, null, name, lineNumber));
+            return this;
+        }
 
-    private static Token rightParen(int lineNumber) {
-        return new Token(TokenType.RIGHT_PAREN, null, null, lineNumber);
-    }
+        TokenBuilder eq() {
+            tokens.add(new Token(TokenType.EQUAL, null, null, lineNumber));
+            return this;
+        }
 
-    private static Token eq(int lineNumber) {
-        return new Token(TokenType.EQUAL, null, null, lineNumber);
-    }
+        TokenBuilder number(double value) {
+            tokens.add(new Token(TokenType.NUMBER, null, value, lineNumber));
+            return this;
+        }
 
-    private static Token greater(int lineNumber) {
-        return new Token(TokenType.GREATER, null, null, lineNumber);
-    }
+        TokenBuilder string(String value) {
+            tokens.add(new Token(TokenType.STRING, null, value, lineNumber));
+            return this;
+        }
 
-    private static Token number(double value, int lineNumber) {
-        return new Token(TokenType.NUMBER, null, value, lineNumber);
-    }
+        TokenBuilder semicolon() {
+            tokens.add(new Token(TokenType.SEMICOLON, null, null, lineNumber));
+            return this;
+        }
 
-    private static Token string(String value, int lineNumber) {
-        return new Token(TokenType.STRING, null, value, lineNumber);
-    }
+        TokenBuilder leftParen() {
+            tokens.add(new Token(TokenType.LEFT_PAREN, null, null, lineNumber));
+            return this;
+        }
 
-    private static Token semicolon(int lineNumber) {
-        return new Token(TokenType.SEMICOLON, null, null, lineNumber);
-    }
+        TokenBuilder rightParen() {
+            tokens.add(new Token(TokenType.RIGHT_PAREN, null, null, lineNumber));
+            return this;
+        }
 
-    private static Token ifKeyword(int lineNumber) {
-        return new Token(TokenType.IF, null, null, lineNumber);
-    }
+        TokenBuilder leftBrace() {
+            tokens.add(new Token(TokenType.LEFT_BRACE, null, null, lineNumber));
+            return this;
+        }
 
-    private static Token print(int lineNumber) {
-        return new Token(TokenType.PRINT, null, null, lineNumber);
-    }
+        TokenBuilder rightBrace() {
+            tokens.add(new Token(TokenType.RIGHT_BRACE, null, null, lineNumber));
+            return this;
+        }
 
-    private static Token eof(int lineNumber) {
-        return new Token(TokenType.EOF, null, null, lineNumber);
+        TokenBuilder greater() {
+            tokens.add(new Token(TokenType.GREATER, null, null, lineNumber));
+            return this;
+        }
+
+        TokenBuilder print() {
+            tokens.add(new Token(TokenType.PRINT, null, null, lineNumber));
+            return this;
+        }
+
+        TokenBuilder eof() {
+            tokens.add(new Token(TokenType.EOF, null, null, lineNumber));
+            return this;
+        }
+
+        TokenBuilder newLine() {
+            ++lineNumber;
+            return this;
+        }
+
+        Token[] build() {
+            return tokens.toArray(new Token[0]);
+        }
     }
 }
