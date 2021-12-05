@@ -21,7 +21,7 @@ public class LexerTest {
 
         List<Token> tokens = lexer.tokenize();
 
-        final int tokensCount = 36;
+        final int tokensCount = 39;
 
         assertThat(tokens).
                 isNotEmpty().
@@ -52,8 +52,11 @@ public class LexerTest {
                         //print z;  line 13
                         print(13), identifier("z", 13), semicolon(13),
 
-                        // line 14
-                        eof(14)
+                        // var printMe; line 15
+                        var(15), identifier("printMe", 15), semicolon(15),
+
+                        // line 16
+                        eof(16)
                 );
     }
 

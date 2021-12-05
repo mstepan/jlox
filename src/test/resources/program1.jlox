@@ -1,7 +1,7 @@
 var x = 10.33;
 var y = 20;
 
-// some long one line comments
+// some long one line comment
 
 var str = "hello, world";
 
@@ -11,3 +11,5 @@ if(y > z){
 	z = y;
 }
 print z;
+
+var printMe;
