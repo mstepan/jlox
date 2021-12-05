@@ -15,7 +15,7 @@ public class Lox {
 
     private static boolean hadError = false;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         // running in REPL mode
         if (args.length == 0) {
             runReplMode();

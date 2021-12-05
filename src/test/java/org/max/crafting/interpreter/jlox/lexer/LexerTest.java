@@ -28,7 +28,7 @@ public class LexerTest {
                 containsExactly(
                         identifier("var", 1), identifier("x", 1), eq(1), number(10.33, 1), semicolon(1),
                         identifier("var", 2), identifier("y", 2), eq(2), number(20, 2), semicolon(2),
-                        eof(3)
+                        eof(6)
                 );
     }
 

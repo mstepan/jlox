@@ -183,7 +183,11 @@ public class Lexer {
             advance();
         }
 
-        addToken(TokenType.IDENTIFIER, source.substring(start, cur));
+        String identifierName = source.substring(start, cur);
+
+        //TODO: check if 'identifierName' is some reserved keyword
+
+        addToken(TokenType.IDENTIFIER, identifierName);
     }
 
     private boolean isDigit(char ch) {

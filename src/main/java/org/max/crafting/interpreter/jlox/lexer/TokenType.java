@@ -18,7 +18,7 @@ public enum TokenType {
     IDENTIFIER, STRING, NUMBER,
 
     // reserved keywords
-    ADN, OR,
+    AND, OR,
     IF, ELSE,
     WHILE, FOR,
     TRUE, FALSE, NIL,
