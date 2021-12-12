@@ -6,30 +6,40 @@ import java.util.Map;
 public enum TokenType {
 
     // single char token
-    LEFT_PAREN, RIGHT_PAREN,
-    LEFT_BRACE, RIGHT_BRACE,
-    COMMA, DOT, SEMICOLON, SLASH, STAR,
-    MINUS, PLUS,
+    LEFT_PAREN("("), RIGHT_PAREN(")"),
+    LEFT_BRACE("{"), RIGHT_BRACE("}"),
+    COMMA(","), DOT("."), SEMICOLON(";"), SLASH("/"), STAR("*"),
+    MINUS("-"), PLUS("+"),
 
     // one or two character token
-    BANG, BANG_EQUAL,
-    EQUAL, EQUAL_EQUAL,
-    LESS, LESS_EQUAL,
-    GREATER, GREATER_EQUAL,
+    BANG("!"), BANG_EQUAL("!="),
+    EQUAL("="), EQUAL_EQUAL("=="),
+    LESS("<"), LESS_EQUAL("<="),
+    GREATER(">"), GREATER_EQUAL(">="),
 
     // literals
-    IDENTIFIER, STRING, NUMBER,
+    IDENTIFIER("id"), STRING("string"), NUMBER("number"),
 
     // reserved keywords
-    AND, OR,
-    IF, ELSE,
-    WHILE, FOR,
-    TRUE, FALSE, NIL,
-    FUN, RETURN,
-    CLASS, THIS, SUPER,
-    PRINT, VAR,
+    AND("and"), OR("or"),
+    IF("if"), ELSE("else"),
+    WHILE("while"), FOR("for"),
+    TRUE("true"), FALSE("false"), NIL("nil"),
+    FUN("fun"), RETURN("return"),
+    CLASS("class"), THIS("this"), SUPER("super"),
+    PRINT("print"), VAR("var"),
 
-    EOF;
+    EOF("eof");
+
+    private final String name;
+
+    TokenType(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
 
     private static final Map<String, TokenType> KEYWORDS = new HashMap<>();
     static {

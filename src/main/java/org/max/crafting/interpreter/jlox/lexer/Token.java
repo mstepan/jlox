@@ -16,6 +16,14 @@ public class Token {
         this.lineNumber = lineNumber;
     }
 
+    public TokenType getType() {
+        return type;
+    }
+
+    public String getLexeme() {
+        return lexeme;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
