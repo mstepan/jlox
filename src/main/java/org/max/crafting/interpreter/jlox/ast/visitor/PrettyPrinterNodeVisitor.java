@@ -21,7 +21,7 @@ public class PrettyPrinterNodeVisitor implements NodeVisitor {
     @Override
     public void visitBinaryExpression(BinaryExpression binaryExp) {
         binaryExp.getLeft().accept(this);
-        buf.append(binaryExp.getOperation().getType().getName());
+        buf.append(" ").append(binaryExp.getOperation().getType().getName()).append(" ");
         binaryExp.getRight().accept(this);
     }
 
@@ -33,9 +33,9 @@ public class PrettyPrinterNodeVisitor implements NodeVisitor {
 
     @Override
     public void visitParentheses(Parentheses parentheses) {
-        buf.append("(");
+        buf.append("( ");
         parentheses.getExpression().accept(this);
-        buf.append(")");
+        buf.append(" )");
     }
 
     @Override

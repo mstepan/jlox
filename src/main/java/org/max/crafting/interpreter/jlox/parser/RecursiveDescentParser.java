@@ -10,9 +10,9 @@ import org.max.crafting.interpreter.jlox.model.TokenType;
 import java.util.List;
 
 /**
- * Use recursive descent parser technique, so grammar should
- * be NON left-recursive (see main-grammar.txt).
+ * Use recursive descent parser technique, so grammar should be NON left-recursive (see main-grammar.txt).
  */
+@SuppressWarnings("LoopStatementThatDoesntLoop")
 public class RecursiveDescentParser {
 
     private final List<Token> tokens;
@@ -102,7 +102,6 @@ public class RecursiveDescentParser {
             Token op = previous();
             Expression right = unary();
             return new UnaryExpression(op, right);
-
         }
 
         return primary();
@@ -112,7 +111,6 @@ public class RecursiveDescentParser {
      * primary = STRING | NUMBER | "true" | "false" | nil | "(" expression ")"
      */
     private Expression primary() {
-
         if (matchAny(TokenType.FALSE)) {
             return new Literal(false);
         }
