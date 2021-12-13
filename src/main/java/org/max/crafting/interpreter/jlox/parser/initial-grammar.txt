@@ -1,0 +1,10 @@
+exp = unary | binary | parentheses | literal
+
+binary = exp op exp
+op = + | - | * | / | == | > | >= | < | <=
+
+unary = (- | !) exp
+
+parentheses = "(" exp ")"
+
+literal = STRING | NUMBER | "true" | "false" | nil

@@ -1,7 +1,9 @@
 package org.max.crafting.interpreter.jlox;
 
+import org.max.crafting.interpreter.jlox.ast.Expression;
+import org.max.crafting.interpreter.jlox.ast.visitor.PrettyPrinterNodeVisitor;
 import org.max.crafting.interpreter.jlox.lexer.Lexer;
-import org.max.crafting.interpreter.jlox.model.Token;
+import org.max.crafting.interpreter.jlox.parser.RecursiveDescentParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -73,11 +75,21 @@ public class Lox {
 
     private static void run(String source) {
 
+        // scanner, lexer step
         final Lexer lexer = new Lexer(source);
 
-        for (Token singleToken : lexer.tokenize()) {
-            System.out.println(singleToken);
-        }
+        // parser step
+        final RecursiveDescentParser parser = new RecursiveDescentParser(lexer.tokenize());
+
+        // abstract syntax tree
+        Expression expr = parser.createAst();
+
+        // some debugging
+        PrettyPrinterNodeVisitor prettyPrinterVisitor = new PrettyPrinterNodeVisitor();
+
+        expr.accept(prettyPrinterVisitor);
+
+        System.out.println(prettyPrinterVisitor.getRepresentation());
     }
 
 }

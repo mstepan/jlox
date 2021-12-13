@@ -16,6 +16,10 @@ public class Token {
         this.lineNumber = lineNumber;
     }
 
+    public Object getLiteral() {
+        return literal;
+    }
+
     public TokenType getType() {
         return type;
     }
