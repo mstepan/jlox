@@ -17,6 +17,7 @@ public class Lox {
 
     private static boolean hadError = false;
     static String astRepr;
+    static String lastErrorMsg;
 
     public static void main(String[] args) throws IOException {
         // running in REPL mode
@@ -34,8 +35,13 @@ public class Lox {
     }
 
     public static void error(int lineNumber, String errorMsg) {
-        System.err.println(String.format("[line %d] Error: %s", lineNumber, errorMsg));
+        lastErrorMsg = String.format("[line %d] Error: %s", lineNumber, errorMsg);
+        System.err.println(lastErrorMsg);
         hadError = true;
+    }
+
+    public static boolean hasError(){
+        return hadError;
     }
 
     /**
@@ -83,7 +89,7 @@ public class Lox {
         final RecursiveDescentParser parser = new RecursiveDescentParser(lexer.tokenize());
 
         // abstract syntax tree
-        Expression expr = parser.createAst();
+        Expression expr = parser.parse();
 
         // some debugging
         PrettyPrinterNodeVisitor prettyPrinterVisitor = new PrettyPrinterNodeVisitor();

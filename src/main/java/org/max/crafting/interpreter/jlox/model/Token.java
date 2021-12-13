@@ -28,6 +28,10 @@ public class Token {
         return lexeme;
     }
 
+    public int getLineNumber() {
+        return lineNumber;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {

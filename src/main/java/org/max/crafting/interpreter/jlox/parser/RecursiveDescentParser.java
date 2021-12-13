@@ -1,9 +1,10 @@
 package org.max.crafting.interpreter.jlox.parser;
 
+import org.max.crafting.interpreter.jlox.Lox;
 import org.max.crafting.interpreter.jlox.ast.BinaryExpression;
 import org.max.crafting.interpreter.jlox.ast.Expression;
-import org.max.crafting.interpreter.jlox.ast.Literal;
 import org.max.crafting.interpreter.jlox.ast.Grouping;
+import org.max.crafting.interpreter.jlox.ast.Literal;
 import org.max.crafting.interpreter.jlox.ast.UnaryExpression;
 import org.max.crafting.interpreter.jlox.model.Token;
 import org.max.crafting.interpreter.jlox.model.TokenType;
@@ -23,7 +24,7 @@ public class RecursiveDescentParser {
         this.tokens = tokens;
     }
 
-    public Expression createAst(){
+    public Expression parse() {
         return expression();
     }
 
@@ -130,19 +131,19 @@ public class RecursiveDescentParser {
 
         if (matchAny(TokenType.LEFT_PAREN)) {
             Expression expr = expression();
-            consume(TokenType.RIGHT_PAREN, "Closing ')' expected");
+            consume(TokenType.RIGHT_PAREN, "')' expected");
             return new Grouping(expr);
 
         }
 
-        throw new IllegalStateException("Incorrect expression detected");
+        throw error(peek(), "Expected expression.");
     }
 
     // ========================= utilities below =========================
 
     private boolean matchAny(TokenType... typesToMatch) {
         for (TokenType singleType : typesToMatch) {
-            if (checkType(singleType)) {
+            if (check(singleType)) {
                 advance();
                 return true;
             }
@@ -151,7 +152,7 @@ public class RecursiveDescentParser {
         return false;
     }
 
-    private boolean checkType(TokenType expectedType) {
+    private boolean check(TokenType expectedType) {
         if (isEnd()) {
             return false;
         }
@@ -178,9 +179,16 @@ public class RecursiveDescentParser {
         return tokens.get(cur - 1);
     }
 
-    private void consume(TokenType expectedType, String errorMsg) {
-        if (!matchAny(expectedType)) {
-            System.err.println(errorMsg);
+    private Token consume(TokenType expectedType, String errorMsg) {
+        if (check(expectedType)) {
+            return advance();
         }
+
+        throw error(peek(), errorMsg);
+    }
+
+    private ParseError error(Token token, String errorMsg) {
+        Lox.error(token.getLineNumber(), errorMsg);
+        return new ParseError();
     }
 }
