@@ -12,8 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class LexerTest {
-
+final class LexerTest {
 
     @Test
     void tokenizeSimpleFile() throws IOException {

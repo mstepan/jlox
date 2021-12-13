@@ -2,11 +2,11 @@ package org.max.crafting.interpreter.jlox.ast;
 
 import org.max.crafting.interpreter.jlox.ast.visitor.NodeVisitor;
 
-public class Parentheses implements Expression {
+public class Grouping implements Expression {
 
     private final Expression expression;
 
-    public Parentheses(Expression expression) {
+    public Grouping(Expression expression) {
         this.expression = expression;
     }
 

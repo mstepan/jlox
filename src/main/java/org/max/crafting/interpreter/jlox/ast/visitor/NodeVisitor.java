@@ -2,7 +2,7 @@ package org.max.crafting.interpreter.jlox.ast.visitor;
 
 import org.max.crafting.interpreter.jlox.ast.BinaryExpression;
 import org.max.crafting.interpreter.jlox.ast.Literal;
-import org.max.crafting.interpreter.jlox.ast.Parentheses;
+import org.max.crafting.interpreter.jlox.ast.Grouping;
 import org.max.crafting.interpreter.jlox.ast.UnaryExpression;
 
 public interface NodeVisitor {
@@ -13,5 +13,5 @@ public interface NodeVisitor {
 
     void visitLiteral(Literal literal);
 
-    void visitParentheses(Parentheses parentheses);
+    void visitParentheses(Grouping grouping);
 }

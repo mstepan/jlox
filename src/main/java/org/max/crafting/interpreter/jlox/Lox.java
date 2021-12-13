@@ -16,6 +16,7 @@ import java.nio.file.Paths;
 public class Lox {
 
     private static boolean hadError = false;
+    static String astRepr;
 
     public static void main(String[] args) throws IOException {
         // running in REPL mode
@@ -73,7 +74,7 @@ public class Lox {
         }
     }
 
-    private static void run(String source) {
+    static void run(String source) {
 
         // scanner, lexer step
         final Lexer lexer = new Lexer(source);
@@ -89,7 +90,7 @@ public class Lox {
 
         expr.accept(prettyPrinterVisitor);
 
-        System.out.println(prettyPrinterVisitor.getRepresentation());
+        astRepr = prettyPrinterVisitor.getRepresentation();
     }
 
 }

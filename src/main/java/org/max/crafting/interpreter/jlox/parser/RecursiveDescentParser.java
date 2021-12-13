@@ -3,6 +3,7 @@ package org.max.crafting.interpreter.jlox.parser;
 import org.max.crafting.interpreter.jlox.ast.BinaryExpression;
 import org.max.crafting.interpreter.jlox.ast.Expression;
 import org.max.crafting.interpreter.jlox.ast.Literal;
+import org.max.crafting.interpreter.jlox.ast.Grouping;
 import org.max.crafting.interpreter.jlox.ast.UnaryExpression;
 import org.max.crafting.interpreter.jlox.model.Token;
 import org.max.crafting.interpreter.jlox.model.TokenType;
@@ -130,17 +131,11 @@ public class RecursiveDescentParser {
         if (matchAny(TokenType.LEFT_PAREN)) {
             Expression expr = expression();
             consume(TokenType.RIGHT_PAREN, "Closing ')' expected");
-            return expr;
+            return new Grouping(expr);
 
         }
 
         throw new IllegalStateException("Incorrect expression detected");
-    }
-
-    private void consume(TokenType expectedType, String errorMsg) {
-        if (!matchAny(expectedType)) {
-            System.err.println(errorMsg);
-        }
     }
 
     // ========================= utilities below =========================
@@ -183,5 +178,9 @@ public class RecursiveDescentParser {
         return tokens.get(cur - 1);
     }
 
-
+    private void consume(TokenType expectedType, String errorMsg) {
+        if (!matchAny(expectedType)) {
+            System.err.println(errorMsg);
+        }
+    }
 }
