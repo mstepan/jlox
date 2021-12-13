@@ -1,7 +1,7 @@
 package org.max.crafting.interpreter.jlox;
 
 import org.max.crafting.interpreter.jlox.lexer.Lexer;
-import org.max.crafting.interpreter.jlox.lexer.Token;
+import org.max.crafting.interpreter.jlox.model.Token;
 
 import java.io.BufferedReader;
 import java.io.IOException;

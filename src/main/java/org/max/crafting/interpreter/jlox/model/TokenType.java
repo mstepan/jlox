@@ -1,4 +1,4 @@
-package org.max.crafting.interpreter.jlox.lexer;
+package org.max.crafting.interpreter.jlox.model;
 
 import java.util.HashMap;
 import java.util.Map;

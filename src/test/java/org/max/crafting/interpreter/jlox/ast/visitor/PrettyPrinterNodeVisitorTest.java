@@ -6,8 +6,8 @@ import org.max.crafting.interpreter.jlox.ast.Expression;
 import org.max.crafting.interpreter.jlox.ast.Literal;
 import org.max.crafting.interpreter.jlox.ast.Parentheses;
 import org.max.crafting.interpreter.jlox.ast.UnaryExpression;
-import org.max.crafting.interpreter.jlox.lexer.Token;
-import org.max.crafting.interpreter.jlox.lexer.TokenType;
+import org.max.crafting.interpreter.jlox.model.Token;
+import org.max.crafting.interpreter.jlox.model.TokenType;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

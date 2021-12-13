@@ -1,6 +1,8 @@
 package org.max.crafting.interpreter.jlox.lexer;
 
 import org.junit.jupiter.api.Test;
+import org.max.crafting.interpreter.jlox.model.Token;
+import org.max.crafting.interpreter.jlox.model.TokenType;
 
 import java.io.IOException;
 import java.nio.charset.Charset;

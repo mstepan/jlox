@@ -1,6 +1,8 @@
 package org.max.crafting.interpreter.jlox.lexer;
 
 import org.max.crafting.interpreter.jlox.Lox;
+import org.max.crafting.interpreter.jlox.model.Token;
+import org.max.crafting.interpreter.jlox.model.TokenType;
 
 import java.util.ArrayList;
 import java.util.List;
