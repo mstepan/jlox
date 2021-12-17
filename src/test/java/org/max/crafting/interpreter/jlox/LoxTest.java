@@ -9,10 +9,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 final class LoxTest {
 
     @Test
-    void runCorrectExpression() {
+    void runSingleExpression() {
         Lox.run("(3*6) + 2 != 50");
         assertFalse(Lox.hasError());
         assertEquals("(3.0 * 6.0) + 2.0 != 50.0", Lox.astRepr);
+    }
+
+    @Test
+    void runCommaSeparatedExpressions() {
+        Lox.run("(3*6) + 2 != 50, 2 * 2 == 8");
+        assertFalse(Lox.hasError());
+        assertEquals("(3.0 * 6.0) + 2.0 != 50.0 , 2.0 * 2.0 == 8.0", Lox.astRepr);
     }
 
     @Test
@@ -22,4 +29,5 @@ final class LoxTest {
         assertTrue(Lox.hasError());
         assertEquals("[line 1] Error: ')' expected", Lox.lastErrorMsg);
     }
+
 }

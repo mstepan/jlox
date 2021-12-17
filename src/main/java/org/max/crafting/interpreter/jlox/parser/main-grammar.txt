@@ -1,5 +1,8 @@
 
-expression = equality
+expression = comma_sequence
+
+// comma has lowest precedence
+comma_sequence = equality ((",") equality)*
 
 equality = comparison  (("==" | "!=") comparison)*
 
@@ -9,6 +12,7 @@ term = factor (("+" | "-") factor)*
 
 factor = unary (("*" | "/" ) unary)*
 
+// unary operator has highest precedence
 unary = ("!" | "-") unary | primary
 
 primary = STRING | NUMBER | "true" | "false" | nil | "(" expression ")"

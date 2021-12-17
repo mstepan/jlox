@@ -29,16 +29,31 @@ public class RecursiveDescentParser {
             return expression();
         }
         catch (ParseError parseError) {
-            parseError.printStackTrace();
+            System.err.println(parseError.getMessage());
         }
         return null;
     }
 
     /**
-     * expression = equality
+     * expression = comma_sequence
      */
     private Expression expression() {
-        return equality();
+        return commaSequence();
+    }
+
+    /**
+     * comma_sequence = equality ((",") equality)*
+     */
+    private Expression commaSequence(){
+        Expression left = equality();
+
+        while( matchAny(TokenType.COMMA)){
+            Token op = previous();
+            Expression right = equality();
+            return new BinaryExpression(left, op, right);
+        }
+
+        return left;
     }
 
     /**

@@ -18,4 +18,9 @@ public class Literal implements Expression {
     public void accept(NodeVisitor visitor) {
         visitor.visitLiteral(this);
     }
+
+    @Override
+    public String toString() {
+        return String.valueOf(value);
+    }
 }
