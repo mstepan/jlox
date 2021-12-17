@@ -16,6 +16,7 @@ import java.nio.file.Paths;
 public class Lox {
 
     private static boolean hadError = false;
+
     static String astRepr;
     static String lastErrorMsg;
 
@@ -98,9 +99,7 @@ public class Lox {
         // some debugging
         PrettyPrinterNodeVisitor prettyPrinterVisitor = new PrettyPrinterNodeVisitor();
 
-        expr.accept(prettyPrinterVisitor);
-
-        astRepr = prettyPrinterVisitor.getRepresentation();
+        astRepr = (String)expr.accept(prettyPrinterVisitor);
 
         System.out.println(astRepr);
     }

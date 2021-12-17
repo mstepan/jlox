@@ -4,6 +4,6 @@ import org.max.crafting.interpreter.jlox.ast.visitor.NodeVisitor;
 
 public interface Expression {
 
-    void accept(NodeVisitor visitor);
+    Object accept(NodeVisitor visitor);
 
 }

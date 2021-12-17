@@ -1,3 +1,4 @@
+// we will try to follow "C" precedence levels (see https://en.cppreference.com/w/c/language/operator_precedence)
 
 expression = comma_sequence
 

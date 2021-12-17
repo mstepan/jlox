@@ -7,11 +7,11 @@ import org.max.crafting.interpreter.jlox.ast.UnaryExpression;
 
 public interface NodeVisitor {
 
-    void visitBinaryExpression(BinaryExpression binaryExp);
+    Object visitBinaryExpression(BinaryExpression binaryExp);
 
-    void visitUnaryExpression(UnaryExpression unaryExp);
+    Object visitUnaryExpression(UnaryExpression unaryExp);
 
-    void visitLiteral(Literal literal);
+    Object visitLiteral(Literal literal);
 
-    void visitParentheses(Grouping grouping);
+    Object visitParentheses(Grouping grouping);
 }

@@ -15,7 +15,7 @@ public class Grouping implements Expression {
     }
 
     @Override
-    public void accept(NodeVisitor visitor) {
-        visitor.visitParentheses(this);
+    public Object accept(NodeVisitor visitor) {
+        return visitor.visitParentheses(this);
     }
 }

@@ -15,8 +15,8 @@ public class Literal implements Expression {
     }
 
     @Override
-    public void accept(NodeVisitor visitor) {
-        visitor.visitLiteral(this);
+    public Object accept(NodeVisitor visitor) {
+        return visitor.visitLiteral(this);
     }
 
     @Override

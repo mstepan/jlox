@@ -15,8 +15,8 @@ public class UnaryExpression implements Expression {
     }
 
     @Override
-    public void accept(NodeVisitor visitor) {
-        visitor.visitUnaryExpression(this);
+    public Object accept(NodeVisitor visitor) {
+        return visitor.visitUnaryExpression(this);
     }
 
     public Token getOperation() {

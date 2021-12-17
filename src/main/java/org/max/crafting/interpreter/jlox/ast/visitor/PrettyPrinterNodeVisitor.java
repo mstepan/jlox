@@ -1,46 +1,35 @@
 package org.max.crafting.interpreter.jlox.ast.visitor;
 
 import org.max.crafting.interpreter.jlox.ast.BinaryExpression;
-import org.max.crafting.interpreter.jlox.ast.Literal;
 import org.max.crafting.interpreter.jlox.ast.Grouping;
+import org.max.crafting.interpreter.jlox.ast.Literal;
 import org.max.crafting.interpreter.jlox.ast.UnaryExpression;
 
 
 public class PrettyPrinterNodeVisitor implements NodeVisitor {
 
-    private final StringBuilder buf;
-
-    public PrettyPrinterNodeVisitor() {
-        buf = new StringBuilder();
-    }
-
-    public String getRepresentation() {
-        return buf.toString();
+    @Override
+    public Object visitBinaryExpression(BinaryExpression binaryExp) {
+        String leftStr = String.valueOf(binaryExp.getLeft().accept(this));
+        String opStr = binaryExp.getOperation().getType().getName();
+        String rightStr = String.valueOf(binaryExp.getRight().accept(this));
+        return leftStr + " " + opStr + " " + rightStr;
     }
 
     @Override
-    public void visitBinaryExpression(BinaryExpression binaryExp) {
-        binaryExp.getLeft().accept(this);
-        buf.append(" ").append(binaryExp.getOperation().getType().getName()).append(" ");
-        binaryExp.getRight().accept(this);
+    public Object visitUnaryExpression(UnaryExpression unaryExp) {
+        String opStr = unaryExp.getOperation().getType().getName();
+        return opStr + unaryExp.getExpression().accept(this);
     }
 
     @Override
-    public void visitUnaryExpression(UnaryExpression unaryExp) {
-        buf.append(unaryExp.getOperation().getType().getName());
-        unaryExp.getExpression().accept(this);
+    public Object visitParentheses(Grouping grouping) {
+        return "(" + grouping.getExpression().accept(this) + ")";
     }
 
     @Override
-    public void visitParentheses(Grouping grouping) {
-        buf.append("(");
-        grouping.getExpression().accept(this);
-        buf.append(")");
-    }
-
-    @Override
-    public void visitLiteral(Literal literal) {
-        buf.append(literal.getValue());
+    public Object visitLiteral(Literal literal) {
+        return literal.getValue();
     }
 
 }

@@ -34,9 +34,9 @@ final class PrettyPrinterNodeVisitorTest {
 
         PrettyPrinterNodeVisitor visitor = new PrettyPrinterNodeVisitor();
 
-        expression.accept(visitor);
+        String repr = (String)expression.accept(visitor);
 
-        assertEquals("-6 * (2 + 3)", visitor.getRepresentation());
+        assertEquals("-6 * (2 + 3)", repr);
     }
 
     @Test
@@ -64,9 +64,9 @@ final class PrettyPrinterNodeVisitorTest {
 
         PrettyPrinterNodeVisitor visitor = new PrettyPrinterNodeVisitor();
 
-        expression.accept(visitor);
+        String repr = (String)expression.accept(visitor);
 
-        assertEquals("1 - (2 * 3) < 4 == false", visitor.getRepresentation());
+        assertEquals("1 - (2 * 3) < 4 == false", repr);
     }
 
 

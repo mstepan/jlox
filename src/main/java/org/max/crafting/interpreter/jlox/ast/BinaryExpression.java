@@ -30,7 +30,7 @@ public class BinaryExpression implements Expression {
     }
 
     @Override
-    public void accept(NodeVisitor visitor) {
-        visitor.visitBinaryExpression(this);
+    public Object accept(NodeVisitor visitor) {
+        return visitor.visitBinaryExpression(this);
     }
 }
