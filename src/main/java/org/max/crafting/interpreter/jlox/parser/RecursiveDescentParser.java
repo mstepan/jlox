@@ -25,7 +25,13 @@ public class RecursiveDescentParser {
     }
 
     public Expression parse() {
-        return expression();
+        try {
+            return expression();
+        }
+        catch (ParseError parseError) {
+            parseError.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -190,5 +196,25 @@ public class RecursiveDescentParser {
     private ParseError error(Token token, String errorMsg) {
         Lox.error(token.getLineNumber(), errorMsg);
         return new ParseError();
+    }
+
+    /**
+     * Synchronize parser till next valid token (skipping all cascade failures).
+     */
+    private void synchronize() {
+        advance();
+
+        while (!isEnd()) {
+            if (previous().getType() == TokenType.SEMICOLON) {
+                return;
+            }
+
+            switch (peek().getType()) {
+                case CLASS, FUN, VAR, FOR, IF, WHILE, PRINT, RETURN:
+                    return;
+            }
+
+            advance();
+        }
     }
 }

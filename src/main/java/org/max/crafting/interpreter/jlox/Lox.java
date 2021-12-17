@@ -91,12 +91,18 @@ public class Lox {
         // abstract syntax tree
         Expression expr = parser.parse();
 
+        if( hasError() ){
+            return;
+        }
+
         // some debugging
         PrettyPrinterNodeVisitor prettyPrinterVisitor = new PrettyPrinterNodeVisitor();
 
         expr.accept(prettyPrinterVisitor);
 
         astRepr = prettyPrinterVisitor.getRepresentation();
+
+        System.out.println(astRepr);
     }
 
 }
