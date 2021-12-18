@@ -44,10 +44,10 @@ public class RecursiveDescentParser {
     /**
      * comma_sequence = equality ((",") equality)*
      */
-    private Expression commaSequence(){
+    private Expression commaSequence() {
         Expression left = equality();
 
-        while( matchAny(TokenType.COMMA)){
+        while (matchAny(TokenType.COMMA)) {
             Token op = previous();
             Expression right = equality();
             return new BinaryExpression(left, op, right);
@@ -178,7 +178,7 @@ public class RecursiveDescentParser {
             return false;
         }
 
-        return peek().getType() == expectedType;
+        return peek().type == expectedType;
     }
 
     private Token peek() {
@@ -193,7 +193,7 @@ public class RecursiveDescentParser {
     }
 
     private boolean isEnd() {
-        return tokens.get(cur).getType() == TokenType.EOF;
+        return tokens.get(cur).type == TokenType.EOF;
     }
 
     private Token previous() {
@@ -220,11 +220,11 @@ public class RecursiveDescentParser {
         advance();
 
         while (!isEnd()) {
-            if (previous().getType() == TokenType.SEMICOLON) {
+            if (previous().type == TokenType.SEMICOLON) {
                 return;
             }
 
-            switch (peek().getType()) {
+            switch (peek().type) {
                 case CLASS, FUN, VAR, FOR, IF, WHILE, PRINT, RETURN:
                     return;
             }

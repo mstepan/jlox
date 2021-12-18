@@ -1,6 +1,7 @@
 package org.max.crafting.interpreter.jlox;
 
 import org.max.crafting.interpreter.jlox.ast.Expression;
+import org.max.crafting.interpreter.jlox.ast.visitor.Interpreter;
 import org.max.crafting.interpreter.jlox.ast.visitor.PrettyPrinterNodeVisitor;
 import org.max.crafting.interpreter.jlox.lexer.Lexer;
 import org.max.crafting.interpreter.jlox.parser.RecursiveDescentParser;
@@ -17,7 +18,7 @@ public class Lox {
 
     private static boolean hadError = false;
 
-    static String astRepr;
+    static Object result;
     static String lastErrorMsg;
 
     public static void main(String[] args) throws IOException {
@@ -83,6 +84,8 @@ public class Lox {
 
     static void run(String source) {
 
+        clearState();
+
         // scanner, lexer step
         final Lexer lexer = new Lexer(source);
 
@@ -96,12 +99,16 @@ public class Lox {
             return;
         }
 
-        // some debugging
-        PrettyPrinterNodeVisitor prettyPrinterVisitor = new PrettyPrinterNodeVisitor();
+        // evaluate AST
+        Interpreter interpreter = new Interpreter();
 
-        astRepr = (String)expr.accept(prettyPrinterVisitor);
+        result = expr.accept(interpreter);
+    }
 
-        System.out.println(astRepr);
+    private static void clearState(){
+        hadError = false;
+        lastErrorMsg = null;
+        result = null;
     }
 
 }

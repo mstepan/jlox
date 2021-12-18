@@ -31,14 +31,10 @@ public enum TokenType {
 
     EOF("eof");
 
-    private final String name;
+    public final String name;
 
     TokenType(String name) {
         this.name = name;
-    }
-
-    public String getName() {
-        return name;
     }
 
     private static final Map<String, TokenType> KEYWORDS = new HashMap<>();

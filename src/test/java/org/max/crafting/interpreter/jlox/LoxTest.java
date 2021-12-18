@@ -9,17 +9,43 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 final class LoxTest {
 
     @Test
-    void runSingleExpression() {
+    void runSingleNumericalExpression() {
+        Lox.run("(3*6) + 2");
+        assertFalse(Lox.hasError());
+        assertEquals(20.0, Lox.result);
+    }
+
+    @Test
+    void runSingleEqEqLogicalExpression() {
+        Lox.run("(3*6) + 2 == 20");
+        assertFalse(Lox.hasError());
+        assertEquals(true, Lox.result);
+    }
+
+    @Test
+    void runSingleBangEqLogicalExpression() {
         Lox.run("(3*6) + 2 != 50");
         assertFalse(Lox.hasError());
-        assertEquals("(3.0 * 6.0) + 2.0 != 50.0", Lox.astRepr);
+        assertEquals(true, Lox.result);
     }
 
     @Test
     void runCommaSeparatedExpressions() {
-        Lox.run("(3*6) + 2 != 50, 2 * 2 == 8");
+        Lox.run("(3*6) + 2 != 50, 2 * 4 == 8");
         assertFalse(Lox.hasError());
-        assertEquals("(3.0 * 6.0) + 2.0 != 50.0 , 2.0 * 2.0 == 8.0", Lox.astRepr);
+        assertEquals(true, Lox.result);
+    }
+
+    /**
+     * This test case works just check that we use Double.equals(...) for '==' comparison,
+     * which in java returns 'true' for NaN.equals(NaN).
+     */
+    @Test
+    void comparingNans() {
+        Lox.run("0/0 == 0/0");
+
+        assertFalse(Lox.hasError());
+        assertEquals(true, Lox.result);
     }
 
     @Test
@@ -29,5 +55,4 @@ final class LoxTest {
         assertTrue(Lox.hasError());
         assertEquals("[line 1] Error: ')' expected", Lox.lastErrorMsg);
     }
-
 }
