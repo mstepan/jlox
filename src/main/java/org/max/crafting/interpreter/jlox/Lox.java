@@ -2,7 +2,6 @@ package org.max.crafting.interpreter.jlox;
 
 import org.max.crafting.interpreter.jlox.ast.Expression;
 import org.max.crafting.interpreter.jlox.ast.visitor.Interpreter;
-import org.max.crafting.interpreter.jlox.ast.visitor.PrettyPrinterNodeVisitor;
 import org.max.crafting.interpreter.jlox.lexer.Lexer;
 import org.max.crafting.interpreter.jlox.parser.RecursiveDescentParser;
 
@@ -16,8 +15,7 @@ import java.nio.file.Paths;
 
 public class Lox {
 
-    private static boolean hadError = false;
-
+    private static boolean hadError;
     static Object result;
     static String lastErrorMsg;
 
@@ -42,7 +40,7 @@ public class Lox {
         hadError = true;
     }
 
-    public static boolean hasError(){
+    public static boolean hasError() {
         return hadError;
     }
 
@@ -95,20 +93,23 @@ public class Lox {
         // abstract syntax tree
         Expression expr = parser.parse();
 
-        if( hasError() ){
+        if (hasError()) {
             return;
         }
 
         // evaluate AST
         Interpreter interpreter = new Interpreter();
-
-        result = expr.accept(interpreter);
+        result = interpreter.interpret(expr);
     }
 
-    private static void clearState(){
+    private static void clearState() {
         hadError = false;
         lastErrorMsg = null;
         result = null;
     }
 
+    public static void runtimeError(Interpreter.RuntimeError ex) {
+        hadError = true;
+        error(-1, ex.getMessage());
+    }
 }

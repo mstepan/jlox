@@ -1,33 +1,72 @@
 package org.max.crafting.interpreter.jlox.ast.visitor;
 
+import org.max.crafting.interpreter.jlox.Lox;
 import org.max.crafting.interpreter.jlox.ast.BinaryExpression;
+import org.max.crafting.interpreter.jlox.ast.Expression;
 import org.max.crafting.interpreter.jlox.ast.Grouping;
 import org.max.crafting.interpreter.jlox.ast.Literal;
 import org.max.crafting.interpreter.jlox.ast.UnaryExpression;
+import org.max.crafting.interpreter.jlox.model.Token;
 
 public class Interpreter implements NodeVisitor {
+
+    public Object interpret(Expression expression) {
+        try {
+            return expression.accept(this);
+        }
+        catch (RuntimeError ex) {
+            Lox.runtimeError(ex);
+        }
+        return null;
+    }
 
     @Override
     public Object visitBinaryExpression(BinaryExpression binaryExp) {
 
+        Object left = binaryExp.left.accept(this);
+        Object right = binaryExp.right.accept(this);
+
         return switch (binaryExp.operation.type) {
-            case MINUS -> (double) binaryExp.left.accept(this) - (double) binaryExp.right.accept(this);
-            case STAR -> (double) binaryExp.left.accept(this) * (double) binaryExp.right.accept(this);
-            case SLASH -> (double) binaryExp.left.accept(this) / (double) binaryExp.right.accept(this);
-            case PLUS -> plus(binaryExp.left.accept(this), binaryExp.right.accept(this));
-            case GREATER -> (double) binaryExp.left.accept(this) > (double) binaryExp.right.accept(this);
-            case GREATER_EQUAL -> (double) binaryExp.left.accept(this) >= (double) binaryExp.right.accept(this);
-            case LESS -> (double) binaryExp.left.accept(this) < (double) binaryExp.right.accept(this);
-            case LESS_EQUAL -> (double) binaryExp.left.accept(this) <= (double) binaryExp.right.accept(this);
-            case EQUAL_EQUAL -> isEqual(binaryExp.left.accept(this), binaryExp.right.accept(this));
-            case BANG_EQUAL -> !isEqual(binaryExp.left.accept(this), binaryExp.right.accept(this));
+            case MINUS -> {
+                checkBothOperandsNumbers(binaryExp.operation, left, right);
+                yield (double) left - (double) right;
+            }
+            case STAR -> {
+                checkBothOperandsNumbers(binaryExp.operation, left, right);
+                yield (double) left * (double) right;
+            }
+            case SLASH -> {
+                checkBothOperandsNumbers(binaryExp.operation, left, right);
+                yield (double) left / (double) right;
+            }
+            case PLUS -> plus(binaryExp.operation, left, right);
+            case GREATER -> {
+                checkBothOperandsNumbers(binaryExp.operation, left, right);
+                yield (double) left > (double) right;
+            }
+            case GREATER_EQUAL -> {
+                checkBothOperandsNumbers(binaryExp.operation, left, right);
+                yield (double) left >= (double) right;
+            }
+            case LESS -> {
+                checkBothOperandsNumbers(binaryExp.operation, left, right);
+                yield (double) left < (double) right;
+            }
+            case LESS_EQUAL -> {
+                checkBothOperandsNumbers(binaryExp.operation, left, right);
+                yield (double) left <= (double) right;
+            }
+            case EQUAL_EQUAL -> {
+                checkBothOperandsNumbers(binaryExp.operation, left, right);
+                yield isEqual(left, right);
+            }
+            case BANG_EQUAL -> {
+                checkBothOperandsNumbers(binaryExp.operation, left, right);
+                yield (!isEqual(left, right));
+            }
             case COMMA -> {
-                // for comma, we just discard left hand side
-                Object leftRes = binaryExp.left.accept(this);
-
-                Object rightRes = binaryExp.right.accept(this);
-
-                yield binaryExp.right.accept(this);
+                // for comma, we just evaluate and discard left hand side and use only right side
+                yield right;
             }
             default -> throw new IllegalStateException("Unsupported expression: " + binaryExp.operation.type);
         };
@@ -43,16 +82,14 @@ public class Interpreter implements NodeVisitor {
         return left.equals(right);
     }
 
-    private Object plus(Object left, Object right) {
+    private Object plus(Token operator, Object left, Object right) {
         if (left instanceof Double && right instanceof Double) {
             return (double) left + (double) right;
         }
         if (left instanceof String && right instanceof String) {
             return String.valueOf(left) + right;
         }
-
-        //TODO: do something here if types are not compatible
-        return null;
+        return new RuntimeError(operator, "Operands must be two numbers or strings.");
     }
 
     @Override
@@ -60,7 +97,10 @@ public class Interpreter implements NodeVisitor {
         Object res = unaryExp.expression.accept(this);
 
         return switch (unaryExp.operation.type) {
-            case MINUS -> -(double) res;
+            case MINUS -> {
+                checkNumberOperand(unaryExp.operation, res);
+                yield -(double) res;
+            }
             case BANG -> !isTrue(res);
             default -> null;
         };
@@ -92,5 +132,29 @@ public class Interpreter implements NodeVisitor {
     @Override
     public Object visitParentheses(Grouping grouping) {
         return grouping.expression.accept(this);
+    }
+
+    private void checkBothOperandsNumbers(Token operator, Object left, Object right) {
+        if (left instanceof Double && right instanceof Double) {
+            return;
+        }
+        throw new RuntimeError(operator, "Both operands must be numbers.");
+    }
+
+    private void checkNumberOperand(Token operator, Object operand) {
+        if (operand instanceof Double) {
+            return;
+        }
+        throw new RuntimeError(operator, "Operand must be a number.");
+    }
+
+    public static final class RuntimeError extends RuntimeException {
+
+        final Token operation;
+
+        RuntimeError(Token operation, String errorMsg) {
+            super(errorMsg);
+            this.operation = operation;
+        }
     }
 }

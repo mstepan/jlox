@@ -9,28 +9,28 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 final class LoxTest {
 
     @Test
-    void runSingleNumericalExpression() {
+    void singleNumericalExpression() {
         Lox.run("(3*6) + 2");
         assertFalse(Lox.hasError());
         assertEquals(20.0, Lox.result);
     }
 
     @Test
-    void runSingleEqEqLogicalExpression() {
+    void singleEqEqLogicalExpression() {
         Lox.run("(3*6) + 2 == 20");
         assertFalse(Lox.hasError());
         assertEquals(true, Lox.result);
     }
 
     @Test
-    void runSingleBangEqLogicalExpression() {
+    void singleBangEqLogicalExpression() {
         Lox.run("(3*6) + 2 != 50");
         assertFalse(Lox.hasError());
         assertEquals(true, Lox.result);
     }
 
     @Test
-    void runCommaSeparatedExpressions() {
+    void commaSeparatedExpressions() {
         Lox.run("(3*6) + 2 != 50, 2 * 4 == 8");
         assertFalse(Lox.hasError());
         assertEquals(true, Lox.result);
@@ -49,10 +49,26 @@ final class LoxTest {
     }
 
     @Test
-    void runGroupingWithoutMatchingParentheses() {
+    void expressionsWithUnaryMinus() {
+        Lox.run("2 * (6 / -3)");
+
+        assertFalse(Lox.hasError());
+        assertEquals(-4.0, Lox.result);
+    }
+
+    @Test
+    void groupingWithoutMatchingParenthesesShouldFail() {
         Lox.run("(3*6 + 2 != 50");
 
         assertTrue(Lox.hasError());
         assertEquals("[line 1] Error: ')' expected", Lox.lastErrorMsg);
+    }
+
+    @Test
+    void negateStringShouldFail() {
+        Lox.run("2 * (6 / -\"hello, world\")");
+
+        assertTrue(Lox.hasError());
+//        assertEquals("[line 1] Error: ')' expected", Lox.lastErrorMsg);
     }
 }
