@@ -133,21 +133,21 @@ public class Lexer {
     private void readString() {
 
         final int initialLineNumber = lineNumber;
+        char lastCh = peek();
 
         while (!isEof()) {
-
-            char ch = advance();
-
             // we support multi-line strings, so we need to handle '\n' here too
-            if (ch == '\n') {
+            if (lastCh == '\n') {
                 ++lineNumber;
             }
-            else if (ch == '"') {
+            else if (lastCh == '"') {
                 break;
             }
+
+            lastCh = advance();
         }
 
-        if (isEof()) {
+        if (lastCh == '\0') {
             Lox.error(initialLineNumber, "Unterminated string found");
             return;
         }

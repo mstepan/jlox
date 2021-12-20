@@ -3,6 +3,7 @@ package org.max.crafting.interpreter.jlox;
 import org.max.crafting.interpreter.jlox.ast.Expression;
 import org.max.crafting.interpreter.jlox.ast.visitor.Interpreter;
 import org.max.crafting.interpreter.jlox.lexer.Lexer;
+import org.max.crafting.interpreter.jlox.model.Token;
 import org.max.crafting.interpreter.jlox.parser.RecursiveDescentParser;
 
 import java.io.BufferedReader;
@@ -12,6 +13,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 public class Lox {
 
@@ -87,8 +89,10 @@ public class Lox {
         // scanner, lexer step
         final Lexer lexer = new Lexer(source);
 
+        List<Token> tokens = lexer.tokenize();
+
         // parser step
-        final RecursiveDescentParser parser = new RecursiveDescentParser(lexer.tokenize());
+        final RecursiveDescentParser parser = new RecursiveDescentParser(tokens);
 
         // abstract syntax tree
         Expression expr = parser.parse();
@@ -114,12 +118,18 @@ public class Lox {
         return hadError || hadRuntimeError;
     }
 
+    /**
+     * Report syntax (static) error from lexer.
+     */
     public static void error(int lineNumber, String errorMsg) {
         lastErrorMsg = String.format("[line %d] Error: %s", lineNumber, errorMsg);
         System.err.println(lastErrorMsg);
         hadError = true;
     }
 
+    /**
+     * Report dynamic (runtime) error from parser evaluation.
+     */
     public static void runtimeError(Interpreter.RuntimeError error) {
         lastErrorMsg = String.format("[line %s]: %s", error.operator.lineNumber, error.getMessage());
         System.err.println(lastErrorMsg);

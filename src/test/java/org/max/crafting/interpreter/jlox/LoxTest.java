@@ -1,5 +1,6 @@
 package org.max.crafting.interpreter.jlox;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -7,6 +8,21 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 final class LoxTest {
+
+    @Test
+    @Disabled("temporary disabled")
+    void comparisonForNumberAndString() {
+        Lox.run("3 < \"hello, world\"");
+        assertFalse(Lox.hasError());
+        assertEquals("true", Lox.result);
+    }
+
+    @Test
+    void stringConcatenation() {
+        Lox.run("\"hello\" + \"world\"");
+        assertFalse(Lox.hasError());
+        assertEquals("helloworld", Lox.result);
+    }
 
     @Test
     void singleNumericalExpression() {

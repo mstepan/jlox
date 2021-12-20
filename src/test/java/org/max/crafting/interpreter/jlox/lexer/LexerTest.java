@@ -15,6 +15,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 final class LexerTest {
 
     @Test
+    void tokenizeNumberExpression()  {
+        final Lexer lexer = new Lexer("1+2+3");
+        List<Token> tokens = lexer.tokenize();
+        assertThat(tokens).hasSize(6);
+    }
+
+    @Test
+    void tokenizeString()  {
+        final Lexer lexer = new Lexer("\"hello\"");
+        List<Token> tokens = lexer.tokenize();
+        assertThat(tokens).hasSize(2);
+    }
+
+    @Test
+    void tokenizeUnterminatedString()  {
+        final Lexer lexer = new Lexer("\"hello");
+        List<Token> tokens = lexer.tokenize();
+        assertThat(tokens).hasSize(2);
+    }
+
+    @Test
     void tokenizeSimpleFile() throws IOException {
 
         String source = Files.readString(Paths.get("src/test/resources/program1.jlox"),
