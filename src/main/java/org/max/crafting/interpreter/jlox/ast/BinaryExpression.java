@@ -7,13 +7,13 @@ public class BinaryExpression implements Expression {
 
     public final Expression left;
 
-    public final Token operation;
+    public final Token operator;
 
     public final Expression right;
 
-    public BinaryExpression(Expression left, Token operation, Expression right) {
+    public BinaryExpression(Expression left, Token operator, Expression right) {
         this.left = left;
-        this.operation = operation;
+        this.operator = operator;
         this.right = right;
     }
 

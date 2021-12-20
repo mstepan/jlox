@@ -45,15 +45,15 @@ public class RecursiveDescentParser {
      * comma_sequence = equality ((",") equality)*
      */
     private Expression commaSequence() {
-        Expression left = equality();
+        Expression expr = equality();
 
         while (matchAny(TokenType.COMMA)) {
             Token op = previous();
             Expression right = equality();
-            return new BinaryExpression(left, op, right);
+            expr = new BinaryExpression(expr, op, right);
         }
 
-        return left;
+        return expr;
     }
 
     /**
@@ -65,7 +65,7 @@ public class RecursiveDescentParser {
         while (matchAny(TokenType.EQUAL_EQUAL, TokenType.BANG_EQUAL)) {
             Token op = previous();
             Expression rightExp = comparison();
-            return new BinaryExpression(expr, op, rightExp);
+            expr = new BinaryExpression(expr, op, rightExp);
         }
 
         return expr;
@@ -80,7 +80,7 @@ public class RecursiveDescentParser {
         while (matchAny(TokenType.GREATER, TokenType.GREATER_EQUAL, TokenType.LESS, TokenType.LESS_EQUAL)) {
             Token op = previous();
             Expression rightExp = term();
-            return new BinaryExpression(expr, op, rightExp);
+            expr =  new BinaryExpression(expr, op, rightExp);
         }
 
         return expr;
@@ -96,7 +96,7 @@ public class RecursiveDescentParser {
         while (matchAny(TokenType.MINUS, TokenType.PLUS)) {
             Token op = previous();
             Expression rightSide = factor();
-            return new BinaryExpression(expr, op, rightSide);
+            expr = new BinaryExpression(expr, op, rightSide);
         }
 
         return expr;
@@ -111,7 +111,7 @@ public class RecursiveDescentParser {
         while (matchAny(TokenType.STAR, TokenType.SLASH)) {
             Token op = previous();
             Expression rightSide = unary();
-            return new BinaryExpression(expr, op, rightSide);
+            expr = new BinaryExpression(expr, op, rightSide);
         }
 
         return expr;

@@ -16,8 +16,12 @@ import java.nio.file.Paths;
 public class Lox {
 
     private static boolean hadError;
-    static Object result;
+    private static boolean hadRuntimeError;
+
+    static String result;
     static String lastErrorMsg;
+
+    private static final Interpreter interpreter = new Interpreter();
 
     public static void main(String[] args) throws IOException {
         // running in REPL mode
@@ -32,16 +36,6 @@ public class Lox {
             System.out.println("Usage: jlox [script]");
             System.exit(1);
         }
-    }
-
-    public static void error(int lineNumber, String errorMsg) {
-        lastErrorMsg = String.format("[line %d] Error: %s", lineNumber, errorMsg);
-        System.err.println(lastErrorMsg);
-        hadError = true;
-    }
-
-    public static boolean hasError() {
-        return hadError;
     }
 
     /**
@@ -98,18 +92,31 @@ public class Lox {
         }
 
         // evaluate AST
-        Interpreter interpreter = new Interpreter();
         result = interpreter.interpret(expr);
+
+        System.out.println(result);
     }
 
     private static void clearState() {
         hadError = false;
+        hadRuntimeError = false;
         lastErrorMsg = null;
         result = null;
     }
 
-    public static void runtimeError(Interpreter.RuntimeError ex) {
+    public static boolean hasError() {
+        return hadError || hadRuntimeError;
+    }
+
+    public static void error(int lineNumber, String errorMsg) {
+        lastErrorMsg = String.format("[line %d] Error: %s", lineNumber, errorMsg);
+        System.err.println(lastErrorMsg);
         hadError = true;
-        error(-1, ex.getMessage());
+    }
+
+    public static void runtimeError(Interpreter.RuntimeError error) {
+        lastErrorMsg = String.format("[line %s]: %s", error.operator.lineNumber, error.getMessage());
+        System.err.println(lastErrorMsg);
+        hadRuntimeError = true;
     }
 }

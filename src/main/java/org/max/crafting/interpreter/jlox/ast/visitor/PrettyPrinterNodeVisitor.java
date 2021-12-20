@@ -11,7 +11,7 @@ public class PrettyPrinterNodeVisitor implements NodeVisitor {
     @Override
     public Object visitBinaryExpression(BinaryExpression binaryExp) {
         String leftStr = String.valueOf(binaryExp.left.accept(this));
-        String opStr = binaryExp.operation.type.name;
+        String opStr = binaryExp.operator.type.name;
         String rightStr = String.valueOf(binaryExp.right.accept(this));
         return leftStr + " " + opStr + " " + rightStr;
     }

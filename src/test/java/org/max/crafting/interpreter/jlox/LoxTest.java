@@ -12,28 +12,28 @@ final class LoxTest {
     void singleNumericalExpression() {
         Lox.run("(3*6) + 2");
         assertFalse(Lox.hasError());
-        assertEquals(20.0, Lox.result);
+        assertEquals("20", Lox.result);
     }
 
     @Test
     void singleEqEqLogicalExpression() {
         Lox.run("(3*6) + 2 == 20");
         assertFalse(Lox.hasError());
-        assertEquals(true, Lox.result);
+        assertEquals("true", Lox.result);
     }
 
     @Test
     void singleBangEqLogicalExpression() {
         Lox.run("(3*6) + 2 != 50");
         assertFalse(Lox.hasError());
-        assertEquals(true, Lox.result);
+        assertEquals("true", Lox.result);
     }
 
     @Test
     void commaSeparatedExpressions() {
         Lox.run("(3*6) + 2 != 50, 2 * 4 == 8");
         assertFalse(Lox.hasError());
-        assertEquals(true, Lox.result);
+        assertEquals("true", Lox.result);
     }
 
     /**
@@ -45,7 +45,7 @@ final class LoxTest {
         Lox.run("0/0 == 0/0");
 
         assertFalse(Lox.hasError());
-        assertEquals(true, Lox.result);
+        assertEquals("true", Lox.result);
     }
 
     @Test
@@ -53,7 +53,23 @@ final class LoxTest {
         Lox.run("2 * (6 / -3)");
 
         assertFalse(Lox.hasError());
-        assertEquals(-4.0, Lox.result);
+        assertEquals("-4", Lox.result);
+    }
+
+    @Test
+    void multipleOperators() {
+        Lox.run("1+2+3+4+5");
+
+        assertFalse(Lox.hasError());
+        assertEquals("15", Lox.result);
+    }
+
+    @Test
+    void complexExpressionWithGroupingAndUnaryMinus() {
+        Lox.run("((10+20) * 33.24) - 177.45 + (-20)");
+
+        assertFalse(Lox.hasError());
+        assertEquals("799.75", Lox.result);
     }
 
     @Test
@@ -69,6 +85,6 @@ final class LoxTest {
         Lox.run("2 * (6 / -\"hello, world\")");
 
         assertTrue(Lox.hasError());
-//        assertEquals("[line 1] Error: ')' expected", Lox.lastErrorMsg);
+        assertEquals("[line 1]: Operand must be a number.", Lox.lastErrorMsg);
     }
 }

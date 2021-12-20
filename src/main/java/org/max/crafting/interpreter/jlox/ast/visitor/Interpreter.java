@@ -10,14 +10,31 @@ import org.max.crafting.interpreter.jlox.model.Token;
 
 public class Interpreter implements NodeVisitor {
 
-    public Object interpret(Expression expression) {
+    public String interpret(Expression expression) {
         try {
-            return expression.accept(this);
+            return stringify(expression.accept(this));
         }
         catch (RuntimeError ex) {
             Lox.runtimeError(ex);
         }
         return null;
+    }
+
+    private static String stringify(Object value) {
+        if (value == null) {
+            return "nil";
+        }
+
+        if (value instanceof Double) {
+            String doubleValue = String.valueOf(value);
+            if (doubleValue.endsWith(".0")) {
+                return doubleValue.substring(0, doubleValue.indexOf(".0"));
+            }
+
+            return doubleValue;
+        }
+
+        return value.toString();
     }
 
     @Override
@@ -26,49 +43,49 @@ public class Interpreter implements NodeVisitor {
         Object left = binaryExp.left.accept(this);
         Object right = binaryExp.right.accept(this);
 
-        return switch (binaryExp.operation.type) {
+        return switch (binaryExp.operator.type) {
             case MINUS -> {
-                checkBothOperandsNumbers(binaryExp.operation, left, right);
+                checkBothOperandsNumbers(binaryExp.operator, left, right);
                 yield (double) left - (double) right;
             }
             case STAR -> {
-                checkBothOperandsNumbers(binaryExp.operation, left, right);
+                checkBothOperandsNumbers(binaryExp.operator, left, right);
                 yield (double) left * (double) right;
             }
             case SLASH -> {
-                checkBothOperandsNumbers(binaryExp.operation, left, right);
+                checkBothOperandsNumbers(binaryExp.operator, left, right);
                 yield (double) left / (double) right;
             }
-            case PLUS -> plus(binaryExp.operation, left, right);
+            case PLUS -> plus(binaryExp.operator, left, right);
             case GREATER -> {
-                checkBothOperandsNumbers(binaryExp.operation, left, right);
+                checkBothOperandsNumbers(binaryExp.operator, left, right);
                 yield (double) left > (double) right;
             }
             case GREATER_EQUAL -> {
-                checkBothOperandsNumbers(binaryExp.operation, left, right);
+                checkBothOperandsNumbers(binaryExp.operator, left, right);
                 yield (double) left >= (double) right;
             }
             case LESS -> {
-                checkBothOperandsNumbers(binaryExp.operation, left, right);
+                checkBothOperandsNumbers(binaryExp.operator, left, right);
                 yield (double) left < (double) right;
             }
             case LESS_EQUAL -> {
-                checkBothOperandsNumbers(binaryExp.operation, left, right);
+                checkBothOperandsNumbers(binaryExp.operator, left, right);
                 yield (double) left <= (double) right;
             }
             case EQUAL_EQUAL -> {
-                checkBothOperandsNumbers(binaryExp.operation, left, right);
+                checkBothOperandsNumbers(binaryExp.operator, left, right);
                 yield isEqual(left, right);
             }
             case BANG_EQUAL -> {
-                checkBothOperandsNumbers(binaryExp.operation, left, right);
+                checkBothOperandsNumbers(binaryExp.operator, left, right);
                 yield (!isEqual(left, right));
             }
             case COMMA -> {
                 // for comma, we just evaluate and discard left hand side and use only right side
                 yield right;
             }
-            default -> throw new IllegalStateException("Unsupported expression: " + binaryExp.operation.type);
+            default -> throw new IllegalStateException("Unsupported expression: " + binaryExp.operator.type);
         };
     }
 
@@ -150,11 +167,11 @@ public class Interpreter implements NodeVisitor {
 
     public static final class RuntimeError extends RuntimeException {
 
-        final Token operation;
+        public final Token operator;
 
-        RuntimeError(Token operation, String errorMsg) {
+        RuntimeError(Token operator, String errorMsg) {
             super(errorMsg);
-            this.operation = operation;
+            this.operator = operator;
         }
     }
 }
