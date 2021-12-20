@@ -1,4 +1,14 @@
 #!/usr/bin/env bash
 
-java -jar target/jlox-1.0.0-SNAPSHOT.jar
+if [ $# -eq 0 ]
+  then
+    java -jar target/jlox-1.0.0-SNAPSHOT.jar
+fi
+
+if [ $# -eq 1 ]
+  then
+    java -jar target/jlox-1.0.0-SNAPSHOT.jar $1
+fi
+
+
 

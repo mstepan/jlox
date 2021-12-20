@@ -15,3 +15,10 @@ Build interpreter first, then execute:
 ./jlox
 ```
 Enjoy experimenting with jlox interpreter.
+
+## Execute simple script
+
+Build interpreter first and just run: 
+```
+./jlox <script-file>
+```

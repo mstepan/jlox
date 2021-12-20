@@ -67,6 +67,12 @@ public class Lox {
         try {
             String scriptAsStr = Files.readString(scriptFile, Charset.defaultCharset());
             run(scriptAsStr);
+            if (hadError) {
+                System.exit(65);
+            }
+            if (hadRuntimeError) {
+                System.exit(70);
+            }
         }
         catch (IOException ioEx) {
             System.err.println("Can't read file specified by path: " + scriptFile);
