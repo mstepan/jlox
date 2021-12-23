@@ -17,7 +17,7 @@ import java.util.List;
 
 public class Lox {
 
-    private static boolean hadError;
+    private static boolean hadSyntaxError;
     private static boolean hadRuntimeError;
 
     static String result;
@@ -54,7 +54,7 @@ public class Lox {
                     break;
                 }
                 run(lineToEval);
-                hadError = false;
+                hadSyntaxError = false;
             }
 
         }
@@ -69,7 +69,7 @@ public class Lox {
         try {
             String scriptAsStr = Files.readString(scriptFile, Charset.defaultCharset());
             run(scriptAsStr);
-            if (hadError) {
+            if (hadSyntaxError) {
                 System.exit(65);
             }
             if (hadRuntimeError) {
@@ -108,14 +108,14 @@ public class Lox {
     }
 
     private static void clearState() {
-        hadError = false;
+        hadSyntaxError = false;
         hadRuntimeError = false;
         lastErrorMsg = null;
         result = null;
     }
 
     public static boolean hasError() {
-        return hadError || hadRuntimeError;
+        return hadSyntaxError || hadRuntimeError;
     }
 
     /**
@@ -124,7 +124,7 @@ public class Lox {
     public static void error(int lineNumber, String errorMsg) {
         lastErrorMsg = String.format("[line %d] Error: %s", lineNumber, errorMsg);
         System.err.println(lastErrorMsg);
-        hadError = true;
+        hadSyntaxError = true;
     }
 
     /**

@@ -8,6 +8,9 @@ import org.max.crafting.interpreter.jlox.ast.Literal;
 import org.max.crafting.interpreter.jlox.ast.UnaryExpression;
 import org.max.crafting.interpreter.jlox.model.Token;
 
+/**
+ * Traverse Abstract Syntax Tree in post-order and evaluate nodes.
+ */
 public class Interpreter implements NodeVisitor {
 
     public String interpret(Expression expression) {
@@ -18,23 +21,6 @@ public class Interpreter implements NodeVisitor {
             Lox.runtimeError(ex);
         }
         return null;
-    }
-
-    private static String stringify(Object value) {
-        if (value == null) {
-            return "nil";
-        }
-
-        if (value instanceof Double) {
-            String doubleValue = String.valueOf(value);
-            if (doubleValue.endsWith(".0")) {
-                return doubleValue.substring(0, doubleValue.indexOf(".0"));
-            }
-
-            return doubleValue;
-        }
-
-        return value.toString();
     }
 
     @Override
@@ -103,10 +89,14 @@ public class Interpreter implements NodeVisitor {
         if (left instanceof Double && right instanceof Double) {
             return (double) left + (double) right;
         }
-        if (left instanceof String && right instanceof String) {
-            return String.valueOf(left) + right;
+        // below code allows the following cases:
+        // string + number, string + boolean, string + nil etc.
+        // number + string, boolean + string etc.
+        if (left instanceof String || right instanceof String) {
+            return stringify(left) + stringify(right);
         }
-        return new RuntimeError(operator, "Operands must be two numbers or strings.");
+
+        throw new RuntimeError(operator, "Operands must be two numbers or one should be string.");
     }
 
     @Override
@@ -149,6 +139,23 @@ public class Interpreter implements NodeVisitor {
     @Override
     public Object visitParentheses(Grouping grouping) {
         return grouping.expression.accept(this);
+    }
+
+    private static String stringify(Object value) {
+        if (value == null) {
+            return "nil";
+        }
+
+        if (value instanceof Double) {
+            String doubleValue = String.valueOf(value);
+            if (doubleValue.endsWith(".0")) {
+                return doubleValue.substring(0, doubleValue.indexOf(".0"));
+            }
+
+            return doubleValue;
+        }
+
+        return value.toString();
     }
 
     private void checkBothOperandsNumbers(Token operator, Object left, Object right) {
