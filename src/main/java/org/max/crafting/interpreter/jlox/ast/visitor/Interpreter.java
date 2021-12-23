@@ -45,19 +45,19 @@ public class Interpreter implements NodeVisitor {
             case PLUS -> plus(binaryExp.operator, left, right);
             case GREATER -> {
                 checkBothOperandsNumbers(binaryExp.operator, left, right);
-                yield (double) left > (double) right;
+                yield toDouble(binaryExp.operator, left) > toDouble(binaryExp.operator, right);
             }
             case GREATER_EQUAL -> {
                 checkBothOperandsNumbers(binaryExp.operator, left, right);
-                yield (double) left >= (double) right;
+                yield toDouble(binaryExp.operator, left) >= toDouble(binaryExp.operator, right);
             }
             case LESS -> {
                 checkBothOperandsNumbers(binaryExp.operator, left, right);
-                yield (double) left < (double) right;
+                yield toDouble(binaryExp.operator, left) < toDouble(binaryExp.operator, right);
             }
             case LESS_EQUAL -> {
                 checkBothOperandsNumbers(binaryExp.operator, left, right);
-                yield (double) left <= (double) right;
+                yield toDouble(binaryExp.operator, left) <= toDouble(binaryExp.operator, right);
             }
             case EQUAL_EQUAL -> {
                 checkBothOperandsNumbers(binaryExp.operator, left, right);
@@ -76,7 +76,7 @@ public class Interpreter implements NodeVisitor {
     }
 
     private Object plus(Token operator, Object left, Object right) {
-        if (left instanceof Integer && right instanceof Integer) {
+        if (isInt(left) && isInt(right)) {
             return (int) left + (int) right;
         }
         if (isNumber(left) && isNumber(right)) {
@@ -94,7 +94,7 @@ public class Interpreter implements NodeVisitor {
     }
 
     private Object minus(Token operator, Object left, Object right) {
-        if (left instanceof Integer && right instanceof Integer) {
+        if (isInt(left) && isInt(right)) {
             return (int) left - (int) right;
         }
 
@@ -102,7 +102,7 @@ public class Interpreter implements NodeVisitor {
     }
 
     private Object multiply(Token operator, Object left, Object right) {
-        if (left instanceof Integer && right instanceof Integer) {
+        if (isInt(left) && isInt(right)) {
             return (int) left * (int) right;
         }
 
@@ -110,7 +110,7 @@ public class Interpreter implements NodeVisitor {
     }
 
     private Object divide(Token operator, Object left, Object right) {
-        if (left instanceof Integer && right instanceof Integer) {
+        if (isInt(left) && isInt(right)) {
             final int rightInt = (int) right;
             if (rightInt == 0) {
                 throw new RuntimeError(operator, "Integer division by zero");
@@ -168,7 +168,7 @@ public class Interpreter implements NodeVisitor {
     }
 
     private Object negate(Object value) {
-        if (value instanceof Integer) {
+        if (isInt(value)) {
             return -(int) value;
         }
 
@@ -218,17 +218,26 @@ public class Interpreter implements NodeVisitor {
         throw new RuntimeError(operator, "Both operands must be numbers.");
     }
 
-    private static boolean isNumber(Object value) {
-        return (value instanceof Double) || (value instanceof Integer);
-    }
-
     private void checkNumberOperand(Token operator, Object operand) {
-        if (operand instanceof Double || operand instanceof Integer) {
+        if (isNumber(operand)) {
             return;
         }
         throw new RuntimeError(operator, "Operand must be a number.");
     }
 
+    private static boolean isNumber(Object value) {
+        return isDouble(value) || isInt(value);
+    }
+
+    private static boolean isInt(Object value) {
+        return value instanceof Integer;
+    }
+
+    private static boolean isDouble(Object value) {
+        return value instanceof Double;
+    }
+
+    // Runtime error during AST evaluation
     public static final class RuntimeError extends RuntimeException {
 
         public final Token operator;
