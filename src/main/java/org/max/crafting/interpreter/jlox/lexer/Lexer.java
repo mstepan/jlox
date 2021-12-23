@@ -165,18 +165,30 @@ public class Lexer {
         }
 
         char ch = peek();
+        boolean hasFraction = false;
 
         // read fractional part if any
         if (ch == '.' && isDigit(peekNext())) {
 
+            hasFraction = true;
             advance();
 
             while (isDigit(peek())) {
                 advance();
             }
         }
+        String numberStr = source.substring(start, cur);
 
-        addToken(TokenType.NUMBER, Double.parseDouble(source.substring(start, cur)));
+        Object val = null;
+
+        if( hasFraction ){
+            val = Double.parseDouble(numberStr) ;
+        }
+        else {
+            val =  Integer.parseInt(numberStr);
+        }
+
+        addToken(TokenType.NUMBER, val);
     }
 
     //read identifier or reserved keyword

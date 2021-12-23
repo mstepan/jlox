@@ -126,6 +126,11 @@ final class LexerTest {
             return this;
         }
 
+        TokenBuilder number(int value) {
+            tokens.add(new Token(TokenType.NUMBER, null, value, lineNumber));
+            return this;
+        }
+
         TokenBuilder number(double value) {
             tokens.add(new Token(TokenType.NUMBER, null, value, lineNumber));
             return this;

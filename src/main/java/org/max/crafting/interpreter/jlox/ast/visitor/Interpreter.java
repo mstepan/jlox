@@ -32,15 +32,15 @@ public class Interpreter implements NodeVisitor {
         return switch (binaryExp.operator.type) {
             case MINUS -> {
                 checkBothOperandsNumbers(binaryExp.operator, left, right);
-                yield (double) left - (double) right;
+                yield minus(binaryExp.operator, left, right);
             }
             case STAR -> {
                 checkBothOperandsNumbers(binaryExp.operator, left, right);
-                yield (double) left * (double) right;
+                yield multiply(binaryExp.operator, left, right);
             }
             case SLASH -> {
                 checkBothOperandsNumbers(binaryExp.operator, left, right);
-                yield (double) left / (double) right;
+                yield divide(binaryExp.operator, left, right);
             }
             case PLUS -> plus(binaryExp.operator, left, right);
             case GREATER -> {
@@ -75,20 +75,14 @@ public class Interpreter implements NodeVisitor {
         };
     }
 
-    private boolean isEqual(Object left, Object right) {
-        if (left == null && right == null) {
-            return true;
-        }
-        if (left == null) {
-            return false;
-        }
-        return left.equals(right);
-    }
-
     private Object plus(Token operator, Object left, Object right) {
-        if (left instanceof Double && right instanceof Double) {
-            return (double) left + (double) right;
+        if (left instanceof Integer && right instanceof Integer) {
+            return (int) left + (int) right;
         }
+        if (isNumber(left) && isNumber(right)) {
+            return toDouble(operator, left) + toDouble(operator, right);
+        }
+
         // below code allows the following cases:
         // string + number, string + boolean, string + nil etc.
         // number + string, boolean + string etc.
@@ -99,6 +93,66 @@ public class Interpreter implements NodeVisitor {
         throw new RuntimeError(operator, "Operands must be two numbers or one should be string.");
     }
 
+    private Object minus(Token operator, Object left, Object right) {
+        if (left instanceof Integer && right instanceof Integer) {
+            return (int) left - (int) right;
+        }
+
+        return toDouble(operator, left) - toDouble(operator, right);
+    }
+
+    private Object multiply(Token operator, Object left, Object right) {
+        if (left instanceof Integer && right instanceof Integer) {
+            return (int) left * (int) right;
+        }
+
+        return toDouble(operator, left) * toDouble(operator, right);
+    }
+
+    private Object divide(Token operator, Object left, Object right) {
+        if (left instanceof Integer && right instanceof Integer) {
+            final int rightInt = (int) right;
+            if (rightInt == 0) {
+                throw new RuntimeError(operator, "Integer division by zero");
+            }
+            return (int) left / rightInt;
+        }
+
+        return toDouble(operator, left) / toDouble(operator, right);
+    }
+
+    private static double toDouble(Token operator, Object value) {
+        if (value instanceof Double) {
+            return (double) value;
+        }
+        if (value instanceof Integer) {
+            return (double) ((int) value);
+        }
+
+        throw new RuntimeError(operator, "Unsupported type: " + value.getClass().getCanonicalName());
+    }
+
+    private boolean isEqual(Object left, Object right) {
+        if (left == null && right == null) {
+            return true;
+        }
+        if (left == null) {
+            return false;
+        }
+
+        /*
+         * According to IEEE-754 standard:
+         * 1. 0.0 / 0.0 = NaN
+         * 2. (NaN == NaN) => false (in java NaN.equals(NaN) returns true,
+         * so we will use '==' to preserve standard).
+         */
+        if (left instanceof Double && right instanceof Double) {
+            return (double) left == (double) right;
+        }
+
+        return left.equals(right);
+    }
+
     @Override
     public Object visitUnaryExpression(UnaryExpression unaryExp) {
         Object res = unaryExp.expression.accept(this);
@@ -106,11 +160,19 @@ public class Interpreter implements NodeVisitor {
         return switch (unaryExp.operation.type) {
             case MINUS -> {
                 checkNumberOperand(unaryExp.operation, res);
-                yield -(double) res;
+                yield negate(res);
             }
             case BANG -> !isTrue(res);
             default -> null;
         };
+    }
+
+    private Object negate(Object value) {
+        if (value instanceof Integer) {
+            return -(int) value;
+        }
+
+        return -(double) value;
     }
 
     /**
@@ -146,27 +208,22 @@ public class Interpreter implements NodeVisitor {
             return "nil";
         }
 
-        if (value instanceof Double) {
-            String doubleValue = String.valueOf(value);
-            if (doubleValue.endsWith(".0")) {
-                return doubleValue.substring(0, doubleValue.indexOf(".0"));
-            }
-
-            return doubleValue;
-        }
-
         return value.toString();
     }
 
     private void checkBothOperandsNumbers(Token operator, Object left, Object right) {
-        if (left instanceof Double && right instanceof Double) {
+        if (isNumber(left) && isNumber(right)) {
             return;
         }
         throw new RuntimeError(operator, "Both operands must be numbers.");
     }
 
+    private static boolean isNumber(Object value) {
+        return (value instanceof Double) || (value instanceof Integer);
+    }
+
     private void checkNumberOperand(Token operator, Object operand) {
-        if (operand instanceof Double) {
+        if (operand instanceof Double || operand instanceof Integer) {
             return;
         }
         throw new RuntimeError(operator, "Operand must be a number.");

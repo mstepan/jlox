@@ -1,6 +1,5 @@
 package org.max.crafting.interpreter.jlox;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -8,6 +7,20 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 final class LoxTest {
+
+    @Test
+    void divisionByZeroShouldThrowException() {
+        Lox.run("10/0");
+        assertTrue(Lox.hasError());
+    }
+
+    @Test
+    void comparingNansShouldReturnFalse() {
+        Lox.run("0.0/0.0 == 0.0/0.0");
+
+        assertFalse(Lox.hasError());
+        assertEquals("false", Lox.result);
+    }
 
     //==== Concatenation ====
     @Test
@@ -109,18 +122,6 @@ final class LoxTest {
     @Test
     void commaSeparatedExpressions() {
         Lox.run("(3*6) + 2 != 50, 2 * 4 == 8");
-        assertFalse(Lox.hasError());
-        assertEquals("true", Lox.result);
-    }
-
-    /**
-     * This test case works just check that we use Double.equals(...) for '==' comparison,
-     * which in java returns 'true' for NaN.equals(NaN).
-     */
-    @Test
-    void comparingNans() {
-        Lox.run("0/0 == 0/0");
-
         assertFalse(Lox.hasError());
         assertEquals("true", Lox.result);
     }
