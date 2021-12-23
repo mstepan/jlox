@@ -20,7 +20,7 @@ public class Interpreter implements NodeVisitor {
         catch (RuntimeError ex) {
             Lox.runtimeError(ex);
         }
-        return null;
+        return stringify(null);
     }
 
     @Override
@@ -61,11 +61,11 @@ public class Interpreter implements NodeVisitor {
             }
             case EQUAL_EQUAL -> {
                 checkBothOperandsNumbers(binaryExp.operator, left, right);
-                yield isEqual(left, right);
+                yield isEqual(binaryExp.operator, left, right);
             }
             case BANG_EQUAL -> {
                 checkBothOperandsNumbers(binaryExp.operator, left, right);
-                yield (!isEqual(left, right));
+                yield (!isEqual(binaryExp.operator, left, right));
             }
             case COMMA -> {
                 // for comma, we just evaluate and discard left hand side and use only right side
@@ -132,7 +132,7 @@ public class Interpreter implements NodeVisitor {
         throw new RuntimeError(operator, "Unsupported type: " + value.getClass().getCanonicalName());
     }
 
-    private boolean isEqual(Object left, Object right) {
+    private boolean isEqual(Token operator, Object left, Object right) {
         if (left == null && right == null) {
             return true;
         }
@@ -146,8 +146,8 @@ public class Interpreter implements NodeVisitor {
          * 2. (NaN == NaN) => false (in java NaN.equals(NaN) returns true,
          * so we will use '==' to preserve standard).
          */
-        if (left instanceof Double && right instanceof Double) {
-            return (double) left == (double) right;
+        if (isNumber(left) && isNumber(right)) {
+            return toDouble(operator, left) == toDouble(operator, right);
         }
 
         return left.equals(right);
