@@ -10,19 +10,20 @@ public final class Environment {
     private final Map<String, Object> values = new HashMap<>();
 
     void define(String name, Object value) {
-        // we do not check if variable alerady declared, so
-        // we allow double declaration
+        // 1. we do not check if variable already declared, so we allow double declaration
+        // 2. we also allow declared, but undefined variables with 'null' values
         values.put(name, value);
     }
 
+
     Object get(Token name) {
 
-        Object value = values.get(name.lexeme);
+        final String varName = name.lexeme;
 
-        if (value == null) {
+        if( ! values.containsKey(varName) ){
             throw new Interpreter.RuntimeError(name, "Undefined variable with name '" + name.lexeme + "'");
         }
 
-        return value;
+        return  values.get(varName);
     }
 }

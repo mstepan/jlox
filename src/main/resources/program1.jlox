@@ -1,6 +1,6 @@
 // some dummy unused variables declaration
-var x = 133;
 var temp;
+print "Uninitialized variable is set to: " + temp;
 
 // radius for a circle as int
 var r = 10;
