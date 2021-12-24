@@ -1,3 +1,7 @@
+// some dummy unused variables declaration
+var x = 133;
+var temp;
+
 // radius for a circle as int
 var r = 10;
 

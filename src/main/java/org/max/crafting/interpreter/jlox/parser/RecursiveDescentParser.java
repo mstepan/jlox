@@ -245,7 +245,7 @@ public class RecursiveDescentParser {
             return new VariableExpression(previous());
         }
 
-        throw error(peek(), "Expected expression.");
+        throw error(previous(), "Expected expression.");
     }
 
     // ========================= utilities below =========================
@@ -293,7 +293,7 @@ public class RecursiveDescentParser {
             return advance();
         }
 
-        throw error(peek(), errorMsg);
+        throw error(previous(), errorMsg);
     }
 
     private ParseError error(Token token, String errorMsg) {
@@ -305,7 +305,6 @@ public class RecursiveDescentParser {
      * Synchronize parser till next valid token (skipping all cascade failures).
      */
     private void synchronize() {
-        advance();
 
         while (!isEnd()) {
             if (previous().type == TokenType.SEMICOLON) {
