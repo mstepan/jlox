@@ -52,32 +52,25 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
 
     @Override
     public Void visitExpressionStmt(ExpressionStmt stmt) {
-        evaluateExpression(stmt.expr);
+        stmt.expr.accept(this);
         return null;
     }
 
     @Override
     public Void visitPrintStmt(PrintStmt stmt) {
-        Object value = evaluateExpression(stmt.expr);
+        Object value = stmt.expr.accept(this);
         System.out.println(stringify(value));
         return null;
     }
 
     public String eval(Expression expr) {
         try {
-            return stringify(evaluateExpression(expr));
+            return stringify(expr.accept(this));
         }
         catch (RuntimeError ex) {
             Lox.runtimeError(ex);
         }
         return null;
-    }
-
-    private Object evaluateExpression(Expression expr) {
-        if (expr == null) {
-            return null;
-        }
-        return expr.accept(this);
     }
 
     @Override

@@ -10,6 +10,8 @@ public final class Environment {
     private final Map<String, Object> values = new HashMap<>();
 
     void define(String name, Object value) {
+        // we do not check if variable alerady declared, so
+        // we allow double declaration
         values.put(name, value);
     }
 
