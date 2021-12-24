@@ -3,12 +3,16 @@ package org.max.crafting.interpreter.jlox.parser;
 import org.max.crafting.interpreter.jlox.Lox;
 import org.max.crafting.interpreter.jlox.ast.BinaryExpression;
 import org.max.crafting.interpreter.jlox.ast.Expression;
+import org.max.crafting.interpreter.jlox.ast.ExpressionStmt;
 import org.max.crafting.interpreter.jlox.ast.Grouping;
 import org.max.crafting.interpreter.jlox.ast.Literal;
+import org.max.crafting.interpreter.jlox.ast.PrintStmt;
+import org.max.crafting.interpreter.jlox.ast.Stmt;
 import org.max.crafting.interpreter.jlox.ast.UnaryExpression;
 import org.max.crafting.interpreter.jlox.model.Token;
 import org.max.crafting.interpreter.jlox.model.TokenType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,14 +28,56 @@ public class RecursiveDescentParser {
         this.tokens = tokens;
     }
 
-    public Expression parse() {
+    public List<Stmt> parse() {
+        List<Stmt> statements = new ArrayList<>();
+        try {
+            while (!isEnd()) {
+                statements.add(statement());
+            }
+        }
+        catch (ParseError error) {
+            System.err.println(error.getMessage());
+        }
+        return statements;
+    }
+
+    public Expression eval() {
         try {
             return expression();
         }
-        catch (ParseError parseError) {
-            System.err.println(parseError.getMessage());
+        catch (ParseError error) {
+            System.err.println(error.getMessage());
         }
         return null;
+    }
+
+    /**
+     * statement = exprStmt | printStmt
+     */
+    private Stmt statement() {
+        if (matchAny(TokenType.PRINT)) {
+            return printStatement();
+        }
+
+        return expressionStatement();
+    }
+
+    /**
+     * printStmt = "print" expression ";"
+     */
+    private Stmt printStatement() {
+        Expression expr = expression();
+        consume(TokenType.SEMICOLON, "Expected ';' after print statement.");
+        return new PrintStmt(expr);
+    }
+
+    /**
+     * exprStmt = expression ";"
+     */
+    private Stmt expressionStatement() {
+        Expression expr = expression();
+        consume(TokenType.SEMICOLON, "Expected ';' after expression.");
+        return new ExpressionStmt(expr);
     }
 
     /**
@@ -80,7 +126,7 @@ public class RecursiveDescentParser {
         while (matchAny(TokenType.GREATER, TokenType.GREATER_EQUAL, TokenType.LESS, TokenType.LESS_EQUAL)) {
             Token op = previous();
             Expression rightExp = term();
-            expr =  new BinaryExpression(expr, op, rightExp);
+            expr = new BinaryExpression(expr, op, rightExp);
         }
 
         return expr;

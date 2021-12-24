@@ -10,141 +10,141 @@ final class LoxTest {
 
     @Test
     void divisionByZeroShouldThrowException() {
-        Lox.run("10/0");
+        Lox.eval("10/0");
         assertTrue(Lox.hasError());
     }
 
     @Test
     void comparingNansShouldReturnFalse() {
-        Lox.run("0.0/0.0 == 0.0/0.0");
+        Object res = Lox.eval("0.0/0.0 == 0.0/0.0");
 
         assertFalse(Lox.hasError());
-        assertEquals("false", Lox.result);
+        assertEquals("false", res);
     }
 
     //==== Concatenation ====
     @Test
     void stringConcatenation() {
-        Lox.run("\"hello\" + \"world\"");
+        Object res = Lox.eval("\"hello\" + \"world\"");
         assertFalse(Lox.hasError());
-        assertEquals("helloworld", Lox.result);
+        assertEquals("helloworld", res);
     }
 
     @Test
     void stringAndNumberConcatenation() {
-        Lox.run("\"hello\" + 133");
+        Object res = Lox.eval("\"hello\" + 133");
         assertFalse(Lox.hasError());
-        assertEquals("hello133", Lox.result);
+        assertEquals("hello133", res);
     }
 
     @Test
     void stringAndBooleanConcatenation() {
-        Lox.run("\"hello\" + true");
+        Object res = Lox.eval("\"hello\" + true");
         assertFalse(Lox.hasError());
-        assertEquals("hellotrue", Lox.result);
+        assertEquals("hellotrue", res);
     }
 
     @Test
     void stringAndNilConcatenation() {
-        Lox.run("\"hello\" + nil");
+        Object res = Lox.eval("\"hello\" + nil");
         assertFalse(Lox.hasError());
-        assertEquals("hellonil", Lox.result);
+        assertEquals("hellonil", res);
     }
 
     @Test
     void numberAndStringConcatenation() {
-        Lox.run("133 + \"str-123\"");
+        Object res = Lox.eval("133 + \"str-123\"");
         assertFalse(Lox.hasError());
-        assertEquals("133str-123", Lox.result);
+        assertEquals("133str-123", res);
     }
 
     @Test
     void booleanAndStringConcatenation() {
-        Lox.run("true + \"str-123\"");
+        Object res = Lox.eval("true + \"str-123\"");
         assertFalse(Lox.hasError());
-        assertEquals("truestr-123", Lox.result);
+        assertEquals("truestr-123", res);
     }
 
     //==== PLUS operator ====
 
     @Test
     void plusForIntegers() {
-        Lox.run("10+20");
+        Object res = Lox.eval("10+20");
 
         assertFalse(Lox.hasError());
-        assertEquals("30", Lox.result);
+        assertEquals("30", res);
     }
 
     @Test
     void plusForFloatingNumbers() {
-        Lox.run("10.23 + 20.45");
+        Object res = Lox.eval("10.23 + 20.45");
 
         assertFalse(Lox.hasError());
-        assertEquals("30.68", Lox.result);
+        assertEquals("30.68", res);
     }
 
     @Test
     void multiplePlusOperators() {
-        Lox.run("1+2+3+4+5");
+        Object res = Lox.eval("1+2+3+4+5");
 
         assertFalse(Lox.hasError());
-        assertEquals("15", Lox.result);
+        assertEquals("15", res);
     }
 
     @Test
     void plusForTwoBooleansShouldFail() {
-        Lox.run("true + false");
+        Lox.eval("true + false");
         assertTrue(Lox.hasError());
     }
 
     // ==== expressions ====
     @Test
     void singleNumericalExpression() {
-        Lox.run("(3*6) + 2");
+        Object res = Lox.eval("(3*6) + 2");
         assertFalse(Lox.hasError());
-        assertEquals("20", Lox.result);
+        assertEquals("20", res);
     }
 
     @Test
     void singleEqEqLogicalExpression() {
-        Lox.run("(3*6) + 2 == 20");
+        Object res = Lox.eval("(3*6) + 2 == 20");
         assertFalse(Lox.hasError());
-        assertEquals("true", Lox.result);
+        assertEquals("true", res);
     }
 
     @Test
     void singleBangEqLogicalExpression() {
-        Lox.run("(3*6) + 2 != 50");
+        Object res = Lox.eval("(3*6) + 2 != 50");
         assertFalse(Lox.hasError());
-        assertEquals("true", Lox.result);
+        assertEquals("true", res);
     }
 
     @Test
     void commaSeparatedExpressions() {
-        Lox.run("(3*6) + 2 != 50, 2 * 4 == 8");
+        Object res = Lox.eval("(3*6) + 2 != 50, 2 * 4 == 8");
         assertFalse(Lox.hasError());
-        assertEquals("true", Lox.result);
+        assertEquals("true", res);
     }
 
     @Test
     void expressionsWithUnaryMinus() {
-        Lox.run("2 * (6 / -3)");
+        Object res = Lox.eval("2 * (6 / -3)");
 
         assertFalse(Lox.hasError());
-        assertEquals("-4", Lox.result);
+        assertEquals("-4", res);
     }
 
     @Test
     void complexExpressionWithGroupingAndUnaryMinus() {
-        Lox.run("((10+20) * 33.24) - 177.45 + (-20)");
+        Object res = Lox.eval("((10+20) * 33.24) - 177.45 + (-20)");
 
         assertFalse(Lox.hasError());
-        assertEquals("799.75", Lox.result);
+        assertEquals("799.75", res);
     }
 
     @Test
     void groupingWithoutMatchingParenthesesShouldFail() {
-        Lox.run("(3*6 + 2 != 50");
+        Lox.eval("(3*6 + 2 != 50");
 
         assertTrue(Lox.hasError());
         assertEquals("[line 1] Error: ')' expected", Lox.lastErrorMsg);
@@ -152,7 +152,7 @@ final class LoxTest {
 
     @Test
     void negateStringShouldFail() {
-        Lox.run("2 * (6 / -\"hello, world\")");
+        Lox.eval("2 * (6 / -\"hello, world\")");
 
         assertTrue(Lox.hasError());
         assertEquals("[line 1]: Operand must be a number.", Lox.lastErrorMsg);

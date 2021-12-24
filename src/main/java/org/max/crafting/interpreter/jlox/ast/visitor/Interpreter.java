@@ -3,25 +3,66 @@ package org.max.crafting.interpreter.jlox.ast.visitor;
 import org.max.crafting.interpreter.jlox.Lox;
 import org.max.crafting.interpreter.jlox.ast.BinaryExpression;
 import org.max.crafting.interpreter.jlox.ast.Expression;
+import org.max.crafting.interpreter.jlox.ast.ExpressionStmt;
 import org.max.crafting.interpreter.jlox.ast.Grouping;
 import org.max.crafting.interpreter.jlox.ast.Literal;
+import org.max.crafting.interpreter.jlox.ast.PrintStmt;
+import org.max.crafting.interpreter.jlox.ast.Stmt;
 import org.max.crafting.interpreter.jlox.ast.UnaryExpression;
 import org.max.crafting.interpreter.jlox.model.Token;
+
+import java.util.List;
 
 /**
  * Traverse Abstract Syntax Tree in post-order and evaluate nodes.
  */
-public class Interpreter implements ExpressionVisitor {
+public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
 
-    public String interpret(Expression expression) {
+    public void interpret(List<Stmt> statements) {
         try {
-            return stringify(expression.accept(this));
+            for (Stmt singleStmt : statements) {
+                execute(singleStmt);
+            }
         }
         catch (RuntimeError ex) {
             Lox.runtimeError(ex);
         }
-        return stringify(null);
     }
+
+    private void execute(Stmt singleStmt) {
+        singleStmt.accept(this);
+    }
+
+    @Override
+    public Void visitExpressionStmt(ExpressionStmt stmt) {
+        evaluateExpression(stmt.expr);
+        return null;
+    }
+
+    @Override
+    public Void visitPrintStmt(PrintStmt stmt) {
+        Object value = evaluateExpression(stmt.expr);
+        System.out.println(stringify(value));
+        return null;
+    }
+
+    public String eval(Expression expr) {
+        try {
+            return stringify(evaluateExpression(expr));
+        }
+        catch (RuntimeError ex) {
+            Lox.runtimeError(ex);
+        }
+        return null;
+    }
+
+    private Object evaluateExpression(Expression expr) {
+        if( expr == null){
+            return null;
+        }
+        return expr.accept(this);
+    }
+
 
     @Override
     public Object visitBinaryExpression(BinaryExpression binaryExp) {

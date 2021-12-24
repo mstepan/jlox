@@ -1,6 +1,7 @@
 package org.max.crafting.interpreter.jlox;
 
 import org.max.crafting.interpreter.jlox.ast.Expression;
+import org.max.crafting.interpreter.jlox.ast.Stmt;
 import org.max.crafting.interpreter.jlox.ast.visitor.Interpreter;
 import org.max.crafting.interpreter.jlox.lexer.Lexer;
 import org.max.crafting.interpreter.jlox.model.Token;
@@ -20,7 +21,6 @@ public class Lox {
     private static boolean hadSyntaxError;
     private static boolean hadRuntimeError;
 
-    static String result;
     static String lastErrorMsg;
 
     private static final Interpreter interpreter = new Interpreter();
@@ -82,6 +82,9 @@ public class Lox {
         }
     }
 
+    /**
+     * Execute program.
+     */
     static void run(String source) {
 
         clearState();
@@ -95,23 +98,45 @@ public class Lox {
         final RecursiveDescentParser parser = new RecursiveDescentParser(tokens);
 
         // abstract syntax tree
-        Expression expr = parser.parse();
+        List<Stmt> statements = parser.parse();
 
         if (hasError()) {
             return;
         }
 
         // evaluate AST
-        result = interpreter.interpret(expr);
+        interpreter.interpret(statements);
+    }
 
-        System.out.println(result);
+    /**
+     * Evaluate single expression.
+     */
+    static Object eval(String source) {
+        clearState();
+
+        // scanner, lexer step
+        final Lexer lexer = new Lexer(source);
+
+        List<Token> tokens = lexer.tokenize();
+
+        // parser step
+        final RecursiveDescentParser parser = new RecursiveDescentParser(tokens);
+
+        // abstract syntax tree
+        Expression expr = parser.eval();
+
+        if (hasError()) {
+            return null;
+        }
+
+        // evaluate AST
+        return interpreter.eval(expr);
     }
 
     private static void clearState() {
         hadSyntaxError = false;
         hadRuntimeError = false;
         lastErrorMsg = null;
-        result = null;
     }
 
     public static boolean hasError() {

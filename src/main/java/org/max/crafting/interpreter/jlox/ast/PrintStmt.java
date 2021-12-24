@@ -4,7 +4,7 @@ import org.max.crafting.interpreter.jlox.ast.visitor.StmtVisitor;
 
 public class PrintStmt extends Stmt {
 
-    final Expression expr;
+    public final Expression expr;
 
     public PrintStmt(Expression expr) {
         this.expr = expr;
