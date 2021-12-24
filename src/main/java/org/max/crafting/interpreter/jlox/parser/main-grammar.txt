@@ -1,34 +1,38 @@
+// Context-Free Grammar for jlox language
+//
 // we will try to follow "C" precedence levels (see https://en.cppreference.com/w/c/language/operator_precedence)
+//
+//
 
-program = (declaration)* EOF
+program -> (declaration)* EOF
 
 //====== DECLARATIONS & STATEMENTS ============
-declaration = varDeclaration | statement
+declaration -> varDeclaration | statement
 
-varDeclaration = "var" IDENTIFIER ("=" expression)? ";"
+varDeclaration -> "var" IDENTIFIER ("=" expression)? ";"
 
-statement = exprStmt | printStmt
+statement -> exprStmt | printStmt
 
-exprStmt = expression ";"
+exprStmt -> expression ";"
 
-printStmt = "print" expression ";"
+printStmt -> "print" expression ";"
 
 //====== EXPRESSIONS ============
 
-expression = comma_sequence
+expression -> comma_sequence
 
 // comma has lowest precedence
-comma_sequence = equality ((",") equality)*
+comma_sequence -> equality ((",") equality)*
 
-equality = comparison  (("==" | "!=") comparison)*
+equality -> comparison  (("==" | "!=") comparison)*
 
-comparison = term ((">" | "<=" | "<" | "<=") term)*
+comparison -> term ((">" | "<=" | "<" | "<=") term)*
 
-term = factor (("+" | "-") factor)*
+term -> factor (("+" | "-") factor)*
 
-factor = unary (("*" | "/" ) unary)*
+factor -> unary (("*" | "/" ) unary)*
 
 // unary operator has highest precedence
-unary = ("!" | "-") unary | primary
+unary -> ("!" | "-") unary | primary
 
-primary = STRING | NUMBER | "true" | "false" | nil | "(" expression ")" | IDENTIFIER
+primary -> STRING | NUMBER | "true" | "false" | nil | "(" expression ")" | IDENTIFIER

@@ -20,7 +20,6 @@ import java.util.List;
 /**
  * Use recursive descent parser technique, so grammar should be NON left-recursive (see main-grammar.txt).
  */
-@SuppressWarnings("LoopStatementThatDoesntLoop")
 public class RecursiveDescentParser {
 
     private final List<Token> tokens;
@@ -31,7 +30,7 @@ public class RecursiveDescentParser {
     }
 
     /**
-     * program = (declaration)* EOF
+     * program -> (declaration)* EOF
      */
     public List<Stmt> parse() {
         List<Stmt> statements = new ArrayList<>();
@@ -57,7 +56,7 @@ public class RecursiveDescentParser {
     }
 
     /**
-     * declaration = varDeclaration | statement
+     * declaration -> varDeclaration | statement
      */
     private Stmt declaration() {
         try {
@@ -74,7 +73,7 @@ public class RecursiveDescentParser {
     }
 
     /**
-     * varDeclaration = "var" IDENTIFIER ("=" expression)? ";"
+     * varDeclaration -> "var" IDENTIFIER ("=" expression)? ";"
      */
     private Stmt varDeclaration() {
 
@@ -92,7 +91,7 @@ public class RecursiveDescentParser {
     }
 
     /**
-     * statement = exprStmt | printStmt
+     * statement -> exprStmt | printStmt
      */
     private Stmt statement() {
         if (matchAny(TokenType.PRINT)) {
@@ -103,7 +102,7 @@ public class RecursiveDescentParser {
     }
 
     /**
-     * printStmt = "print" expression ";"
+     * printStmt -> "print" expression ";"
      */
     private Stmt printStatement() {
         Expression expr = expression();
@@ -112,7 +111,7 @@ public class RecursiveDescentParser {
     }
 
     /**
-     * exprStmt = expression ";"
+     * exprStmt -> expression ";"
      */
     private Stmt expressionStatement() {
         Expression expr = expression();
@@ -121,14 +120,14 @@ public class RecursiveDescentParser {
     }
 
     /**
-     * expression = comma_sequence
+     * expression -> comma_sequence
      */
     private Expression expression() {
         return commaSequence();
     }
 
     /**
-     * comma_sequence = equality ((",") equality)*
+     * comma_sequence -> equality ((",") equality)*
      */
     private Expression commaSequence() {
         Expression expr = equality();
@@ -143,7 +142,7 @@ public class RecursiveDescentParser {
     }
 
     /**
-     * equality = comparison  (("==" | "!=") comparison)*
+     * equality -> comparison  (("==" | "!=") comparison)*
      */
     private Expression equality() {
         Expression expr = comparison();
@@ -158,7 +157,7 @@ public class RecursiveDescentParser {
     }
 
     /**
-     * comparison = term ((">" | "<=" | "<" | "<=") term)*
+     * comparison -> term ((">" | "<=" | "<" | "<=") term)*
      */
     private Expression comparison() {
         Expression expr = term();
@@ -173,7 +172,7 @@ public class RecursiveDescentParser {
     }
 
     /**
-     * term = factor (("-" | "+") factor)*
+     * term -> factor (("-" | "+") factor)*
      */
     private Expression term() {
 
@@ -189,7 +188,7 @@ public class RecursiveDescentParser {
     }
 
     /**
-     * factor = unary (("*" | "/" ) unary)*
+     * factor -> unary (("*" | "/" ) unary)*
      */
     private Expression factor() {
         Expression expr = unary();
@@ -204,7 +203,7 @@ public class RecursiveDescentParser {
     }
 
     /**
-     * unary = ("!" | "-") unary | primary
+     * unary -> ("!" | "-") unary | primary
      */
     private Expression unary() {
         if (matchAny(TokenType.BANG, TokenType.MINUS)) {
@@ -217,7 +216,7 @@ public class RecursiveDescentParser {
     }
 
     /**
-     * primary = STRING | NUMBER | "true" | "false" | nil | "(" expression ")"
+     * primary -> STRING | NUMBER | "true" | "false" | nil | "(" expression ")" | IDENTIFIER
      */
     private Expression primary() {
         if (matchAny(TokenType.FALSE)) {
