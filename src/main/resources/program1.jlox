@@ -1,17 +1,12 @@
-var x = 10;
-var y = 3.14;
+// radius for a circle as int
+var r = 10;
 
-// print integer and double
-print "x = " + x;
-print "y = " + y;
+// PI constant as a double
+var pi = 3.14;
 
-var str = "hello " + "world" + "!!!";
+// printing some message
+print "calculating area for circle with radius: " + r + " m";
 
-// declare new maxValue
-var maxValue = x;
+var area = pi * r * r;
 
-print "maxValue = " + maxValue;
-
-//if ( y >= x ){
-//	maxValue = y;
-//}
+print "area: " + area + " m^2";

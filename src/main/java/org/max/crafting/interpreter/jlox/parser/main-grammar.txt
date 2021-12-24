@@ -2,6 +2,7 @@
 
 program = (declaration)* EOF
 
+//====== DECLARATIONS & STATEMENTS ============
 declaration = varDeclaration | statement
 
 varDeclaration = "var" IDENTIFIER ("=" expression)? ";"
@@ -11,6 +12,8 @@ statement = exprStmt | printStmt
 exprStmt = expression ";"
 
 printStmt = "print" expression ";"
+
+//====== EXPRESSIONS ============
 
 expression = comma_sequence
 
