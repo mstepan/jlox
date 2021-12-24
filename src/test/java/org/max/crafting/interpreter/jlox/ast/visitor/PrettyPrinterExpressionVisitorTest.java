@@ -11,7 +11,7 @@ import org.max.crafting.interpreter.jlox.model.TokenType;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-final class PrettyPrinterNodeVisitorTest {
+final class PrettyPrinterExpressionVisitorTest {
 
     @Test
     void prettyPrinting() {
@@ -32,7 +32,7 @@ final class PrettyPrinterNodeVisitorTest {
                 ))
         );
 
-        PrettyPrinterNodeVisitor visitor = new PrettyPrinterNodeVisitor();
+        PrettyPrinterExpressionVisitor visitor = new PrettyPrinterExpressionVisitor();
 
         String repr = (String)expression.accept(visitor);
 
@@ -62,7 +62,7 @@ final class PrettyPrinterNodeVisitorTest {
                 new Literal("false")
         );
 
-        PrettyPrinterNodeVisitor visitor = new PrettyPrinterNodeVisitor();
+        PrettyPrinterExpressionVisitor visitor = new PrettyPrinterExpressionVisitor();
 
         String repr = (String)expression.accept(visitor);
 

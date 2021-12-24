@@ -1,6 +1,6 @@
 package org.max.crafting.interpreter.jlox.ast;
 
-import org.max.crafting.interpreter.jlox.ast.visitor.NodeVisitor;
+import org.max.crafting.interpreter.jlox.ast.visitor.ExpressionVisitor;
 
 public class Literal implements Expression {
 
@@ -11,7 +11,7 @@ public class Literal implements Expression {
     }
 
     @Override
-    public Object accept(NodeVisitor visitor) {
+    public Object accept(ExpressionVisitor visitor) {
         return visitor.visitLiteral(this);
     }
 

@@ -1,5 +1,13 @@
 // we will try to follow "C" precedence levels (see https://en.cppreference.com/w/c/language/operator_precedence)
 
+program = (statement)* EOF
+
+statement = exprStmt | printStmt
+
+exprStmt = expression ";"
+
+printStmt = "print" expression ";"
+
 expression = comma_sequence
 
 // comma has lowest precedence

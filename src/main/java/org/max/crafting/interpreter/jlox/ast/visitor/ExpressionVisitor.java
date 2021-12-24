@@ -5,7 +5,7 @@ import org.max.crafting.interpreter.jlox.ast.Literal;
 import org.max.crafting.interpreter.jlox.ast.Grouping;
 import org.max.crafting.interpreter.jlox.ast.UnaryExpression;
 
-public interface NodeVisitor {
+public interface ExpressionVisitor {
 
     Object visitBinaryExpression(BinaryExpression binaryExp);
 

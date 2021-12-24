@@ -11,7 +11,7 @@ import org.max.crafting.interpreter.jlox.model.Token;
 /**
  * Traverse Abstract Syntax Tree in post-order and evaluate nodes.
  */
-public class Interpreter implements NodeVisitor {
+public class Interpreter implements ExpressionVisitor {
 
     public String interpret(Expression expression) {
         try {

@@ -1,9 +1,9 @@
 package org.max.crafting.interpreter.jlox.ast;
 
-import org.max.crafting.interpreter.jlox.ast.visitor.NodeVisitor;
+import org.max.crafting.interpreter.jlox.ast.visitor.ExpressionVisitor;
 
 public interface Expression {
 
-    Object accept(NodeVisitor visitor);
+    Object accept(ExpressionVisitor visitor);
 
 }

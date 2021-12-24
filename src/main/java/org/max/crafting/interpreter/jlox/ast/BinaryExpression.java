@@ -1,6 +1,6 @@
 package org.max.crafting.interpreter.jlox.ast;
 
-import org.max.crafting.interpreter.jlox.ast.visitor.NodeVisitor;
+import org.max.crafting.interpreter.jlox.ast.visitor.ExpressionVisitor;
 import org.max.crafting.interpreter.jlox.model.Token;
 
 public class BinaryExpression implements Expression {
@@ -18,7 +18,7 @@ public class BinaryExpression implements Expression {
     }
 
     @Override
-    public Object accept(NodeVisitor visitor) {
+    public Object accept(ExpressionVisitor visitor) {
         return visitor.visitBinaryExpression(this);
     }
 }

@@ -6,7 +6,7 @@ import org.max.crafting.interpreter.jlox.ast.Literal;
 import org.max.crafting.interpreter.jlox.ast.UnaryExpression;
 
 
-public class PrettyPrinterNodeVisitor implements NodeVisitor {
+public class PrettyPrinterExpressionVisitor implements ExpressionVisitor {
 
     @Override
     public Object visitBinaryExpression(BinaryExpression binaryExp) {
