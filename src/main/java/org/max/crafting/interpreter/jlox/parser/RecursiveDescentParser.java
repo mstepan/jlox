@@ -1,6 +1,7 @@
 package org.max.crafting.interpreter.jlox.parser;
 
 import org.max.crafting.interpreter.jlox.Lox;
+import org.max.crafting.interpreter.jlox.ast.Assignment;
 import org.max.crafting.interpreter.jlox.ast.BinaryExpression;
 import org.max.crafting.interpreter.jlox.ast.Expression;
 import org.max.crafting.interpreter.jlox.ast.ExpressionStmt;
@@ -120,24 +121,30 @@ public class RecursiveDescentParser {
     }
 
     /**
-     * expression -> comma_sequence
+     * expression -> assignment
      */
     private Expression expression() {
-        return commaSequence();
+        return assignment();
     }
 
     /**
-     * comma_sequence -> equality ((",") equality)*
+     * assignment -> IDENTIFIER "=" assignment | equality
      */
-    private Expression commaSequence() {
+    private Expression assignment() {
+
         Expression expr = equality();
 
-        while (matchAny(TokenType.COMMA)) {
-            Token op = previous();
-            Expression right = equality();
-            expr = new BinaryExpression(expr, op, right);
-        }
+        if (matchAny(TokenType.EQUAL)) {
+            Token equalsToken = previous();
+            Expression value = assignment();
 
+            if (expr instanceof VariableExpression) {
+                Token name = ((VariableExpression) expr).name;
+                return new Assignment(name, value);
+            }
+
+            throw error(equalsToken, "Invalid assignment target.");
+        }
         return expr;
     }
 

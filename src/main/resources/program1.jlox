@@ -2,6 +2,13 @@
 var temp;
 print "Uninitialized variable is set to: " + temp;
 
+var x = 133;
+print "x = " + x;
+
+x = 155;
+
+print "x = " + x;
+
 // radius for a circle as int
 var r = 10;
 

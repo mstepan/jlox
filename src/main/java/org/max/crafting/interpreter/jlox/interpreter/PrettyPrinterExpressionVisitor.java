@@ -1,5 +1,6 @@
 package org.max.crafting.interpreter.jlox.interpreter;
 
+import org.max.crafting.interpreter.jlox.ast.Assignment;
 import org.max.crafting.interpreter.jlox.ast.BinaryExpression;
 import org.max.crafting.interpreter.jlox.ast.Grouping;
 import org.max.crafting.interpreter.jlox.ast.Literal;
@@ -38,4 +39,8 @@ public class PrettyPrinterExpressionVisitor implements ExpressionVisitor {
         return literal.value;
     }
 
+    @Override
+    public Object visitAssignmentExpression(Assignment assignment) {
+        return assignment.name + " = " + assignment.value.accept(this);
+    }
 }

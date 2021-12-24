@@ -1,6 +1,7 @@
 package org.max.crafting.interpreter.jlox.interpreter;
 
 import org.max.crafting.interpreter.jlox.Lox;
+import org.max.crafting.interpreter.jlox.ast.Assignment;
 import org.max.crafting.interpreter.jlox.ast.BinaryExpression;
 import org.max.crafting.interpreter.jlox.ast.Expression;
 import org.max.crafting.interpreter.jlox.ast.ExpressionStmt;
@@ -70,6 +71,12 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
         catch (RuntimeError ex) {
             Lox.runtimeError(ex);
         }
+        return null;
+    }
+
+    @Override
+    public Object visitAssignmentExpression(Assignment assignment) {
+        environment.define(assignment.name.lexeme, assignment.value.accept(this));
         return null;
     }
 

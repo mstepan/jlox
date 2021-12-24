@@ -19,10 +19,9 @@ printStmt -> "print" expression ";"
 
 //====== EXPRESSIONS ============
 
-expression -> comma_sequence
+expression -> assignment
 
-// comma has lowest precedence
-comma_sequence -> equality ((",") equality)*
+assignment -> IDENTIFIER "=" assignment | equality
 
 equality -> comparison  (("==" | "!=") comparison)*
 
