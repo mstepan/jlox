@@ -1,6 +1,6 @@
 package org.max.crafting.interpreter.jlox.ast;
 
-import org.max.crafting.interpreter.jlox.ast.visitor.ExpressionVisitor;
+import org.max.crafting.interpreter.jlox.interpreter.ExpressionVisitor;
 
 public class Grouping implements Expression {
 

@@ -1,6 +1,6 @@
 package org.max.crafting.interpreter.jlox.ast;
 
-import org.max.crafting.interpreter.jlox.ast.visitor.StmtVisitor;
+import org.max.crafting.interpreter.jlox.interpreter.StmtVisitor;
 
 public abstract class Stmt {
 

@@ -1,4 +1,4 @@
-package org.max.crafting.interpreter.jlox.ast.visitor;
+package org.max.crafting.interpreter.jlox.interpreter;
 
 import org.max.crafting.interpreter.jlox.ast.BinaryExpression;
 import org.max.crafting.interpreter.jlox.ast.Literal;

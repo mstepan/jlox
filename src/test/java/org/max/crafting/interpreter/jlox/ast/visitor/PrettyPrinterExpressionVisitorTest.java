@@ -6,6 +6,7 @@ import org.max.crafting.interpreter.jlox.ast.Expression;
 import org.max.crafting.interpreter.jlox.ast.Literal;
 import org.max.crafting.interpreter.jlox.ast.Grouping;
 import org.max.crafting.interpreter.jlox.ast.UnaryExpression;
+import org.max.crafting.interpreter.jlox.interpreter.PrettyPrinterExpressionVisitor;
 import org.max.crafting.interpreter.jlox.model.Token;
 import org.max.crafting.interpreter.jlox.model.TokenType;
 

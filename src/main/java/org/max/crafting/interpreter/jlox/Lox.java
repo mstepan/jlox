@@ -2,7 +2,7 @@ package org.max.crafting.interpreter.jlox;
 
 import org.max.crafting.interpreter.jlox.ast.Expression;
 import org.max.crafting.interpreter.jlox.ast.Stmt;
-import org.max.crafting.interpreter.jlox.ast.visitor.Interpreter;
+import org.max.crafting.interpreter.jlox.interpreter.Interpreter;
 import org.max.crafting.interpreter.jlox.lexer.Lexer;
 import org.max.crafting.interpreter.jlox.model.Token;
 import org.max.crafting.interpreter.jlox.parser.RecursiveDescentParser;
