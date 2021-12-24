@@ -9,6 +9,8 @@ import org.max.crafting.interpreter.jlox.ast.Literal;
 import org.max.crafting.interpreter.jlox.ast.PrintStmt;
 import org.max.crafting.interpreter.jlox.ast.Stmt;
 import org.max.crafting.interpreter.jlox.ast.UnaryExpression;
+import org.max.crafting.interpreter.jlox.ast.VarStmt;
+import org.max.crafting.interpreter.jlox.ast.VariableExpression;
 import org.max.crafting.interpreter.jlox.model.Token;
 
 import java.util.List;
@@ -17,6 +19,8 @@ import java.util.List;
  * Traverse Abstract Syntax Tree in post-order and evaluate nodes.
  */
 public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
+
+    private final Environment environment = new Environment();
 
     public void interpret(List<Stmt> statements) {
         try {
@@ -31,6 +35,19 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
 
     private void execute(Stmt singleStmt) {
         singleStmt.accept(this);
+    }
+
+    @Override
+    public Void visitVarStmt(VarStmt stmt) {
+
+        Object val = null;
+
+        if (stmt.initExpr != null) {
+            val = stmt.initExpr.accept(this);
+        }
+        environment.define(stmt.name.lexeme, val);
+
+        return null;
     }
 
     @Override
@@ -57,12 +74,11 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
     }
 
     private Object evaluateExpression(Expression expr) {
-        if( expr == null){
+        if (expr == null) {
             return null;
         }
         return expr.accept(this);
     }
-
 
     @Override
     public Object visitBinaryExpression(BinaryExpression binaryExp) {
@@ -242,6 +258,11 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
     @Override
     public Object visitParentheses(Grouping grouping) {
         return grouping.expression.accept(this);
+    }
+
+    @Override
+    public Object visitVariableExpression(VariableExpression varExpr) {
+        return environment.get(varExpr.name);
     }
 
     private static String stringify(Object value) {

@@ -9,6 +9,8 @@ import org.max.crafting.interpreter.jlox.ast.Literal;
 import org.max.crafting.interpreter.jlox.ast.PrintStmt;
 import org.max.crafting.interpreter.jlox.ast.Stmt;
 import org.max.crafting.interpreter.jlox.ast.UnaryExpression;
+import org.max.crafting.interpreter.jlox.ast.VarStmt;
+import org.max.crafting.interpreter.jlox.ast.VariableExpression;
 import org.max.crafting.interpreter.jlox.model.Token;
 import org.max.crafting.interpreter.jlox.model.TokenType;
 
@@ -28,11 +30,14 @@ public class RecursiveDescentParser {
         this.tokens = tokens;
     }
 
+    /**
+     * program = (declaration)* EOF
+     */
     public List<Stmt> parse() {
         List<Stmt> statements = new ArrayList<>();
         try {
             while (!isEnd()) {
-                statements.add(statement());
+                statements.add(declaration());
             }
         }
         catch (ParseError error) {
@@ -49,6 +54,41 @@ public class RecursiveDescentParser {
             System.err.println(error.getMessage());
         }
         return null;
+    }
+
+    /**
+     * declaration = varDeclaration | statement
+     */
+    private Stmt declaration() {
+        try {
+            if (matchAny(TokenType.VAR)) {
+                return varDeclaration();
+            }
+
+            return statement();
+        }
+        catch (ParseError error) {
+            synchronize();
+            return null;
+        }
+    }
+
+    /**
+     * varDeclaration = "var" IDENTIFIER ("=" expression)? ";"
+     */
+    private Stmt varDeclaration() {
+
+        Token name = consume(TokenType.IDENTIFIER, "Variable name expected.");
+
+        Expression initExpr = null;
+
+        if (matchAny(TokenType.EQUAL)) {
+            initExpr = expression();
+        }
+
+        consume(TokenType.SEMICOLON, "Expected ';' after variable declaration.");
+
+        return new VarStmt(name, initExpr);
     }
 
     /**
@@ -200,7 +240,10 @@ public class RecursiveDescentParser {
             Expression expr = expression();
             consume(TokenType.RIGHT_PAREN, "')' expected");
             return new Grouping(expr);
+        }
 
+        if (matchAny(TokenType.IDENTIFIER)) {
+            return new VariableExpression(previous());
         }
 
         throw error(peek(), "Expected expression.");

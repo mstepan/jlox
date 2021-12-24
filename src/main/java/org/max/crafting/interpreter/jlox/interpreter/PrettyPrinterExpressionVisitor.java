@@ -4,6 +4,7 @@ import org.max.crafting.interpreter.jlox.ast.BinaryExpression;
 import org.max.crafting.interpreter.jlox.ast.Grouping;
 import org.max.crafting.interpreter.jlox.ast.Literal;
 import org.max.crafting.interpreter.jlox.ast.UnaryExpression;
+import org.max.crafting.interpreter.jlox.ast.VariableExpression;
 
 
 public class PrettyPrinterExpressionVisitor implements ExpressionVisitor {
@@ -20,6 +21,11 @@ public class PrettyPrinterExpressionVisitor implements ExpressionVisitor {
     public Object visitUnaryExpression(UnaryExpression unaryExp) {
         String opStr = unaryExp.operation.type.name;
         return opStr + unaryExp.expression.accept(this);
+    }
+
+    @Override
+    public Object visitVariableExpression(VariableExpression varExpr) {
+        return varExpr.name;
     }
 
     @Override

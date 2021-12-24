@@ -1,6 +1,10 @@
 // we will try to follow "C" precedence levels (see https://en.cppreference.com/w/c/language/operator_precedence)
 
-program = (statement)* EOF
+program = (declaration)* EOF
+
+declaration = varDeclaration | statement
+
+varDeclaration = "var" IDENTIFIER ("=" expression)? ";"
 
 statement = exprStmt | printStmt
 
@@ -24,4 +28,4 @@ factor = unary (("*" | "/" ) unary)*
 // unary operator has highest precedence
 unary = ("!" | "-") unary | primary
 
-primary = STRING | NUMBER | "true" | "false" | nil | "(" expression ")"
+primary = STRING | NUMBER | "true" | "false" | nil | "(" expression ")" | IDENTIFIER

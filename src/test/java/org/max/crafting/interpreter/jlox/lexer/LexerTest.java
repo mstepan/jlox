@@ -117,7 +117,7 @@ final class LexerTest {
         }
 
         TokenBuilder identifier(String name) {
-            tokens.add(new Token(TokenType.IDENTIFIER, null, name, lineNumber));
+            tokens.add(new Token(TokenType.IDENTIFIER, name, null, lineNumber));
             return this;
         }
 

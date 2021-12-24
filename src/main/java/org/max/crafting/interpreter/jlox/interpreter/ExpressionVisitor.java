@@ -4,6 +4,7 @@ import org.max.crafting.interpreter.jlox.ast.BinaryExpression;
 import org.max.crafting.interpreter.jlox.ast.Literal;
 import org.max.crafting.interpreter.jlox.ast.Grouping;
 import org.max.crafting.interpreter.jlox.ast.UnaryExpression;
+import org.max.crafting.interpreter.jlox.ast.VariableExpression;
 
 public interface ExpressionVisitor {
 
@@ -14,4 +15,6 @@ public interface ExpressionVisitor {
     Object visitLiteral(Literal literal);
 
     Object visitParentheses(Grouping grouping);
+
+    Object visitVariableExpression(VariableExpression varExpr);
 }

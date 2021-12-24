@@ -1,12 +1,17 @@
-var x = 10.33;
-var y = 20;
+var x = 10;
+var y = 3.14;
 
-var str = "hello, world!!!";
+// print integer and double
+print "x = " + x;
+print "y = " + y;
 
-// some single line comment here
+var str = "hello " + "world" + "!!!";
 
+// declare new maxValue
 var maxValue = x;
 
-if ( y >= x ){
-	maxValue = y;
-}
+print "maxValue = " + maxValue;
+
+//if ( y >= x ){
+//	maxValue = y;
+//}

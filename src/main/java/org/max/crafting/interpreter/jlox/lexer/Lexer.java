@@ -153,7 +153,7 @@ public class Lexer {
         }
 
         String value = source.substring(start + 1, cur - 1);
-        addToken(TokenType.STRING, value);
+        addLiteral(TokenType.STRING, value);
     }
 
     // read number as double value
@@ -188,7 +188,7 @@ public class Lexer {
             val =  Integer.parseInt(numberStr);
         }
 
-        addToken(TokenType.NUMBER, val);
+        addLiteral(TokenType.NUMBER, val);
     }
 
     //read identifier or reserved keyword
@@ -201,10 +201,10 @@ public class Lexer {
 
         TokenType keywordType = TokenType.findReservedKeyword(identifierName);
         if (keywordType != null) {
-            addToken(keywordType);
+            addKeyword(keywordType);
         }
         else {
-            addToken(TokenType.IDENTIFIER, identifierName);
+            addIdentifier(TokenType.IDENTIFIER, identifierName);
         }
     }
 
@@ -226,8 +226,16 @@ public class Lexer {
         tokens.add(new Token(type, null, null, lineNumber));
     }
 
-    private void addToken(TokenType type, Object value) {
+    private void addLiteral(TokenType type, Object value) {
         tokens.add(new Token(type, null, value, lineNumber));
+    }
+
+    private void addIdentifier(TokenType type, String value) {
+        tokens.add(new Token(type, value, null, lineNumber));
+    }
+
+    private void addKeyword(TokenType type){
+        tokens.add(new Token(type, null, null, lineNumber));
     }
 
     private void skipLine() {
