@@ -451,6 +451,7 @@ final class LoxTest {
                 output());
     }
 
+    // === LOGICAL expressions ====
     @Test
     void singleEqEqLogicalExpression() {
         Lox.runScript("""
@@ -481,9 +482,39 @@ final class LoxTest {
                 output());
     }
 
+    @Test
+    void lessForInts() {
+        Lox.runScript("""
+                              var res = (3*3) + 2 < 20;
+                              print res;
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        true
+                         """,
+                output());
+    }
+
+    @Test
+    void greaterForInts() {
+        Lox.runScript("""
+                              var res = (3*3) + 2 > 20;
+                              print res;
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        false
+                         """,
+                output());
+    }
+
     // ==== UNARY minus ====
     @Test
-    void unaryMinus() {
+    void unaryMinusForInt() {
         Lox.runScript("""
                               var res = 2 * (6 / -3);
                               print res;
@@ -493,6 +524,21 @@ final class LoxTest {
         assertEquals(
                 """
                         -4
+                         """,
+                output());
+    }
+
+    @Test
+    void unaryMinusForDoubleAndInt() {
+        Lox.runScript("""
+                              var res = -20.2 * (6 / -3);
+                              print res;
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        40.4
                          """,
                 output());
     }
@@ -511,6 +557,8 @@ final class LoxTest {
                          """,
                 errorOutput());
     }
+
+    // ==== GROUPING ====
 
     @Test
     void complexExpressionWithGroupingAndUnaryMinus() {
