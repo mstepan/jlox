@@ -9,10 +9,18 @@ public final class Environment {
 
     private final Map<String, Object> values = new HashMap<>();
 
+    void clear(){
+        values.clear();
+    }
+
     void define(String name, Object value) {
         // 1. we do not check if variable already declared, so we allow double declaration
         // 2. we also allow declared, but undefined variables with 'null' values
         values.put(name, value);
+    }
+
+    boolean isDefined(Token name){
+        return values.containsKey(name.lexeme);
     }
 
 

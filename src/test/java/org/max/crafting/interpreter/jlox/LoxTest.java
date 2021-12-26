@@ -92,26 +92,6 @@ final class LoxTest {
                 output());
     }
 
-    @Test
-    void test123() {
-
-        String script = """
-                x = 133;
-                print x;
-                """;
-
-        Lox.run(script);
-
-        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
-
-        assertEquals(
-                """
-                        133
-                        """,
-                output());
-
-    }
-
     // ==== VAR declaration ====
 
     @Test
@@ -120,7 +100,7 @@ final class LoxTest {
         String script = """
                 var x = 1;
                 var y = 2;
-                
+                                
                 print x;
                 print y;
                 """;
@@ -145,10 +125,10 @@ final class LoxTest {
                 var x = 1;
                 var y = 2;
                 var x = 133;
-                
+                                
                 print x;
                 print y;
-                
+                                
                 var x = 155;
                 print x;
                 """;
@@ -231,5 +211,26 @@ final class LoxTest {
                         [line 2] Error: Invalid assignment target.
                         """,
                 errorOutput());
+    }
+
+    @Test
+    void assignmentWithoutDeclarationShouldFail() {
+
+        String script = """
+                var y = 10 + 20;
+                x = 133;
+                print x;
+                """;
+
+        Lox.run(script);
+
+        assertTrue(Lox.hasError(), "Expected error here");
+
+        assertEquals(
+                """
+                        [line 2]: Can't assign to undefined variable 'x'.
+                         """,
+                errorOutput());
+
     }
 }

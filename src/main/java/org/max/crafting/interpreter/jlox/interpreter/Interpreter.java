@@ -23,6 +23,10 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
 
     private final Environment environment = new Environment();
 
+    public void clearState(){
+        environment.clear();
+    }
+
     public void interpret(List<Stmt> statements) {
         try {
             for (Stmt singleStmt : statements) {
@@ -76,6 +80,10 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
 
     @Override
     public Object visitAssignmentExpression(Assignment assignment) {
+        if( ! environment.isDefined(assignment.name) ){
+            throw new RuntimeError(assignment.name, "Can't assign to undefined variable '" + assignment.name.lexeme + "'.");
+        }
+
         environment.define(assignment.name.lexeme, assignment.value.accept(this));
         return null;
     }

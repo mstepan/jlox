@@ -134,6 +134,7 @@ public class Lox {
     }
 
     private static void clearState() {
+        interpreter.clearState();
         hadSyntaxError = false;
         hadRuntimeError = false;
         lastErrorMsg = null;
