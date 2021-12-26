@@ -1,6 +1,5 @@
 package org.max.crafting.interpreter.jlox;
 
-import org.max.crafting.interpreter.jlox.ast.Expression;
 import org.max.crafting.interpreter.jlox.ast.Stmt;
 import org.max.crafting.interpreter.jlox.interpreter.Interpreter;
 import org.max.crafting.interpreter.jlox.lexer.Lexer;
@@ -25,7 +24,7 @@ public class Lox {
 
     private static final Interpreter interpreter = new Interpreter();
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         // running in REPL mode
         if (args.length == 0) {
             runReplMode();

@@ -3,7 +3,6 @@ package org.max.crafting.interpreter.jlox.interpreter;
 import org.max.crafting.interpreter.jlox.Lox;
 import org.max.crafting.interpreter.jlox.ast.Assignment;
 import org.max.crafting.interpreter.jlox.ast.BinaryExpression;
-import org.max.crafting.interpreter.jlox.ast.Expression;
 import org.max.crafting.interpreter.jlox.ast.ExpressionStmt;
 import org.max.crafting.interpreter.jlox.ast.Grouping;
 import org.max.crafting.interpreter.jlox.ast.Literal;
@@ -65,16 +64,6 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
     public Void visitPrintStmt(PrintStmt stmt) {
         Object value = stmt.expr.accept(this);
         System.out.println(stringify(value));
-        return null;
-    }
-
-    public String eval(Expression expr) {
-        try {
-            return stringify(expr.accept(this));
-        }
-        catch (RuntimeError ex) {
-            Lox.runtimeError(ex);
-        }
         return null;
     }
 
