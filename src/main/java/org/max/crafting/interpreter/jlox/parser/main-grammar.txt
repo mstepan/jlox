@@ -19,7 +19,9 @@ printStmt -> "print" expression ";"
 
 //====== EXPRESSIONS (all expression are left recursive by default) ============
 
-expression -> assignment
+expression -> comma
+
+comma = assignment ("," comma)*
 
 // right recursive
 assignment -> IDENTIFIER "=" assignment | equality

@@ -3,6 +3,7 @@ package org.max.crafting.interpreter.jlox.parser;
 import org.max.crafting.interpreter.jlox.Lox;
 import org.max.crafting.interpreter.jlox.ast.Assignment;
 import org.max.crafting.interpreter.jlox.ast.BinaryExpression;
+import org.max.crafting.interpreter.jlox.ast.CommaExpresssion;
 import org.max.crafting.interpreter.jlox.ast.Expression;
 import org.max.crafting.interpreter.jlox.ast.ExpressionStmt;
 import org.max.crafting.interpreter.jlox.ast.Grouping;
@@ -121,10 +122,25 @@ public class RecursiveDescentParser {
     }
 
     /**
-     * expression -> assignment
+     * expression -> comma
      */
     private Expression expression() {
-        return assignment();
+        return comma();
+    }
+
+    /**
+     * comma = assignment ("," comma)*
+     */
+    private Expression comma() {
+
+        Expression left = assignment();
+
+        if( matchAny(TokenType.COMMA) ){
+            Expression right = comma();
+            return new CommaExpresssion(left, right);
+        }
+
+        return left;
     }
 
     /**

@@ -22,4 +22,7 @@ Build interpreter first and just run:
 ```
 ./jlox <script-file>
 ```
-As a quick example, just run `./jlox src/main/resources/program1.jlox`
+As a quick example, just run 
+```
+./jlox src/main/resources/program1.jlox
+```

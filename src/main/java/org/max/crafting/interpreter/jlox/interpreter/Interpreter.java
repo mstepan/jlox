@@ -3,6 +3,7 @@ package org.max.crafting.interpreter.jlox.interpreter;
 import org.max.crafting.interpreter.jlox.Lox;
 import org.max.crafting.interpreter.jlox.ast.Assignment;
 import org.max.crafting.interpreter.jlox.ast.BinaryExpression;
+import org.max.crafting.interpreter.jlox.ast.CommaExpresssion;
 import org.max.crafting.interpreter.jlox.ast.ExpressionStmt;
 import org.max.crafting.interpreter.jlox.ast.Grouping;
 import org.max.crafting.interpreter.jlox.ast.Literal;
@@ -65,6 +66,14 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
         Object value = stmt.expr.accept(this);
         System.out.println(stringify(value));
         return null;
+    }
+
+    @Override
+    public Object visitCommaExpression(CommaExpresssion commaExpr) {
+        // IMPORTANT: left side evaluated, but returned value ignored
+        // this is important for assignments if any
+        commaExpr.left.accept(this);
+        return commaExpr.right.accept(this);
     }
 
     @Override
