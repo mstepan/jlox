@@ -17,10 +17,11 @@ exprStmt -> expression ";"
 
 printStmt -> "print" expression ";"
 
-//====== EXPRESSIONS ============
+//====== EXPRESSIONS (all expression are left recursive by default) ============
 
 expression -> assignment
 
+// right recursive
 assignment -> IDENTIFIER "=" assignment | equality
 
 equality -> comparison  (("==" | "!=") comparison)*

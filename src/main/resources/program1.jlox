@@ -1,11 +1,20 @@
 // some dummy unused variables declaration
-var temp;
-print "Uninitialized variable is set to: " + temp;
+var x = 10;
+var y = 20;
+var z;
 
-var x = 133;
 print "x = " + x;
+print "y = " + y;
+print "Uninitialized variable is set to: " + z;
 
-x = 155;
+// assignment var to var
+x = y;
+
+print "x = " + x;
+print "y = " + y;
+
+// assigment var to expression
+x = (2*3) + 4;
 
 print "x = " + x;
 

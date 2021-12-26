@@ -132,20 +132,20 @@ public class RecursiveDescentParser {
      */
     private Expression assignment() {
 
-        Expression expr = equality();
+        Expression left = equality();
 
         if (matchAny(TokenType.EQUAL)) {
             Token equalsToken = previous();
-            Expression value = assignment();
+            Expression right = assignment();
 
-            if (expr instanceof VariableExpression) {
-                Token name = ((VariableExpression) expr).name;
-                return new Assignment(name, value);
+            if (left instanceof VariableExpression) {
+                Token name = ((VariableExpression) left).name;
+                return new Assignment(name, right);
             }
 
             throw error(equalsToken, "Invalid assignment target.");
         }
-        return expr;
+        return left;
     }
 
     /**
