@@ -244,7 +244,7 @@ public class RecursiveDescentParser {
 
         if (matchAny(TokenType.LEFT_PAREN)) {
             Expression expr = expression();
-            consume(TokenType.RIGHT_PAREN, "')' expected");
+            consume(TokenType.RIGHT_PAREN, "Matching ')' expected.");
             return new Grouping(expr);
         }
 

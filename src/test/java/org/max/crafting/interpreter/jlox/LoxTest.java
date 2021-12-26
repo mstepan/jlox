@@ -191,7 +191,7 @@ final class LoxTest {
         assertTrue(Lox.hasError(), "Error wasn't detected, strange");
         assertEquals(
                 """
-                        [line 1] Error: Invalid assignment target.
+                        [line 1] Invalid assignment target.
                         """,
                 errorOutput());
     }
@@ -208,21 +208,18 @@ final class LoxTest {
         assertTrue(Lox.hasError(), "Error wasn't detected, strange");
         assertEquals(
                 """
-                        [line 2] Error: Invalid assignment target.
+                        [line 2] Invalid assignment target.
                         """,
                 errorOutput());
     }
 
     @Test
     void assignmentWithoutDeclarationShouldFail() {
-
-        String script = """
-                var y = 10 + 20;
-                x = 133;
-                print x;
-                """;
-
-        Lox.runScript(script);
+        Lox.runScript("""
+                              var y = 10 + 20;
+                              x = 133;
+                              print x;
+                              """);
 
         assertTrue(Lox.hasError(), "Expected error here");
 
@@ -233,4 +230,316 @@ final class LoxTest {
                 errorOutput());
 
     }
+
+    // ==== String concatenation ====
+
+    @Test
+    void stringConcatenation() {
+            Lox.runScript("""
+                              var res = "hello " + "world " + "!!!";
+                              print res;
+                              """);
+
+            assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+            assertEquals(
+                    """
+                            hello world !!!
+                             """,
+                    output());
+    }
+
+    @Test
+    void stringAndNumberConcatenation() {
+        Lox.runScript("""
+                              var res = "hello " + 133;
+                              print res;
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        hello 133
+                         """,
+                output());
+    }
+
+    @Test
+    void stringAndBooleanConcatenation() {
+        Lox.runScript("""
+                              var res = "hello " + true;
+                              print res;
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        hello true
+                         """,
+                output());
+    }
+
+    @Test
+    void stringAndNilConcatenation() {
+        Lox.runScript("""
+                              var res = "hello " + nil;
+                              print res;
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        hello nil
+                         """,
+                output());
+    }
+
+    @Test
+    void numberAndStringConcatenation() {
+        Lox.runScript("""
+                              var res = 133 + " hello";
+                              print res;
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        133 hello
+                         """,
+                output());
+    }
+
+    @Test
+    void booleanAndStringConcatenation() {
+        Lox.runScript("""
+                              var res = false + " hello";
+                              print res;
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        false hello
+                         """,
+                output());
+    }
+
+    //==== PLUS operator ====
+
+    @Test
+    void plusForIntegers() {
+        Lox.runScript("""
+                              var res = 10 + 20 + 30;
+                              print res;
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        60
+                         """,
+                output());
+    }
+
+    @Test
+    void plusForFloatingNumbers() {
+        Lox.runScript("""
+                              var res = 10.2 + 20.2 + 30.4;
+                              print res;
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        60.8
+                         """,
+                output());
+    }
+
+    @Test
+    void plusForIntegersAndFloats() {
+        Lox.runScript("""
+                              var res = 100 + 10.4 + 20.4 + 200 + 30.4;
+                              print res;
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        361.2
+                         """,
+                output());
+    }
+
+    @Test
+    void plusForTwoBooleansShouldFail() {
+        Lox.runScript("""
+                              var res = true + false;
+                              print res;
+                              """);
+
+        assertTrue(Lox.hasError(), "Expected error here");
+        assertEquals(
+                """
+                        [line 1]: Both operands must be numbers or one should be a string.
+                         """,
+                errorOutput());
+    }
+
+    @Test
+    void plusForBooleanAndIntegerShouldFail() {
+        Lox.runScript("""
+                              var res = true + 133;
+                              print res;
+                              """);
+
+        assertTrue(Lox.hasError(), "Expected error here");
+        assertEquals(
+                """
+                        [line 1]: Both operands must be numbers or one should be a string.
+                         """,
+                errorOutput());
+    }
+
+    // ==== DOUBLE ====
+
+    @Test
+    void comparingNansShouldReturnFalse() {
+        Lox.runScript("""
+                              var res = 0.0/0.0 == 0.0/0.0;
+                              print "res: " + res;
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        res: false
+                         """,
+                output());
+    }
+
+    // ==== DIVISION ====
+
+    @Test
+    void intDivisionByZeroShouldFail() {
+        Lox.runScript("""
+                              var x = 10/0;
+                              """);
+
+        assertTrue(Lox.hasError(), "Expected error here");
+
+        assertEquals(
+                """
+                        [line 1]: Integer division by zero.
+                         """,
+                errorOutput());
+    }
+
+    // ==== Complex expression ====
+
+    @Test
+    void singleNumericalExpression() {
+        Lox.runScript("""
+                              var res = (3*6) + 2;
+                              print res;
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        20
+                         """,
+                output());
+    }
+
+    @Test
+    void singleEqEqLogicalExpression() {
+        Lox.runScript("""
+                              var res = (3*6) + 2 == 20;
+                              print res;
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        true
+                         """,
+                output());
+    }
+
+    @Test
+    void singleNotEqLogicalExpression() {
+        Lox.runScript("""
+                              var res = (3*6) + 2 != 50;
+                              print res;
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        true
+                         """,
+                output());
+    }
+
+    // ==== UNARY minus ====
+    @Test
+    void unaryMinus() {
+        Lox.runScript("""
+                              var res = 2 * (6 / -3);
+                              print res;
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        -4
+                         """,
+                output());
+    }
+
+    @Test
+    void negateStringShouldFail() {
+        Lox.runScript("""
+                              var res = -"hello, world";
+                              print res;
+                              """);
+
+        assertTrue(Lox.hasError(), "Expected error here");
+        assertEquals(
+                """
+                        [line 1]: Operand must be a number.
+                         """,
+                errorOutput());
+    }
+
+    @Test
+    void complexExpressionWithGroupingAndUnaryMinus() {
+        Lox.runScript("""
+                              var res = ((10+20) * 33.24) - 177.45 + (-20);
+                              print res;
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        799.75
+                         """,
+                output());
+    }
+
+    @Test
+    void groupingWithoutMatchingParenthesesShouldFail() {
+        Lox.runScript("""
+                              var res = (3*6 + 2 != 50;
+                              print res;
+                              """);
+
+        assertTrue(Lox.hasError(), "Expected error here");
+        assertEquals(
+                """
+                        [line 1] Matching ')' expected.
+                         """,
+                errorOutput());
+    }
+
 }

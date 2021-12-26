@@ -114,31 +114,6 @@ public class Lox {
         interpreter.interpret(statements);
     }
 
-    /**
-     * Evaluate single expression.
-     */
-    static Object eval(String source) {
-        clearState();
-
-        // scanner, lexer step
-        final Lexer lexer = new Lexer(source);
-
-        List<Token> tokens = lexer.tokenize();
-
-        // parser step
-        final RecursiveDescentParser parser = new RecursiveDescentParser(tokens);
-
-        // abstract syntax tree
-        Expression expr = parser.eval();
-
-        if (hasError()) {
-            return null;
-        }
-
-        // evaluate AST
-        return interpreter.eval(expr);
-    }
-
     private static void clearState() {
         interpreter.clearState();
         hadSyntaxError = false;
@@ -154,7 +129,7 @@ public class Lox {
      * Report syntax (static) error from lexer.
      */
     public static void error(int lineNumber, String errorMsg) {
-        lastErrorMsg = String.format("[line %d] Error: %s", lineNumber, errorMsg);
+        lastErrorMsg = String.format("[line %d] %s", lineNumber, errorMsg);
         System.err.println(lastErrorMsg);
         hadSyntaxError = true;
     }

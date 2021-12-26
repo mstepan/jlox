@@ -155,7 +155,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
             return stringify(left) + stringify(right);
         }
 
-        throw new RuntimeError(operator, "Operands must be two numbers or one should be string.");
+        throw new RuntimeError(operator, "Both operands must be numbers or one should be a string.");
     }
 
     private Object minus(Token operator, Object left, Object right) {
@@ -178,7 +178,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
         if (isInt(left) && isInt(right)) {
             final int rightInt = (int) right;
             if (rightInt == 0) {
-                throw new RuntimeError(operator, "Integer division by zero");
+                throw new RuntimeError(operator, "Integer division by zero.");
             }
             return (int) left / rightInt;
         }
