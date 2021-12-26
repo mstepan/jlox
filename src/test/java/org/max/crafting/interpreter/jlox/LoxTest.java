@@ -96,16 +96,13 @@ final class LoxTest {
 
     @Test
     void varDeclaration() {
-
-        String script = """
+        Lox.runScript("""
                 var x = 1;
                 var y = 2;
                                 
                 print x;
                 print y;
-                """;
-
-        Lox.runScript(script);
+                """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
 
@@ -120,8 +117,7 @@ final class LoxTest {
 
     @Test
     void redeclareVariableFewTimesShouldBeOK() {
-
-        String script = """
+        Lox.runScript("""
                 var x = 1;
                 var y = 2;
                 var x = 133;
@@ -131,9 +127,7 @@ final class LoxTest {
                                 
                 var x = 155;
                 print x;
-                """;
-
-        Lox.runScript(script);
+                """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
 
@@ -151,8 +145,7 @@ final class LoxTest {
     // ==== ASSIGNMENTS ====
     @Test
     void assignments() {
-
-        String script = """
+        Lox.runScript("""
                 var x = 1;
                 var y = 2;
                             
@@ -165,9 +158,7 @@ final class LoxTest {
                                 
                 print "z = " + z;
 
-                """;
-
-        Lox.runScript(script);
+                """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
 
@@ -181,12 +172,60 @@ final class LoxTest {
     }
 
     @Test
-    void assignmentToStringShouldFail() {
-        String script = """
-                "hello" = 133;
-                """;
+    void assignmentAsExpressionShouldReturnValue() {
+        Lox.runScript("""
+                var x = 10;
+                print x = 20;
+                """);
 
-        Lox.runScript(script);
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+
+        assertEquals(
+                """ 
+                        20
+                         """,
+                output());
+
+    }
+
+    @Test
+    void assignDifferentTypeValuesToSameVariable() {
+        Lox.runScript("""
+                var x = 10;
+                print x;
+                
+                x = "hello";
+                print x;
+                
+                x = 133.33;
+                print x;
+                
+                x = true;
+                print x;
+                
+                x = "string again";
+                print x;
+                """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+
+        assertEquals(
+                """ 
+                        10
+                        hello
+                        133.33
+                        true
+                        string again
+                         """,
+                output());
+
+    }
+
+    @Test
+    void assignmentToStringShouldFail() {
+        Lox.runScript("""
+                "hello" = 133;
+                """);
 
         assertTrue(Lox.hasError(), "Error wasn't detected, strange");
         assertEquals(
@@ -198,12 +237,10 @@ final class LoxTest {
 
     @Test
     void assignmentToNumberShouldFail() {
-        String script = """
+        Lox.runScript("""
                 var x = 133;
                 155 = x;
-                """;
-
-        Lox.runScript(script);
+                """);
 
         assertTrue(Lox.hasError(), "Error wasn't detected, strange");
         assertEquals(
@@ -235,17 +272,17 @@ final class LoxTest {
 
     @Test
     void stringConcatenation() {
-            Lox.runScript("""
+        Lox.runScript("""
                               var res = "hello " + "world " + "!!!";
                               print res;
                               """);
 
-            assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
-            assertEquals(
-                    """
-                            hello world !!!
-                             """,
-                    output());
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        hello world !!!
+                         """,
+                output());
     }
 
     @Test

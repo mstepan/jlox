@@ -22,7 +22,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
 
     private final Environment environment = new Environment();
 
-    public void clearState(){
+    public void clearState() {
         environment.clear();
     }
 
@@ -69,12 +69,9 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
 
     @Override
     public Object visitAssignmentExpression(Assignment assignment) {
-        if( ! environment.isDefined(assignment.name) ){
-            throw new RuntimeError(assignment.name, "Can't assign to undefined variable '" + assignment.name.lexeme + "'.");
-        }
-
-        environment.define(assignment.name.lexeme, assignment.value.accept(this));
-        return null;
+        Object value = assignment.value.accept(this);
+        environment.assign(assignment.name, value);
+        return value;
     }
 
     @Override
