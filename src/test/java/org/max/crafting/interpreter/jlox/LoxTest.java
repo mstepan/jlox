@@ -75,7 +75,7 @@ final class LoxTest {
 
                 """;
 
-        Lox.run(script);
+        Lox.runScript(script);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
         assertEquals(
@@ -105,7 +105,7 @@ final class LoxTest {
                 print y;
                 """;
 
-        Lox.run(script);
+        Lox.runScript(script);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
 
@@ -133,7 +133,7 @@ final class LoxTest {
                 print x;
                 """;
 
-        Lox.run(script);
+        Lox.runScript(script);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
 
@@ -167,7 +167,7 @@ final class LoxTest {
 
                 """;
 
-        Lox.run(script);
+        Lox.runScript(script);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
 
@@ -186,7 +186,7 @@ final class LoxTest {
                 "hello" = 133;
                 """;
 
-        Lox.run(script);
+        Lox.runScript(script);
 
         assertTrue(Lox.hasError(), "Error wasn't detected, strange");
         assertEquals(
@@ -203,7 +203,7 @@ final class LoxTest {
                 155 = x;
                 """;
 
-        Lox.run(script);
+        Lox.runScript(script);
 
         assertTrue(Lox.hasError(), "Error wasn't detected, strange");
         assertEquals(
@@ -222,7 +222,7 @@ final class LoxTest {
                 print x;
                 """;
 
-        Lox.run(script);
+        Lox.runScript(script);
 
         assertTrue(Lox.hasError(), "Expected error here");
 

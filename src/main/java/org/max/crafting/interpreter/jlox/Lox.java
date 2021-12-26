@@ -68,7 +68,7 @@ public class Lox {
 
         try {
             String scriptAsStr = Files.readString(scriptFile, Charset.defaultCharset());
-            run(scriptAsStr);
+            runScript(scriptAsStr);
             if (hadSyntaxError) {
                 System.exit(65);
             }
@@ -85,9 +85,15 @@ public class Lox {
     /**
      * Execute program.
      */
-    static void run(String source) {
-
+    static void runScript(String source) {
         clearState();
+        run(source);
+    }
+
+    /**
+     * Execute single script or single statement from EVAL.
+     */
+    static void run(String source) {
 
         // scanner, lexer step
         final Lexer lexer = new Lexer(source);
