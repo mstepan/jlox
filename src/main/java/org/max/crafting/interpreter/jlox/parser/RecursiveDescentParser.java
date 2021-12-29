@@ -339,6 +339,10 @@ public class RecursiveDescentParser {
                 return;
             }
 
+            if( peek().type == TokenType.RIGHT_BRACE ){
+                return;
+            }
+
             switch (peek().type) {
                 case CLASS, FUN, VAR, FOR, IF, WHILE, PRINT, RETURN:
                     return;
