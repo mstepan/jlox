@@ -1,9 +1,11 @@
 package org.max.crafting.interpreter.jlox;
 
+import org.max.crafting.interpreter.jlox.ast.Expression;
 import org.max.crafting.interpreter.jlox.ast.Stmt;
 import org.max.crafting.interpreter.jlox.interpreter.Interpreter;
 import org.max.crafting.interpreter.jlox.lexer.Lexer;
 import org.max.crafting.interpreter.jlox.model.Token;
+import org.max.crafting.interpreter.jlox.model.TokenType;
 import org.max.crafting.interpreter.jlox.parser.RecursiveDescentParser;
 
 import java.io.BufferedReader;
@@ -52,8 +54,9 @@ public class Lox {
                 if (lineToEval == null) {
                     break;
                 }
-                run(lineToEval);
+                evalSingleLine(lineToEval);
                 hadSyntaxError = false;
+                hadRuntimeError = false;
             }
 
         }
@@ -90,7 +93,44 @@ public class Lox {
     }
 
     /**
-     * Execute single script or single statement from EVAL.
+     * Execute single expression or statement for REPL.
+     */
+    private static void evalSingleLine(String lineOfCode) {
+        // scanner, lexer step
+        final Lexer lexer = new Lexer(lineOfCode);
+
+        List<Token> tokens = lexer.tokenize();
+
+        if (tokens.size() == 1) {
+            return;
+        }
+
+        Token lastToken = tokens.get(tokens.size() - 2);
+
+        // parser step
+        final RecursiveDescentParser parser = new RecursiveDescentParser(tokens);
+
+        // parse and evaluate AST
+        if (lastToken.type == TokenType.SEMICOLON) {
+            // statement
+            List<Stmt> statements = parser.parse();
+            if (hasError()) {
+                return;
+            }
+            interpreter.interpret(statements);
+        }
+        else {
+            // expression
+            Expression expr = parser.parseSingleExpression();
+            if (hasError()) {
+                return;
+            }
+            System.out.println(interpreter.interpret(expr));
+        }
+    }
+
+    /**
+     * Execute single script.
      */
     static void run(String source) {
 

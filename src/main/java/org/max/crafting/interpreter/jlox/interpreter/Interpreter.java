@@ -5,6 +5,7 @@ import org.max.crafting.interpreter.jlox.ast.Assignment;
 import org.max.crafting.interpreter.jlox.ast.BinaryExpression;
 import org.max.crafting.interpreter.jlox.ast.Block;
 import org.max.crafting.interpreter.jlox.ast.CommaExpresssion;
+import org.max.crafting.interpreter.jlox.ast.Expression;
 import org.max.crafting.interpreter.jlox.ast.ExpressionStmt;
 import org.max.crafting.interpreter.jlox.ast.Grouping;
 import org.max.crafting.interpreter.jlox.ast.Literal;
@@ -37,6 +38,16 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
         catch (RuntimeError ex) {
             Lox.runtimeError(ex);
         }
+    }
+
+    public String interpret(Expression expr) {
+        try {
+            return stringify(expr.accept(this));
+        }
+        catch (RuntimeError ex) {
+            Lox.runtimeError(ex);
+        }
+        return stringify(null);
     }
 
     private void execute(Stmt singleStmt) {

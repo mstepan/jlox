@@ -45,6 +45,15 @@ public class RecursiveDescentParser {
         return statements;
     }
 
+    public Expression parseSingleExpression(){
+        try {
+            return expression();
+        }
+        catch( ParseError parseError ){
+            return null;
+        }
+    }
+
     /**
      * declaration -> varDeclaration | statement
      */

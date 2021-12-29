@@ -6,8 +6,8 @@
 
 program -> (declaration)* EOF
 
-
 //====== DECLARATIONS & STATEMENTS ============
+
 declaration -> varDeclaration | statement
 
 varDeclaration -> "var" IDENTIFIER ("=" expression)? ";"
