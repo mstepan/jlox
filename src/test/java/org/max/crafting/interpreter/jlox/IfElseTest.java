@@ -9,25 +9,22 @@ final class IfElseTest extends LoxBaseTest {
 
     @Test
     void ifElseGoingIfBranch() {
+        Lox.runScript("""
+                              var x = 100;
+                              var y = 20;
+                                              
+                              var z;
+                                              
+                              if( x > y ){
+                                  z = x;
+                              }
+                              else {
+                                  z = y;
+                              }
+                                              
+                              print z;
 
-        String script = """
-                var x = 100;
-                var y = 20;
-                                
-                var z;
-                                
-                if( x > y ){
-                    z = x;
-                }
-                else {
-                    z = y;
-                }
-                                
-                print z;
-
-                """;
-
-        Lox.runScript(script);
+                              """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
         assertEquals(
@@ -39,30 +36,78 @@ final class IfElseTest extends LoxBaseTest {
 
     @Test
     void ifElseGoingElseBranch() {
+        Lox.runScript("""
+                              var x = 10;
+                              var y = 20;
+                                              
+                              var z;
+                                              
+                              if( x > y ){
+                                  z = x;
+                              }
+                              else {
+                                  z = y;
+                              }
+                                              
+                              print z;
 
-        String script = """
-                var x = 10;
-                var y = 20;
-                                
-                var z;
-                                
-                if( x > y ){
-                    z = x;
-                }
-                else {
-                    z = y;
-                }
-                                
-                print z;
-
-                """;
-
-        Lox.runScript(script);
+                              """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
         assertEquals(
                 """
                         20
+                        """,
+                output());
+    }
+
+    @Test
+    void ifWithoutElse() {
+        Lox.runScript("""
+                              var x = 10;
+                              var y = 20;
+                                              
+                              var maxValue = x;
+                                              
+                              if( y > maxValue ) maxValue = y;
+                                        
+                              print maxValue;
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        20
+                        """,
+                output());
+    }
+
+    @Test
+    void ifWithDanglingElse() {
+        Lox.runScript("""
+                              var x = 10;
+                              var y = 20;
+                              var z = 30;
+                                              
+                              var maxValue = 0;
+                                              
+                              if( x > maxValue ) {
+                                maxValue = x;
+                                if(y > z){
+                                    maxValue = y;
+                                }
+                                else {
+                                    maxValue = z;
+                                }
+                              }
+                                        
+                              print maxValue;
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        30
                         """,
                 output());
     }
