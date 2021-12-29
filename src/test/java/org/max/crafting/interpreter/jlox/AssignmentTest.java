@@ -7,61 +7,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Test functionality related to variable declaration and assignment.
+ * Test functionality related to variable assignment.
  */
-final class VarDeclarationAndAssignmentTest extends LoxBaseTest {
+final class AssignmentTest extends LoxBaseTest {
 
-    // ==== Declaration ====
-
-    @Test
-    void varDeclaration() {
-        Lox.runScript("""
-                              var x = 1;
-                              var y = 2;
-                                              
-                              print x;
-                              print y;
-                              """);
-
-        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
-
-        assertEquals(
-                """
-                        1
-                        2
-                        """,
-                output());
-
-    }
-
-    @Test
-    void redeclareVariableFewTimesShouldBeOK() {
-        Lox.runScript("""
-                              var x = 1;
-                              var y = 2;
-                              var x = 133;
-                                              
-                              print x;
-                              print y;
-                                              
-                              var x = 155;
-                              print x;
-                              """);
-
-        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
-
-        assertEquals(
-                """
-                        133
-                        2
-                        155
-                        """,
-                output());
-
-    }
-
-
-    // ==== ASSIGNMENTS ====
     @Test
     void assignments() {
         Lox.runScript("""
@@ -183,22 +132,6 @@ final class VarDeclarationAndAssignmentTest extends LoxBaseTest {
                 """
                         [line 2]: Can't assign to undefined variable 'x'.
                          """,
-                errorOutput());
-    }
-
-    @Test
-    void varWithoutCommaShouldFail() {
-        Lox.runScript("""
-                              var x = 133;
-                              var y = 155
-                              var z = 777;
-                              """);
-
-        assertTrue(Lox.hasError(), "Error wasn't detected, strange");
-        assertEquals(
-                """
-                        [line 2] Expected ';' after variable declaration.
-                        """,
                 errorOutput());
     }
 }

@@ -37,14 +37,11 @@ public class RecursiveDescentParser {
      */
     public List<Stmt> parse() {
         List<Stmt> statements = new ArrayList<>();
-        try {
-            while (!isEnd()) {
-                statements.add(declaration());
-            }
+
+        while (!isEnd()) {
+            statements.add(declaration());
         }
-        catch (ParseError error) {
-            System.err.println(error.getMessage());
-        }
+
         return statements;
     }
 
