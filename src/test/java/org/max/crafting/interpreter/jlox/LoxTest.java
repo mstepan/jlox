@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 final class LoxTest extends LoxBaseTest {
 
@@ -78,5 +79,23 @@ final class LoxTest extends LoxBaseTest {
                         20
                          """,
                 output());
+    }
+
+
+    // ==== Incorrect expressions ====
+
+    @Test
+    void incorrectExpressionShouldFail() {
+        Lox.runScript("""
+                              var x = 133;
+                              #some_value123;
+                              """);
+
+        assertTrue(Lox.hasError(), "Expected error here");
+        assertEquals(
+                """
+                        [line 2] Unexpected character #
+                         """,
+                errorOutput());
     }
 }

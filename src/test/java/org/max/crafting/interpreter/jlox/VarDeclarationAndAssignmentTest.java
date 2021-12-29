@@ -185,4 +185,20 @@ final class VarDeclarationAndAssignmentTest extends LoxBaseTest {
                          """,
                 errorOutput());
     }
+
+    @Test
+    void varWithoutCommaShouldFail() {
+        Lox.runScript("""
+                              var x = 133;
+                              var y = 155
+                              var z = 777;
+                              """);
+
+        assertTrue(Lox.hasError(), "Error wasn't detected, strange");
+        assertEquals(
+                """
+                        [line 2] Expected ';' after variable declaration.
+                        """,
+                errorOutput());
+    }
 }
