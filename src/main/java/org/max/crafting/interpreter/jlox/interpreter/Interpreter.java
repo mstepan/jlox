@@ -76,7 +76,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
     }
 
     private void executeBlock(Block blockStmt) {
-        try (Environment.Scope notUsed = environment.newScope()) {
+        try (Environment.Scope ignored = environment.newScope()) {
             for (Stmt innerStmt : blockStmt.statements) {
                 innerStmt.accept(this);
             }
@@ -140,10 +140,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
             case BANG_EQUAL -> {
                 yield (!isEqual(binaryExp.operator, left, right));
             }
-            case COMMA -> {
-                // for comma, we just evaluate and discard left hand side and use only right side
-                yield right;
-            }
+
             default -> throw new IllegalStateException("Unsupported expression: " + binaryExp.operator.type);
         };
     }

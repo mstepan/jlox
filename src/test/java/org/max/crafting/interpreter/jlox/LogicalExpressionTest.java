@@ -58,8 +58,7 @@ final class LogicalExpressionTest extends LoxBaseTest {
     @Test
     void singleNotEqLogicalExpression() {
         Lox.runScript("""
-                              var res = (3*6) + 2 != 50;
-                              print res;
+                              print (3*6) + 2 != 50;
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -71,10 +70,9 @@ final class LogicalExpressionTest extends LoxBaseTest {
     }
 
     @Test
-    void lessForInts() {
+    void lessForIntegers() {
         Lox.runScript("""
-                              var res = (3*3) + 2 < 20;
-                              print res;
+                              print (3*3) + 2 < 20;
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -86,15 +84,50 @@ final class LogicalExpressionTest extends LoxBaseTest {
     }
 
     @Test
-    void greaterForInts() {
+    void lessEqualsForIntegers() {
         Lox.runScript("""
-                              var res = (3*3) + 2 > 20;
-                              print res;
+                              print 3+3 <= 20;
+                              print 10+10 <= 20;
+                              print 20 + 20 <= 20;
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
         assertEquals(
                 """
+                        true
+                        true
+                        false
+                         """,
+                output());
+    }
+
+    @Test
+    void greaterForIntegers() {
+        Lox.runScript("""
+                              print (3*3) + 2 > 20;
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        false
+                         """,
+                output());
+    }
+
+    @Test
+    void greaterEqualsForIntegers() {
+        Lox.runScript("""
+                              print 20 + 20 >= 20;
+                              print 10 + 10 >= 20;
+                              print 1 + 1 >= 20;
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        true
+                        true
                         false
                          """,
                 output());

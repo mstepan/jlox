@@ -11,6 +11,23 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 final class CommaExpressionTest extends LoxBaseTest {
 
     @Test
+    void commaExpression() {
+        Lox.runScript("""            
+                                              
+                              print 10 + 20, 30 + 40;
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+
+        assertEquals(
+                """
+                        70
+                        """,
+                output());
+
+    }
+
+    @Test
     void commaExpressionWithAssignments() {
         Lox.runScript("""
                               var x = 10;
