@@ -45,16 +45,6 @@ public class RecursiveDescentParser {
         return statements;
     }
 
-    public Expression eval() {
-        try {
-            return expression();
-        }
-        catch (ParseError error) {
-            System.err.println(error.getMessage());
-        }
-        return null;
-    }
-
     /**
      * declaration -> varDeclaration | statement
      */

@@ -1,5 +1,6 @@
 package org.max.crafting.interpreter.jlox;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -163,6 +164,28 @@ final class ScopeTest extends LoxBaseTest {
         assertEquals(
                 """
                         [line 3] '}' expected at the end of block.
+                        """,
+                errorOutput());
+
+    }
+
+    @Test
+    @Disabled("ignored till synchronize from RecursiveDescentParser will be fixed ")
+    void failure123() {
+        Lox.runScript("""
+                              var x = 1;
+                              print x;
+                              {
+                                  var y = 2
+                              }             
+                              """);
+
+        assertTrue(Lox.hasError(), "Expected error here");
+
+        assertEquals(
+                """
+                        [line 4] Expected ';' after variable declaration.
+                        [line 5] '}' expected at the end of block.                        
                         """,
                 errorOutput());
 
