@@ -92,6 +92,65 @@ final class LoxTest {
                 output());
     }
 
+    // ==== Scopes ====
+
+    @Test
+    void namesFromDifferentScopes() {
+        Lox.runScript("""
+                var x = 1;
+                {
+                    var y = 2;
+                    print x;
+                    print y;
+                }                  
+                """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+
+        assertEquals(
+                """
+                        1
+                        2
+                        """,
+                output());
+
+    }
+
+    @Test
+    void nameShadowingInNewScope() {
+        Lox.runScript("""
+                var x = 1;
+                var y = 20;
+                
+                print x;
+                print y;
+                {
+                    var x = x + 10;
+                    var y = 30;
+                    
+                    print "inner x: " + x;                   
+                    print "inner y: " + y;
+                }   
+                print x;   
+                print y;             
+                """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+
+        assertEquals(
+                """
+                        1
+                        20
+                        inner x: 11
+                        inner y: 30
+                        1
+                        20
+                        """,
+                output());
+
+    }
+
+
     // ==== VAR declaration ====
 
     @Test

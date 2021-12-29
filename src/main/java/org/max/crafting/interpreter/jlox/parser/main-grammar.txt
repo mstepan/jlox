@@ -6,16 +6,19 @@
 
 program -> (declaration)* EOF
 
+
 //====== DECLARATIONS & STATEMENTS ============
 declaration -> varDeclaration | statement
 
 varDeclaration -> "var" IDENTIFIER ("=" expression)? ";"
 
-statement -> exprStmt | printStmt
+statement -> exprStmt | printStmt | block
 
 exprStmt -> expression ";"
 
 printStmt -> "print" expression ";"
+
+block -> "{" declaration* "}"
 
 //====== EXPRESSIONS (all expression are left recursive by default) ============
 

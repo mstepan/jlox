@@ -3,6 +3,7 @@ package org.max.crafting.interpreter.jlox.parser;
 import org.max.crafting.interpreter.jlox.Lox;
 import org.max.crafting.interpreter.jlox.ast.Assignment;
 import org.max.crafting.interpreter.jlox.ast.BinaryExpression;
+import org.max.crafting.interpreter.jlox.ast.Block;
 import org.max.crafting.interpreter.jlox.ast.CommaExpresssion;
 import org.max.crafting.interpreter.jlox.ast.Expression;
 import org.max.crafting.interpreter.jlox.ast.ExpressionStmt;
@@ -93,14 +94,31 @@ public class RecursiveDescentParser {
     }
 
     /**
-     * statement -> exprStmt | printStmt
+     * statement -> exprStmt | printStmt | block
      */
     private Stmt statement() {
         if (matchAny(TokenType.PRINT)) {
             return printStatement();
         }
 
+        if (matchAny(TokenType.LEFT_BRACE)) {
+            return block();
+        }
+
         return expressionStatement();
+    }
+
+    private Block block() {
+        Block blockStmt = new Block();
+
+        while (!check(TokenType.RIGHT_BRACE) && !isEnd()) {
+            Stmt singleStmt = declaration();
+            blockStmt.add(singleStmt);
+        }
+
+        consume(TokenType.RIGHT_BRACE, "'}' expected at the end of block.");
+
+        return blockStmt;
     }
 
     /**
@@ -135,7 +153,7 @@ public class RecursiveDescentParser {
 
         Expression left = assignment();
 
-        if( matchAny(TokenType.COMMA) ){
+        if (matchAny(TokenType.COMMA)) {
             Expression right = comma();
             return new CommaExpresssion(left, right);
         }
