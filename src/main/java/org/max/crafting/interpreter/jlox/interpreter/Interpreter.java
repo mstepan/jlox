@@ -8,6 +8,7 @@ import org.max.crafting.interpreter.jlox.ast.CommaExpresssion;
 import org.max.crafting.interpreter.jlox.ast.Expression;
 import org.max.crafting.interpreter.jlox.ast.ExpressionStmt;
 import org.max.crafting.interpreter.jlox.ast.Grouping;
+import org.max.crafting.interpreter.jlox.ast.IfStmt;
 import org.max.crafting.interpreter.jlox.ast.Literal;
 import org.max.crafting.interpreter.jlox.ast.PrintStmt;
 import org.max.crafting.interpreter.jlox.ast.Stmt;
@@ -92,6 +93,21 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
                 innerStmt.accept(this);
             }
         }
+    }
+
+    @Override
+    public Void visitIfStatement(IfStmt ifStmt) {
+
+        boolean conditionTrue = isTrue(ifStmt.condition.accept(this));
+
+        if (conditionTrue) {
+            return ifStmt.thenBranch.accept(this);
+        }
+        else if (ifStmt.elseBranch != null) {
+            return ifStmt.elseBranch.accept(this);
+        }
+
+        return null;
     }
 
     @Override

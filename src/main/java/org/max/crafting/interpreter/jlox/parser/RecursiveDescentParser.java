@@ -8,6 +8,7 @@ import org.max.crafting.interpreter.jlox.ast.CommaExpresssion;
 import org.max.crafting.interpreter.jlox.ast.Expression;
 import org.max.crafting.interpreter.jlox.ast.ExpressionStmt;
 import org.max.crafting.interpreter.jlox.ast.Grouping;
+import org.max.crafting.interpreter.jlox.ast.IfStmt;
 import org.max.crafting.interpreter.jlox.ast.Literal;
 import org.max.crafting.interpreter.jlox.ast.PrintStmt;
 import org.max.crafting.interpreter.jlox.ast.Stmt;
@@ -45,11 +46,11 @@ public class RecursiveDescentParser {
         return statements;
     }
 
-    public Expression parseSingleExpression(){
+    public Expression parseSingleExpression() {
         try {
             return expression();
         }
-        catch( ParseError parseError ){
+        catch (ParseError parseError) {
             return null;
         }
     }
@@ -90,7 +91,7 @@ public class RecursiveDescentParser {
     }
 
     /**
-     * statement -> exprStmt | printStmt | block
+     * statement -> exprStmt | printStmt | block | ifStatement
      */
     private Stmt statement() {
         if (matchAny(TokenType.PRINT)) {
@@ -101,9 +102,25 @@ public class RecursiveDescentParser {
             return block();
         }
 
+        if (matchAny(TokenType.IF)) {
+            return ifStatement();
+        }
+
         return expressionStatement();
     }
 
+    /**
+     * printStmt -> "print" expression ";"
+     */
+    private Stmt printStatement() {
+        Expression expr = expression();
+        consume(TokenType.SEMICOLON, "Expected ';' after print statement.");
+        return new PrintStmt(expr);
+    }
+
+    /**
+     * block -> "{" declaration* "}"
+     */
     private Block block() {
         Block blockStmt = new Block();
 
@@ -118,13 +135,25 @@ public class RecursiveDescentParser {
     }
 
     /**
-     * printStmt -> "print" expression ";"
+     * ifStatement -> "if" "(" expression ")" statement ("else" statement)?
      */
-    private Stmt printStatement() {
-        Expression expr = expression();
-        consume(TokenType.SEMICOLON, "Expected ';' after print statement.");
-        return new PrintStmt(expr);
+    private Stmt ifStatement() {
+        consume(TokenType.LEFT_PAREN, "expected '(' after if.");
+
+        Expression conditionExpr = expression();
+
+        consume(TokenType.RIGHT_PAREN, "expected ')' after if condition.");
+
+        Stmt thenBranch = statement();
+        Stmt elseBranch = null;
+
+        if (matchAny(TokenType.ELSE)) {
+            elseBranch = statement();
+        }
+
+        return new IfStmt(conditionExpr, thenBranch, elseBranch);
     }
+
 
     /**
      * exprStmt -> expression ";"
@@ -348,7 +377,7 @@ public class RecursiveDescentParser {
                 return;
             }
 
-            if( peek().type == TokenType.RIGHT_BRACE ){
+            if (peek().type == TokenType.RIGHT_BRACE) {
                 return;
             }
 

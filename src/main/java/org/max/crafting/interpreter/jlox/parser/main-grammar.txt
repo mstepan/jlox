@@ -12,13 +12,15 @@ declaration -> varDeclaration | statement
 
 varDeclaration -> "var" IDENTIFIER ("=" expression)? ";"
 
-statement -> exprStmt | printStmt | block
+statement -> exprStmt | printStmt | block | ifStatement
 
 exprStmt -> expression ";"
 
 printStmt -> "print" expression ";"
 
 block -> "{" declaration* "}"
+
+ifStatement -> "if" "(" expression ")" statement ("else" statement)?
 
 //====== EXPRESSIONS (all expression are left recursive by default) ============
 
