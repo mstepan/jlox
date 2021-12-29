@@ -12,10 +12,39 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 final class LogicalExpressionTest extends LoxBaseTest {
 
     @Test
-    void singleEqEqLogicalExpression() {
+    void equalsForStrings() {
         Lox.runScript("""
-                              var res = (3*6) + 2 == 20;
-                              print res;
+                              print "hello" == "hello";
+                              print "Hello" == "hello";
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        true
+                        false
+                         """,
+                output());
+    }
+
+    @Test
+    void equalsForInt() {
+        Lox.runScript("""
+                              print (3*6) + 2 == 20;
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        true
+                         """,
+                output());
+    }
+
+    @Test
+    void equalsForDouble() {
+        Lox.runScript("""
+                              print 30.0 / 5.0 == 6.0;
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -61,6 +90,34 @@ final class LogicalExpressionTest extends LoxBaseTest {
         Lox.runScript("""
                               var res = (3*3) + 2 > 20;
                               print res;
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        false
+                         """,
+                output());
+    }
+
+    @Test
+    void nilEqualsToNil() {
+        Lox.runScript("""
+                              print nil == nil;
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        true
+                         """,
+                output());
+    }
+
+    @Test
+    void nilShouldNotBeEqualToNumber() {
+        Lox.runScript("""
+                              print nil == 133;
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");

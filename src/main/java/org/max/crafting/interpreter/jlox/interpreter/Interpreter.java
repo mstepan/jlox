@@ -135,11 +135,9 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
                 yield toDouble(binaryExp.operator, left) <= toDouble(binaryExp.operator, right);
             }
             case EQUAL_EQUAL -> {
-                checkBothOperandsNumbers(binaryExp.operator, left, right);
                 yield isEqual(binaryExp.operator, left, right);
             }
             case BANG_EQUAL -> {
-                checkBothOperandsNumbers(binaryExp.operator, left, right);
                 yield (!isEqual(binaryExp.operator, left, right));
             }
             case COMMA -> {

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Test all functionality related to lexical scopes.
@@ -146,6 +147,24 @@ final class ScopeTest extends LoxBaseTest {
                         last x: 10
                         """,
                 output());
+
+    }
+
+    @Test
+    void blockWithoutBraceShouldFail() {
+        Lox.runScript("""
+                             var x = 1;
+                             {
+                                  var y = 2;           
+                              """);
+
+        assertTrue(Lox.hasError(), "Expected error here");
+
+        assertEquals(
+                """
+                        [line 3] '}' expected at the end of block.
+                        """,
+                errorOutput());
 
     }
 
