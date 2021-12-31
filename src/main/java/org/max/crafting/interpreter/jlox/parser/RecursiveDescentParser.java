@@ -16,6 +16,7 @@ import org.max.crafting.interpreter.jlox.ast.Stmt;
 import org.max.crafting.interpreter.jlox.ast.UnaryExpression;
 import org.max.crafting.interpreter.jlox.ast.VarStmt;
 import org.max.crafting.interpreter.jlox.ast.VariableExpression;
+import org.max.crafting.interpreter.jlox.ast.WhileStatement;
 import org.max.crafting.interpreter.jlox.model.Token;
 import org.max.crafting.interpreter.jlox.model.TokenType;
 
@@ -92,7 +93,7 @@ public class RecursiveDescentParser {
     }
 
     /**
-     * statement -> exprStmt | printStmt | block | ifStatement
+     * statement -> exprStmt | printStmt | block | ifStatement | whileStatement
      */
     private Stmt statement() {
         if (matchAny(TokenType.PRINT)) {
@@ -105,6 +106,10 @@ public class RecursiveDescentParser {
 
         if (matchAny(TokenType.IF)) {
             return ifStatement();
+        }
+
+        if (matchAny(TokenType.WHILE)) {
+            return whileStatement();
         }
 
         return expressionStatement();
@@ -155,6 +160,21 @@ public class RecursiveDescentParser {
         return new IfStmt(conditionExpr, thenBranch, elseBranch);
     }
 
+    /**
+     * whileStatement -> "while" "(" expression ")" statement
+     */
+    private Stmt whileStatement() {
+
+        consume(TokenType.LEFT_PAREN, "'(' expected after while.");
+
+        Expression condition = expression();
+
+        consume(TokenType.RIGHT_PAREN, "')' expected after while condition.");
+
+        Stmt body = statement();
+
+        return new WhileStatement(condition, body);
+    }
 
     /**
      * exprStmt -> expression ";"

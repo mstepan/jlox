@@ -1,0 +1,16 @@
+// print first 10 fibonacci numbers
+var first = 1;
+var second = 1;
+
+var it = 0;
+
+while( it < 10 ){
+	print "fibonacci-" + it + ": " + first;
+	var temp = first + second;
+	first = second;
+	second = temp;
+
+	it = it + 1;
+}
+
+print "Main done. Calculated fibonacci numbers count: "+ it;

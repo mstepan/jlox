@@ -16,6 +16,7 @@ import org.max.crafting.interpreter.jlox.ast.Stmt;
 import org.max.crafting.interpreter.jlox.ast.UnaryExpression;
 import org.max.crafting.interpreter.jlox.ast.VarStmt;
 import org.max.crafting.interpreter.jlox.ast.VariableExpression;
+import org.max.crafting.interpreter.jlox.ast.WhileStatement;
 import org.max.crafting.interpreter.jlox.model.Token;
 import org.max.crafting.interpreter.jlox.model.TokenType;
 
@@ -113,6 +114,15 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
     }
 
     @Override
+    public Void visitWhileStatement(WhileStatement whileStmt) {
+        while (isTrue(whileStmt.condition.accept(this))) {
+            whileStmt.body.accept(this);
+        }
+
+        return null;
+    }
+
+    @Override
     public Object visitCommaExpression(CommaExpresssion commaExpr) {
         // IMPORTANT: left side evaluated, but returned value ignored
         // this is important for assignments if any
@@ -138,7 +148,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
         }
 
         // short-circuit OR
-        if((logicalExpr.operator.type == TokenType.OR) && isTrue(left)){
+        if ((logicalExpr.operator.type == TokenType.OR) && isTrue(left)) {
             return left;
         }
 

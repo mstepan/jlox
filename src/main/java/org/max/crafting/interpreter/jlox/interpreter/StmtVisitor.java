@@ -5,6 +5,7 @@ import org.max.crafting.interpreter.jlox.ast.ExpressionStmt;
 import org.max.crafting.interpreter.jlox.ast.IfStmt;
 import org.max.crafting.interpreter.jlox.ast.PrintStmt;
 import org.max.crafting.interpreter.jlox.ast.VarStmt;
+import org.max.crafting.interpreter.jlox.ast.WhileStatement;
 
 public interface StmtVisitor<T> {
 
@@ -17,4 +18,6 @@ public interface StmtVisitor<T> {
     T visitBlockStatement(Block blockStmt);
 
     T visitIfStatement(IfStmt ifStmt);
+
+    T visitWhileStatement(WhileStatement whileStmt);
 }

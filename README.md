@@ -26,3 +26,7 @@ As a quick example, just run
 ```
 ./jlox src/main/resources/program1.jlox
 ```
+or 
+```
+./jlox src/main/resources/fibonacci.jlox
+```
