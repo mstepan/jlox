@@ -10,12 +10,14 @@ import org.max.crafting.interpreter.jlox.ast.ExpressionStmt;
 import org.max.crafting.interpreter.jlox.ast.Grouping;
 import org.max.crafting.interpreter.jlox.ast.IfStmt;
 import org.max.crafting.interpreter.jlox.ast.Literal;
+import org.max.crafting.interpreter.jlox.ast.LogicalExpression;
 import org.max.crafting.interpreter.jlox.ast.PrintStmt;
 import org.max.crafting.interpreter.jlox.ast.Stmt;
 import org.max.crafting.interpreter.jlox.ast.UnaryExpression;
 import org.max.crafting.interpreter.jlox.ast.VarStmt;
 import org.max.crafting.interpreter.jlox.ast.VariableExpression;
 import org.max.crafting.interpreter.jlox.model.Token;
+import org.max.crafting.interpreter.jlox.model.TokenType;
 
 import java.util.List;
 
@@ -123,6 +125,18 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
         Object value = assignment.value.accept(this);
         environment.assign(assignment.name, value);
         return value;
+    }
+
+    @Override
+    public Object visitLogicalExpression(LogicalExpression logicalExpr) {
+        // Logical AND (&&), logical OR (||) in java short circuit, so
+        // we can directly use here
+        if (logicalExpr.operator.type == TokenType.AND) {
+            return isTrue(logicalExpr.left.accept(this)) &&
+                    isTrue(logicalExpr.right.accept(this));
+        }
+
+        return isTrue(logicalExpr.left.accept(this)) || isTrue(logicalExpr.right.accept(this));
     }
 
     @Override

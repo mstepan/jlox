@@ -115,6 +115,51 @@ final class IfElseTest extends LoxBaseTest {
     }
 
     @Test
+    void ifWithLogicalOr() {
+        Lox.runScript("""
+                              var x = 100;
+                              var y = 0;
+                                              
+                              if( x == 0 or y == 0 ){
+                                  print "YES";
+                              }
+                              else {
+                                  print "NO";
+                              }
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        YES
+                        """,
+                output());
+    }
+
+    @Test
+    void ifWithLogicalAnd() {
+        Lox.runScript("""
+                              var x = 0;
+                              var y = 0;
+                                              
+                              if( x == 0 and y == 0 ){
+                                  print "YES";
+                              }
+                              else {
+                                  print "NO";
+                              }
+
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        YES
+                        """,
+                output());
+    }
+
+    @Test
     void elseWithoutIfShouldFail1() {
         Lox.runScript("""
                               else {

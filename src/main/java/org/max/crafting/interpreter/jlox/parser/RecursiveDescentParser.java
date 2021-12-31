@@ -10,6 +10,7 @@ import org.max.crafting.interpreter.jlox.ast.ExpressionStmt;
 import org.max.crafting.interpreter.jlox.ast.Grouping;
 import org.max.crafting.interpreter.jlox.ast.IfStmt;
 import org.max.crafting.interpreter.jlox.ast.Literal;
+import org.max.crafting.interpreter.jlox.ast.LogicalExpression;
 import org.max.crafting.interpreter.jlox.ast.PrintStmt;
 import org.max.crafting.interpreter.jlox.ast.Stmt;
 import org.max.crafting.interpreter.jlox.ast.UnaryExpression;
@@ -187,11 +188,11 @@ public class RecursiveDescentParser {
     }
 
     /**
-     * assignment -> IDENTIFIER "=" assignment | equality
+     * assignment -> IDENTIFIER "=" assignment | logic_or
      */
     private Expression assignment() {
 
-        Expression left = equality();
+        Expression left = logicalOr();
 
         if (matchAny(TokenType.EQUAL)) {
             Token equalsToken = previous();
@@ -205,6 +206,37 @@ public class RecursiveDescentParser {
             throw error(equalsToken, "Invalid assignment target.");
         }
         return left;
+    }
+
+    /**
+     * logic_or -> logic_and ("or" logic_and)*
+     */
+    private Expression logicalOr() {
+        Expression expr = logicalAnd();
+
+        while (matchAny(TokenType.OR)) {
+            Token operator = previous();
+            Expression right = logicalAnd();
+            expr = new LogicalExpression(expr, operator, right);
+        }
+
+        return expr;
+    }
+
+    /**
+     * logic_and -> equality ("and" equality)*
+     */
+    private Expression logicalAnd() {
+
+        Expression expr = equality();
+
+        while (matchAny(TokenType.AND)) {
+            Token operator = previous();
+            Expression right = equality();
+            expr = new LogicalExpression(expr, operator, right);
+        }
+
+        return expr;
     }
 
     /**

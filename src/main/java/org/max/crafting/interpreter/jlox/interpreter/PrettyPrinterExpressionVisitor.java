@@ -5,6 +5,7 @@ import org.max.crafting.interpreter.jlox.ast.BinaryExpression;
 import org.max.crafting.interpreter.jlox.ast.CommaExpresssion;
 import org.max.crafting.interpreter.jlox.ast.Grouping;
 import org.max.crafting.interpreter.jlox.ast.Literal;
+import org.max.crafting.interpreter.jlox.ast.LogicalExpression;
 import org.max.crafting.interpreter.jlox.ast.UnaryExpression;
 import org.max.crafting.interpreter.jlox.ast.VariableExpression;
 
@@ -48,5 +49,10 @@ public class PrettyPrinterExpressionVisitor implements ExpressionVisitor {
     @Override
     public Object visitCommaExpression(CommaExpresssion commaExpr) {
         return commaExpr.right.accept(this);
+    }
+
+    @Override
+    public Object visitLogicalExpression(LogicalExpression logicalExpr) {
+        return String.valueOf(logicalExpr.left.accept(this)) + logicalExpr.operator + logicalExpr.right.accept(this);
     }
 }
