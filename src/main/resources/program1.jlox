@@ -30,3 +30,14 @@ print "calculating area for circle with radius: " + r + " m";
 var area = pi * r * r;
 
 print "area: " + area + " m^2";
+
+
+var first = 10;
+var second = 20;
+var maxValue = first;
+
+if ( second > maxValue ){
+	maxValue = second;
+}
+
+print "max(" + first + ", " + second + ") = " + maxValue;

@@ -183,7 +183,8 @@ final class ScopeTest extends LoxBaseTest {
 
         assertEquals(
                 """
-                        [line 4] Expected ';' after variable declaration.                       
+                        [line 4] Expected ';' after variable declaration.    
+                        [line 6] '}' expected at the end of block.                   
                         """,
                 errorOutput());
     }

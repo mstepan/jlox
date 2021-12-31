@@ -1,9 +1,11 @@
 package org.max.crafting.interpreter.jlox;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 final class IfElseTest extends LoxBaseTest {
 
@@ -110,5 +112,38 @@ final class IfElseTest extends LoxBaseTest {
                         30
                         """,
                 output());
+    }
+
+    @Test
+    void elseWithoutIfShouldFail1() {
+        Lox.runScript("""
+                              else {
+                                   var x = 20;
+                              }
+                              """);
+
+        assertTrue(Lox.hasError(), "Expected error here");
+        assertEquals(
+                """
+                        [line 1] Expected expression.
+                        """,
+                errorOutput());
+    }
+
+    @Test
+    void elseWithoutIfShouldFail2() {
+        Lox.runScript("""
+                              var x = 10;
+                              else {
+                                   x = 20;
+                              }
+                              """);
+
+        assertTrue(Lox.hasError(), "Expected error here");
+        assertEquals(
+                """
+                        [line 1] Expected expression.
+                        """,
+                errorOutput());
     }
 }

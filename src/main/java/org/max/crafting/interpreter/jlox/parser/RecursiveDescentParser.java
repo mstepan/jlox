@@ -351,6 +351,9 @@ public class RecursiveDescentParser {
     }
 
     private Token previous() {
+        if (cur == 0) {
+            return tokens.get(cur);
+        }
         return tokens.get(cur - 1);
     }
 
@@ -372,17 +375,16 @@ public class RecursiveDescentParser {
      */
     private void synchronize() {
 
+        advance();
+
         while (!isEnd()) {
+
             if (previous().type == TokenType.SEMICOLON) {
                 return;
             }
 
-            if (peek().type == TokenType.RIGHT_BRACE) {
-                return;
-            }
-
             switch (peek().type) {
-                case CLASS, FUN, VAR, FOR, IF, WHILE, PRINT, RETURN:
+                case CLASS, FUN, VAR, FOR, IF, WHILE, PRINT, RETURN, LEFT_BRACE:
                     return;
             }
 
