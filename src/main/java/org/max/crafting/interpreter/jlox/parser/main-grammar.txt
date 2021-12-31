@@ -28,7 +28,7 @@ expression -> comma
 
 comma = assignment ("," comma)*
 
-// right recursive
+// assignment is right recursive
 assignment -> IDENTIFIER "=" assignment | logic_or
 
 logic_or -> logic_and ("or" logic_and)*

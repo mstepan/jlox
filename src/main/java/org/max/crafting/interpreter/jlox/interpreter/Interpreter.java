@@ -129,14 +129,20 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
 
     @Override
     public Object visitLogicalExpression(LogicalExpression logicalExpr) {
-        // Logical AND (&&), logical OR (||) in java short circuit, so
-        // we can directly use here
-        if (logicalExpr.operator.type == TokenType.AND) {
-            return isTrue(logicalExpr.left.accept(this)) &&
-                    isTrue(logicalExpr.right.accept(this));
+
+        Object left = logicalExpr.left.accept(this);
+
+        // short-circuit AND
+        if ((logicalExpr.operator.type == TokenType.AND) && isFalse(left)) {
+            return left;
         }
 
-        return isTrue(logicalExpr.left.accept(this)) || isTrue(logicalExpr.right.accept(this));
+        // short-circuit OR
+        if((logicalExpr.operator.type == TokenType.OR) && isTrue(left)){
+            return left;
+        }
+
+        return logicalExpr.right.accept(this);
     }
 
     @Override
@@ -273,7 +279,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
                 checkNumberOperand(unaryExp.operation, res);
                 yield negate(res);
             }
-            case BANG -> !isTrue(res);
+            case BANG -> isFalse(res);
             default -> null;
         };
     }
@@ -302,6 +308,10 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
         }
 
         return true;
+    }
+
+    private static boolean isFalse(Object value) {
+        return !isTrue(value);
     }
 
     @Override

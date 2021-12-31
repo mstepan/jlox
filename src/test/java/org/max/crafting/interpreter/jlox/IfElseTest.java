@@ -137,6 +137,21 @@ final class IfElseTest extends LoxBaseTest {
     }
 
     @Test
+    void ifWithLogicalOrCheckShortCircuit() {
+        Lox.runScript("""
+                              // logical OR should short-circuit here and print true
+                              print true or 2;
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        true
+                        """,
+                output());
+    }
+
+    @Test
     void ifWithLogicalAnd() {
         Lox.runScript("""
                               var x = 0;
@@ -155,6 +170,25 @@ final class IfElseTest extends LoxBaseTest {
         assertEquals(
                 """
                         YES
+                        """,
+                output());
+    }
+
+    @Test
+    void ifWithLogicalAndCheckShortCircuit() {
+        Lox.runScript("""
+                              // logical AND should short-circuit here and print false
+                              print false and 2;
+                              
+                              // nil is FALSE, so logical AND should short-circuit here
+                              print nil and 2;
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        false
+                        nil
                         """,
                 output());
     }
