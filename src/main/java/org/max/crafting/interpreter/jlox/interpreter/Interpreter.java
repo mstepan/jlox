@@ -2,21 +2,21 @@ package org.max.crafting.interpreter.jlox.interpreter;
 
 import org.max.crafting.interpreter.jlox.Lox;
 import org.max.crafting.interpreter.jlox.ast.Assignment;
-import org.max.crafting.interpreter.jlox.ast.BinaryExpression;
+import org.max.crafting.interpreter.jlox.ast.BinaryExpr;
 import org.max.crafting.interpreter.jlox.ast.Block;
-import org.max.crafting.interpreter.jlox.ast.CommaExpresssion;
+import org.max.crafting.interpreter.jlox.ast.CommaExpr;
 import org.max.crafting.interpreter.jlox.ast.Expression;
 import org.max.crafting.interpreter.jlox.ast.ExpressionStmt;
 import org.max.crafting.interpreter.jlox.ast.Grouping;
 import org.max.crafting.interpreter.jlox.ast.IfStmt;
 import org.max.crafting.interpreter.jlox.ast.Literal;
-import org.max.crafting.interpreter.jlox.ast.LogicalExpression;
+import org.max.crafting.interpreter.jlox.ast.LogicalExpr;
 import org.max.crafting.interpreter.jlox.ast.PrintStmt;
 import org.max.crafting.interpreter.jlox.ast.Stmt;
-import org.max.crafting.interpreter.jlox.ast.UnaryExpression;
+import org.max.crafting.interpreter.jlox.ast.UnaryExpr;
 import org.max.crafting.interpreter.jlox.ast.VarStmt;
-import org.max.crafting.interpreter.jlox.ast.VariableExpression;
-import org.max.crafting.interpreter.jlox.ast.WhileStatement;
+import org.max.crafting.interpreter.jlox.ast.VariableExpr;
+import org.max.crafting.interpreter.jlox.ast.WhileStmt;
 import org.max.crafting.interpreter.jlox.model.Token;
 import org.max.crafting.interpreter.jlox.model.TokenType;
 
@@ -39,7 +39,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
                 execute(singleStmt);
             }
         }
-        catch (RuntimeError ex) {
+        catch (RuntimeInterpreterException ex) {
             Lox.runtimeError(ex);
         }
     }
@@ -48,7 +48,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
         try {
             return stringify(expr.accept(this));
         }
-        catch (RuntimeError ex) {
+        catch (RuntimeInterpreterException ex) {
             Lox.runtimeError(ex);
         }
         return stringify(null);
@@ -114,7 +114,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
     }
 
     @Override
-    public Void visitWhileStatement(WhileStatement whileStmt) {
+    public Void visitWhileStatement(WhileStmt whileStmt) {
         while (isTrue(whileStmt.condition.accept(this))) {
             whileStmt.body.accept(this);
         }
@@ -123,7 +123,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
     }
 
     @Override
-    public Object visitCommaExpression(CommaExpresssion commaExpr) {
+    public Object visitCommaExpression(CommaExpr commaExpr) {
         // IMPORTANT: left side evaluated, but returned value ignored
         // this is important for assignments if any
         commaExpr.left.accept(this);
@@ -138,7 +138,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
     }
 
     @Override
-    public Object visitLogicalExpression(LogicalExpression logicalExpr) {
+    public Object visitLogicalExpression(LogicalExpr logicalExpr) {
 
         Object left = logicalExpr.left.accept(this);
 
@@ -156,7 +156,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
     }
 
     @Override
-    public Object visitBinaryExpression(BinaryExpression binaryExp) {
+    public Object visitBinaryExpression(BinaryExpr binaryExp) {
 
         Object left = binaryExp.left.accept(this);
         Object right = binaryExp.right.accept(this);
@@ -217,7 +217,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
             return stringify(left) + stringify(right);
         }
 
-        throw new RuntimeError(operator, "Both operands must be numbers or one should be a string.");
+        throw new RuntimeInterpreterException(operator, "Both operands must be numbers or one should be a string.");
     }
 
     private Object minus(Token operator, Object left, Object right) {
@@ -240,7 +240,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
         if (isInt(left) && isInt(right)) {
             final int rightInt = (int) right;
             if (rightInt == 0) {
-                throw new RuntimeError(operator, "Integer division by zero.");
+                throw new RuntimeInterpreterException(operator, "Integer division by zero.");
             }
             return (int) left / rightInt;
         }
@@ -256,7 +256,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
             return (double) ((int) value);
         }
 
-        throw new RuntimeError(operator, "Unsupported type: " + value.getClass().getCanonicalName());
+        throw new RuntimeInterpreterException(operator, "Unsupported type: " + value.getClass().getCanonicalName());
     }
 
     private boolean isEqual(Token operator, Object left, Object right) {
@@ -281,7 +281,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
     }
 
     @Override
-    public Object visitUnaryExpression(UnaryExpression unaryExp) {
+    public Object visitUnaryExpression(UnaryExpr unaryExp) {
         Object res = unaryExp.expression.accept(this);
 
         return switch (unaryExp.operation.type) {
@@ -304,9 +304,9 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
 
     /**
      * We will follow Ruby rules here:
-     * 1. null -> false
-     * 2. Boolean -> value itself
-     * 3. everything else -> true
+     * 1. 'null' is always false
+     * 2. 'boolean' value evaluated to itself
+     * 3. everything else treated as 'true'
      */
     private static boolean isTrue(Object value) {
         if (value == null) {
@@ -335,7 +335,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
     }
 
     @Override
-    public Object visitVariableExpression(VariableExpression varExpr) {
+    public Object visitVariableExpression(VariableExpr varExpr) {
         return environment.get(varExpr.name);
     }
 
@@ -351,14 +351,14 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
         if (isNumber(left) && isNumber(right)) {
             return;
         }
-        throw new RuntimeError(operator, "Both operands must be numbers.");
+        throw new RuntimeInterpreterException(operator, "Both operands must be numbers.");
     }
 
     private void checkNumberOperand(Token operator, Object operand) {
         if (isNumber(operand)) {
             return;
         }
-        throw new RuntimeError(operator, "Operand must be a number.");
+        throw new RuntimeInterpreterException(operator, "Operand must be a number.");
     }
 
     private static boolean isNumber(Object value) {
@@ -373,12 +373,12 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
         return value instanceof Double;
     }
 
-    // Runtime error during AST evaluation
-    public static final class RuntimeError extends RuntimeException {
+    // Runtime exception during AST evaluation
+    public static final class RuntimeInterpreterException extends RuntimeException {
 
         public final Token operator;
 
-        RuntimeError(Token operator, String errorMsg) {
+        RuntimeInterpreterException(Token operator, String errorMsg) {
             super(errorMsg);
             this.operator = operator;
         }

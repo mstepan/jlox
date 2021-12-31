@@ -3,7 +3,7 @@ package org.max.crafting.interpreter.jlox.ast;
 import org.max.crafting.interpreter.jlox.interpreter.ExpressionVisitor;
 import org.max.crafting.interpreter.jlox.model.Token;
 
-public class BinaryExpression implements Expression {
+public class BinaryExpr implements Expression {
 
     public final Expression left;
 
@@ -11,7 +11,7 @@ public class BinaryExpression implements Expression {
 
     public final Expression right;
 
-    public BinaryExpression(Expression left, Token operator, Expression right) {
+    public BinaryExpr(Expression left, Token operator, Expression right) {
         this.left = left;
         this.operator = operator;
         this.right = right;

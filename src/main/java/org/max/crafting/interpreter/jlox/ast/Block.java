@@ -5,7 +5,7 @@ import org.max.crafting.interpreter.jlox.interpreter.StmtVisitor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Block extends Stmt {
+public class Block implements Stmt {
 
     public final List<Stmt> statements = new ArrayList<>();
 

@@ -1,29 +1,29 @@
 package org.max.crafting.interpreter.jlox.interpreter;
 
 import org.max.crafting.interpreter.jlox.ast.Assignment;
-import org.max.crafting.interpreter.jlox.ast.BinaryExpression;
-import org.max.crafting.interpreter.jlox.ast.CommaExpresssion;
+import org.max.crafting.interpreter.jlox.ast.BinaryExpr;
+import org.max.crafting.interpreter.jlox.ast.CommaExpr;
 import org.max.crafting.interpreter.jlox.ast.Literal;
 import org.max.crafting.interpreter.jlox.ast.Grouping;
-import org.max.crafting.interpreter.jlox.ast.LogicalExpression;
-import org.max.crafting.interpreter.jlox.ast.UnaryExpression;
-import org.max.crafting.interpreter.jlox.ast.VariableExpression;
+import org.max.crafting.interpreter.jlox.ast.LogicalExpr;
+import org.max.crafting.interpreter.jlox.ast.UnaryExpr;
+import org.max.crafting.interpreter.jlox.ast.VariableExpr;
 
 public interface ExpressionVisitor {
 
-    Object visitBinaryExpression(BinaryExpression binaryExp);
+    Object visitBinaryExpression(BinaryExpr binaryExp);
 
-    Object visitUnaryExpression(UnaryExpression unaryExp);
+    Object visitUnaryExpression(UnaryExpr unaryExp);
 
     Object visitLiteral(Literal literal);
 
     Object visitParentheses(Grouping grouping);
 
-    Object visitVariableExpression(VariableExpression varExpr);
+    Object visitVariableExpression(VariableExpr varExpr);
 
     Object visitAssignmentExpression(Assignment assignment);
 
-    Object visitCommaExpression(CommaExpresssion commaExpr);
+    Object visitCommaExpression(CommaExpr commaExpr);
 
-    Object visitLogicalExpression(LogicalExpression logicalExpr);
+    Object visitLogicalExpression(LogicalExpr logicalExpr);
 }

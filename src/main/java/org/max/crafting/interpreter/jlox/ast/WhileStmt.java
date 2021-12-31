@@ -2,12 +2,12 @@ package org.max.crafting.interpreter.jlox.ast;
 
 import org.max.crafting.interpreter.jlox.interpreter.StmtVisitor;
 
-public class WhileStatement extends Stmt {
+public class WhileStmt implements Stmt {
 
     public final Expression condition;
     public final Stmt body;
 
-    public WhileStatement(Expression condition, Stmt body) {
+    public WhileStmt(Expression condition, Stmt body) {
         this.condition = condition;
         this.body = body;
     }

@@ -2,21 +2,21 @@ package org.max.crafting.interpreter.jlox.parser;
 
 import org.max.crafting.interpreter.jlox.Lox;
 import org.max.crafting.interpreter.jlox.ast.Assignment;
-import org.max.crafting.interpreter.jlox.ast.BinaryExpression;
+import org.max.crafting.interpreter.jlox.ast.BinaryExpr;
 import org.max.crafting.interpreter.jlox.ast.Block;
-import org.max.crafting.interpreter.jlox.ast.CommaExpresssion;
+import org.max.crafting.interpreter.jlox.ast.CommaExpr;
 import org.max.crafting.interpreter.jlox.ast.Expression;
 import org.max.crafting.interpreter.jlox.ast.ExpressionStmt;
 import org.max.crafting.interpreter.jlox.ast.Grouping;
 import org.max.crafting.interpreter.jlox.ast.IfStmt;
 import org.max.crafting.interpreter.jlox.ast.Literal;
-import org.max.crafting.interpreter.jlox.ast.LogicalExpression;
+import org.max.crafting.interpreter.jlox.ast.LogicalExpr;
 import org.max.crafting.interpreter.jlox.ast.PrintStmt;
 import org.max.crafting.interpreter.jlox.ast.Stmt;
-import org.max.crafting.interpreter.jlox.ast.UnaryExpression;
+import org.max.crafting.interpreter.jlox.ast.UnaryExpr;
 import org.max.crafting.interpreter.jlox.ast.VarStmt;
-import org.max.crafting.interpreter.jlox.ast.VariableExpression;
-import org.max.crafting.interpreter.jlox.ast.WhileStatement;
+import org.max.crafting.interpreter.jlox.ast.VariableExpr;
+import org.max.crafting.interpreter.jlox.ast.WhileStmt;
 import org.max.crafting.interpreter.jlox.model.Token;
 import org.max.crafting.interpreter.jlox.model.TokenType;
 
@@ -173,7 +173,7 @@ public class RecursiveDescentParser {
 
         Stmt body = statement();
 
-        return new WhileStatement(condition, body);
+        return new WhileStmt(condition, body);
     }
 
     /**
@@ -201,7 +201,7 @@ public class RecursiveDescentParser {
 
         if (matchAny(TokenType.COMMA)) {
             Expression right = comma();
-            return new CommaExpresssion(left, right);
+            return new CommaExpr(left, right);
         }
 
         return left;
@@ -218,8 +218,8 @@ public class RecursiveDescentParser {
             Token equalsToken = previous();
             Expression right = assignment();
 
-            if (left instanceof VariableExpression) {
-                Token name = ((VariableExpression) left).name;
+            if (left instanceof VariableExpr) {
+                Token name = ((VariableExpr) left).name;
                 return new Assignment(name, right);
             }
 
@@ -237,7 +237,7 @@ public class RecursiveDescentParser {
         while (matchAny(TokenType.OR)) {
             Token operator = previous();
             Expression right = logicalAnd();
-            expr = new LogicalExpression(expr, operator, right);
+            expr = new LogicalExpr(expr, operator, right);
         }
 
         return expr;
@@ -253,7 +253,7 @@ public class RecursiveDescentParser {
         while (matchAny(TokenType.AND)) {
             Token operator = previous();
             Expression right = equality();
-            expr = new LogicalExpression(expr, operator, right);
+            expr = new LogicalExpr(expr, operator, right);
         }
 
         return expr;
@@ -268,7 +268,7 @@ public class RecursiveDescentParser {
         while (matchAny(TokenType.EQUAL_EQUAL, TokenType.BANG_EQUAL)) {
             Token op = previous();
             Expression rightExp = comparison();
-            expr = new BinaryExpression(expr, op, rightExp);
+            expr = new BinaryExpr(expr, op, rightExp);
         }
 
         return expr;
@@ -283,7 +283,7 @@ public class RecursiveDescentParser {
         while (matchAny(TokenType.GREATER, TokenType.GREATER_EQUAL, TokenType.LESS, TokenType.LESS_EQUAL)) {
             Token op = previous();
             Expression rightExp = term();
-            expr = new BinaryExpression(expr, op, rightExp);
+            expr = new BinaryExpr(expr, op, rightExp);
         }
 
         return expr;
@@ -299,7 +299,7 @@ public class RecursiveDescentParser {
         while (matchAny(TokenType.MINUS, TokenType.PLUS)) {
             Token op = previous();
             Expression rightSide = factor();
-            expr = new BinaryExpression(expr, op, rightSide);
+            expr = new BinaryExpr(expr, op, rightSide);
         }
 
         return expr;
@@ -314,7 +314,7 @@ public class RecursiveDescentParser {
         while (matchAny(TokenType.STAR, TokenType.SLASH)) {
             Token op = previous();
             Expression rightSide = unary();
-            expr = new BinaryExpression(expr, op, rightSide);
+            expr = new BinaryExpr(expr, op, rightSide);
         }
 
         return expr;
@@ -327,7 +327,7 @@ public class RecursiveDescentParser {
         if (matchAny(TokenType.BANG, TokenType.MINUS)) {
             Token op = previous();
             Expression right = unary();
-            return new UnaryExpression(op, right);
+            return new UnaryExpr(op, right);
         }
 
         return primary();
@@ -360,7 +360,7 @@ public class RecursiveDescentParser {
         }
 
         if (matchAny(TokenType.IDENTIFIER)) {
-            return new VariableExpression(previous());
+            return new VariableExpr(previous());
         }
 
         throw error(previous(), "Expected expression.");

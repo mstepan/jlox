@@ -3,7 +3,7 @@ package org.max.crafting.interpreter.jlox.ast;
 import org.max.crafting.interpreter.jlox.interpreter.StmtVisitor;
 import org.max.crafting.interpreter.jlox.model.Token;
 
-public class VarStmt extends Stmt {
+public class VarStmt implements Stmt {
 
     public final Token name;
     public final Expression initExpr;

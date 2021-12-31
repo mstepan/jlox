@@ -43,7 +43,7 @@ public final class Environment {
         Map<String, Object> curScope = findScopeForVar(varName);
 
         if (!curScope.containsKey(varName)) {
-            throw new Interpreter.RuntimeError(name, "Undefined variable with name '" + name.lexeme + "'");
+            throw new Interpreter.RuntimeInterpreterException(name, "Undefined variable with name '" + name.lexeme + "'");
         }
 
         return curScope.get(varName);
@@ -63,7 +63,7 @@ public final class Environment {
         }
 
         // no implicit variable declaration, so fail here
-        throw new Interpreter.RuntimeError(name, "Can't assign to undefined variable '" + name.lexeme + "'.");
+        throw new Interpreter.RuntimeInterpreterException(name, "Can't assign to undefined variable '" + name.lexeme + "'.");
     }
 
     private Map<String, Object> last() {

@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
  * Tests related to logical expressions: ==, !=, <, <=, >, >=
  * Some double related corner cases also handled here, like NaN == NaN should return false.
  */
-final class LogicalExpressionTest extends LoxBaseTest {
+final class LogicalExprTest extends LoxBaseTest {
 
     @Test
     void equalsForStrings() {

@@ -1,11 +1,11 @@
 package org.max.crafting.interpreter.jlox.ast.visitor;
 
 import org.junit.jupiter.api.Test;
-import org.max.crafting.interpreter.jlox.ast.BinaryExpression;
+import org.max.crafting.interpreter.jlox.ast.BinaryExpr;
 import org.max.crafting.interpreter.jlox.ast.Expression;
 import org.max.crafting.interpreter.jlox.ast.Literal;
 import org.max.crafting.interpreter.jlox.ast.Grouping;
-import org.max.crafting.interpreter.jlox.ast.UnaryExpression;
+import org.max.crafting.interpreter.jlox.ast.UnaryExpr;
 import org.max.crafting.interpreter.jlox.interpreter.PrettyPrinterExpressionVisitor;
 import org.max.crafting.interpreter.jlox.model.Token;
 import org.max.crafting.interpreter.jlox.model.TokenType;
@@ -18,15 +18,15 @@ final class PrettyPrinterExpressionVisitorTest {
     void prettyPrinting() {
 
         // -6 * (2 + 3)
-        Expression expression = new BinaryExpression(
+        Expression expression = new BinaryExpr(
                 // -6
-                new UnaryExpression(new Token(TokenType.MINUS, null, null, 0), new Literal(6)),
+                new UnaryExpr(new Token(TokenType.MINUS, null, null, 0), new Literal(6)),
 
                 // *
                 new Token(TokenType.STAR, null, null, 0),
 
                 // (2 + 3)
-                new Grouping(new BinaryExpression(
+                new Grouping(new BinaryExpr(
                         new Literal(2),
                         new Token(TokenType.PLUS, null, null, 0),
                         new Literal(3)
@@ -44,15 +44,15 @@ final class PrettyPrinterExpressionVisitorTest {
     void prettyPrintingWithComparison() {
 
         // 1 - (2 * 3) < 4 == false
-        Expression expression = new BinaryExpression(
+        Expression expression = new BinaryExpr(
                 //1 - (2 * 3) < 4
-                new BinaryExpression(
+                new BinaryExpr(
                         new Literal(1),
                         new Token(TokenType.MINUS, null, null, 0),
 
                         //(2 * 3) < 4
-                        new BinaryExpression(
-                                new Grouping(new BinaryExpression(
+                        new BinaryExpr(
+                                new Grouping(new BinaryExpr(
                                         new Literal(2),
                                         new Token(TokenType.STAR, null, null, 0),
                                         new Literal(3))),

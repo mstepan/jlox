@@ -176,7 +176,7 @@ public class Lox {
     /**
      * Report dynamic (runtime) error from parser evaluation.
      */
-    public static void runtimeError(Interpreter.RuntimeError error) {
+    public static void runtimeError(Interpreter.RuntimeInterpreterException error) {
         lastErrorMsg = String.format("[line %s]: %s", error.operator.lineNumber, error.getMessage());
         System.err.println(lastErrorMsg);
         hadRuntimeError = true;

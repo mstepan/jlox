@@ -2,7 +2,7 @@ package org.max.crafting.interpreter.jlox.ast;
 
 import org.max.crafting.interpreter.jlox.interpreter.StmtVisitor;
 
-public class PrintStmt extends Stmt {
+public class PrintStmt implements Stmt {
 
     public final Expression expr;
 

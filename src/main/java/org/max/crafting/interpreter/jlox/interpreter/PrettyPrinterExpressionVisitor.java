@@ -1,19 +1,19 @@
 package org.max.crafting.interpreter.jlox.interpreter;
 
 import org.max.crafting.interpreter.jlox.ast.Assignment;
-import org.max.crafting.interpreter.jlox.ast.BinaryExpression;
-import org.max.crafting.interpreter.jlox.ast.CommaExpresssion;
+import org.max.crafting.interpreter.jlox.ast.BinaryExpr;
+import org.max.crafting.interpreter.jlox.ast.CommaExpr;
 import org.max.crafting.interpreter.jlox.ast.Grouping;
 import org.max.crafting.interpreter.jlox.ast.Literal;
-import org.max.crafting.interpreter.jlox.ast.LogicalExpression;
-import org.max.crafting.interpreter.jlox.ast.UnaryExpression;
-import org.max.crafting.interpreter.jlox.ast.VariableExpression;
+import org.max.crafting.interpreter.jlox.ast.LogicalExpr;
+import org.max.crafting.interpreter.jlox.ast.UnaryExpr;
+import org.max.crafting.interpreter.jlox.ast.VariableExpr;
 
 
 public class PrettyPrinterExpressionVisitor implements ExpressionVisitor {
 
     @Override
-    public Object visitBinaryExpression(BinaryExpression binaryExp) {
+    public Object visitBinaryExpression(BinaryExpr binaryExp) {
         String leftStr = String.valueOf(binaryExp.left.accept(this));
         String opStr = binaryExp.operator.type.name;
         String rightStr = String.valueOf(binaryExp.right.accept(this));
@@ -21,13 +21,13 @@ public class PrettyPrinterExpressionVisitor implements ExpressionVisitor {
     }
 
     @Override
-    public Object visitUnaryExpression(UnaryExpression unaryExp) {
+    public Object visitUnaryExpression(UnaryExpr unaryExp) {
         String opStr = unaryExp.operation.type.name;
         return opStr + unaryExp.expression.accept(this);
     }
 
     @Override
-    public Object visitVariableExpression(VariableExpression varExpr) {
+    public Object visitVariableExpression(VariableExpr varExpr) {
         return varExpr.name;
     }
 
@@ -47,12 +47,12 @@ public class PrettyPrinterExpressionVisitor implements ExpressionVisitor {
     }
 
     @Override
-    public Object visitCommaExpression(CommaExpresssion commaExpr) {
+    public Object visitCommaExpression(CommaExpr commaExpr) {
         return commaExpr.right.accept(this);
     }
 
     @Override
-    public Object visitLogicalExpression(LogicalExpression logicalExpr) {
+    public Object visitLogicalExpression(LogicalExpr logicalExpr) {
         return String.valueOf(logicalExpr.left.accept(this)) + logicalExpr.operator + logicalExpr.right.accept(this);
     }
 }
