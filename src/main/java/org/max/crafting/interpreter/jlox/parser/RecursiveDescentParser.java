@@ -99,17 +99,17 @@ public class RecursiveDescentParser {
         if (matchAny(TokenType.PRINT)) {
             return printStatement();
         }
-
         if (matchAny(TokenType.LEFT_BRACE)) {
             return block();
         }
-
         if (matchAny(TokenType.IF)) {
             return ifStatement();
         }
-
         if (matchAny(TokenType.WHILE)) {
             return whileStatement();
+        }
+        if (matchAny(TokenType.FOR)) {
+            return forStatement();
         }
 
         return expressionStatement();
@@ -175,6 +175,78 @@ public class RecursiveDescentParser {
 
         return new WhileStmt(condition, body);
     }
+
+    /**
+     * forStatement -> "for" "(" (varDeclaration | exprStmt | ";") expression? ";" expression?  ")" statement
+     * Parse FOR-statement here, but convert into WHILE statement under the hood.
+     * FOR loop kinda playing role of 'syntactic sugar' for WHILE loop.
+     */
+    private Stmt forStatement() {
+
+        consume(TokenType.LEFT_PAREN, "Expected '(' after for.");
+
+        // parse INIT section (init is optional)
+        Stmt init;
+        if (matchAny(TokenType.SEMICOLON)) {
+            init = null;
+        }
+        else if (matchAny(TokenType.VAR)) {
+            init = varDeclaration();
+        }
+        else {
+            init = expressionStatement();
+        }
+
+        // parse CONDITION section if any (condition is optional)
+        Expression condition;
+        if (matchAny(TokenType.SEMICOLON)) {
+            condition = null;
+        }
+        else {
+            condition = expression();
+            consume(TokenType.SEMICOLON, "Expected ';' after FOR loop condition.");
+        }
+
+        // parse INCREMENT section if any (increment is optional)
+        Expression increment;
+        if (matchAny(TokenType.RIGHT_PAREN)) {
+            increment = null;
+        }
+        else {
+            increment = expression();
+            consume(TokenType.RIGHT_PAREN, "Expected ')' after FOR clauses.");
+        }
+
+        Stmt body = statement();
+
+        return toWhileStatement(init, condition, increment, body);
+    }
+
+    /**
+     * Convert parts of FOR loop into WHILE loop.
+     */
+    private Stmt toWhileStatement(Stmt init, Expression condition, Expression increment, Stmt body) {
+
+        Expression whileCondition = (condition == null) ? new Literal(true) : condition;
+
+        Block whileBody = new Block();
+        whileBody.add(body);
+        if (increment != null) {
+            whileBody.add(new ExpressionStmt(increment));
+        }
+
+        WhileStmt whileStmt = new WhileStmt(whileCondition, whileBody);
+
+        Block combinedBlock = new Block();
+        if (init != null) {
+            combinedBlock.add(init);
+        }
+
+        combinedBlock.add(whileStmt);
+
+        return combinedBlock;
+    }
+
 
     /**
      * exprStmt -> expression ";"

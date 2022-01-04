@@ -14,7 +14,7 @@ final class WhileTest extends LoxBaseTest {
                               var x = 0;
                                               
                               while( x < 5 ){
-                                print "loop: " + x;
+                                print "x = " + x;
                                 x = x + 1;
                               }
                                                             
@@ -25,11 +25,11 @@ final class WhileTest extends LoxBaseTest {
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
         assertEquals(
                 """
-                        loop: 0
-                        loop: 1
-                        loop: 2
-                        loop: 3
-                        loop: 4
+                        x = 0
+                        x = 1
+                        x = 2
+                        x = 3
+                        x = 4
                         after loop: 5
                         """,
                 output());
