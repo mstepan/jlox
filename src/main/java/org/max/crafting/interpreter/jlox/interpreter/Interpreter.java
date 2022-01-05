@@ -4,6 +4,7 @@ import org.max.crafting.interpreter.jlox.Lox;
 import org.max.crafting.interpreter.jlox.ast.Assignment;
 import org.max.crafting.interpreter.jlox.ast.BinaryExpr;
 import org.max.crafting.interpreter.jlox.ast.Block;
+import org.max.crafting.interpreter.jlox.ast.CallExpr;
 import org.max.crafting.interpreter.jlox.ast.CommaExpr;
 import org.max.crafting.interpreter.jlox.ast.Expression;
 import org.max.crafting.interpreter.jlox.ast.ExpressionStmt;
@@ -322,6 +323,13 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
 
     private static boolean isFalse(Object value) {
         return !isTrue(value);
+    }
+
+    @Override
+    public Object visitCall(CallExpr callExpr) {
+
+        //TODO: visit function call
+        return null;
     }
 
     @Override

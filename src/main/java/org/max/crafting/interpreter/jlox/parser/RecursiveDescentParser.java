@@ -4,6 +4,7 @@ import org.max.crafting.interpreter.jlox.Lox;
 import org.max.crafting.interpreter.jlox.ast.Assignment;
 import org.max.crafting.interpreter.jlox.ast.BinaryExpr;
 import org.max.crafting.interpreter.jlox.ast.Block;
+import org.max.crafting.interpreter.jlox.ast.CallExpr;
 import org.max.crafting.interpreter.jlox.ast.CommaExpr;
 import org.max.crafting.interpreter.jlox.ast.Expression;
 import org.max.crafting.interpreter.jlox.ast.ExpressionStmt;
@@ -393,7 +394,7 @@ public class RecursiveDescentParser {
     }
 
     /**
-     * unary -> ("!" | "-") unary | primary
+     * unary -> ("!" | "-") unary | call
      */
     private Expression unary() {
         if (matchAny(TokenType.BANG, TokenType.MINUS)) {
@@ -402,35 +403,90 @@ public class RecursiveDescentParser {
             return new UnaryExpr(op, right);
         }
 
-        return primary();
+        return call();
     }
+
+    /**
+     * call -> primary ("(" arguments? ")")*
+     */
+    private Expression call() {
+
+        Expression calleeExpr = primary();
+
+        while (matchAny(TokenType.LEFT_PAREN)) {
+            calleeExpr = finishCall(calleeExpr);
+        }
+
+        return calleeExpr;
+    }
+
+    private Expression finishCall(Expression calleeExpr) {
+
+        List<Expression> arguments = new ArrayList<>();
+
+        // no arguments function call possible here
+        if (!check(TokenType.RIGHT_PAREN)) {
+            do {
+                arguments.addAll(commaToExpressionsList(expression()));
+            }
+            while (matchAny(TokenType.COMMA));
+        }
+
+        Token rightParen = consume(TokenType.RIGHT_PAREN, "Expected ')' after arguments list.");
+
+        return new CallExpr(calleeExpr, arguments, rightParen);
+    }
+
+    /**
+     * According to our grammar rules, arguments list will be always parsed to CommaExpr:
+     * <p>
+     * 1. comma = assignment ("," comma)*
+     * 2. arguments -> expression (", " expression)*
+     * <p>
+     * So just flatten comma expression to list of single expressions.
+     */
+    private List<Expression> commaToExpressionsList(Expression expression) {
+
+        Expression curExpr = expression;
+
+        List<Expression> flatExpressions = new ArrayList<>();
+
+        while (curExpr instanceof CommaExpr) {
+
+            CommaExpr commaExp = (CommaExpr) curExpr;
+
+            flatExpressions.add(commaExp.left);
+
+            curExpr = commaExp.right;
+        }
+
+        flatExpressions.add(curExpr);
+
+        return flatExpressions;
+    }
+
 
     /**
      * primary -> STRING | NUMBER | "true" | "false" | nil | "(" expression ")" | IDENTIFIER
      */
     private Expression primary() {
-        if (matchAny(TokenType.FALSE)) {
-            return new Literal(false);
-        }
-
-        if (matchAny(TokenType.TRUE)) {
-            return new Literal(true);
-        }
-
-        if (matchAny(TokenType.NIL)) {
-            return new Literal(null);
-        }
-
         if (matchAny(TokenType.NUMBER, TokenType.STRING)) {
             return new Literal(previous().getLiteral());
         }
-
+        if (matchAny(TokenType.TRUE)) {
+            return new Literal(true);
+        }
+        if (matchAny(TokenType.FALSE)) {
+            return new Literal(false);
+        }
+        if (matchAny(TokenType.NIL)) {
+            return new Literal(null);
+        }
         if (matchAny(TokenType.LEFT_PAREN)) {
             Expression expr = expression();
             consume(TokenType.RIGHT_PAREN, "Matching ')' expected.");
             return new Grouping(expr);
         }
-
         if (matchAny(TokenType.IDENTIFIER)) {
             return new VariableExpr(previous());
         }

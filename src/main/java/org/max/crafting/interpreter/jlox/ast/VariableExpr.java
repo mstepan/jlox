@@ -15,4 +15,9 @@ public class VariableExpr implements Expression {
     public Object accept(ExpressionVisitor visitor) {
         return visitor.visitVariableExpression(this);
     }
+
+    @Override
+    public String toString(){
+        return name.lexeme;
+    }
 }

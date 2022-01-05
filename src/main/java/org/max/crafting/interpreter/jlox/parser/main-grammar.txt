@@ -30,7 +30,7 @@ forStatement -> "for" "(" (varDeclaration | exprStmt | ";") expression? ";" expr
 
 expression -> comma
 
-comma = assignment ("," comma)*
+comma -> assignment ("," comma)*
 
 // assignment is right recursive
 assignment -> IDENTIFIER "=" assignment | logic_or
@@ -48,6 +48,10 @@ term -> factor (("+" | "-") factor)*
 factor -> unary (("*" | "/" ) unary)*
 
 // unary operator has highest precedence
-unary -> ("!" | "-") unary | primary
+unary -> ("!" | "-") unary | call
+
+call -> primary ( "(" arguments? ")" )*
+
+arguments -> expression (", " expression)*
 
 primary -> STRING | NUMBER | "true" | "false" | nil | "(" expression ")" | IDENTIFIER

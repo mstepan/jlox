@@ -2,6 +2,7 @@ package org.max.crafting.interpreter.jlox.interpreter;
 
 import org.max.crafting.interpreter.jlox.ast.Assignment;
 import org.max.crafting.interpreter.jlox.ast.BinaryExpr;
+import org.max.crafting.interpreter.jlox.ast.CallExpr;
 import org.max.crafting.interpreter.jlox.ast.CommaExpr;
 import org.max.crafting.interpreter.jlox.ast.Grouping;
 import org.max.crafting.interpreter.jlox.ast.Literal;
@@ -54,5 +55,10 @@ public class PrettyPrinterExpressionVisitor implements ExpressionVisitor {
     @Override
     public Object visitLogicalExpression(LogicalExpr logicalExpr) {
         return String.valueOf(logicalExpr.left.accept(this)) + logicalExpr.operator + logicalExpr.right.accept(this);
+    }
+
+    @Override
+    public Object visitCall(CallExpr callExpr) {
+        return "call " + callExpr.callee.accept(this);
     }
 }

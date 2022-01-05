@@ -2,6 +2,7 @@ package org.max.crafting.interpreter.jlox.interpreter;
 
 import org.max.crafting.interpreter.jlox.ast.Assignment;
 import org.max.crafting.interpreter.jlox.ast.BinaryExpr;
+import org.max.crafting.interpreter.jlox.ast.CallExpr;
 import org.max.crafting.interpreter.jlox.ast.CommaExpr;
 import org.max.crafting.interpreter.jlox.ast.Literal;
 import org.max.crafting.interpreter.jlox.ast.Grouping;
@@ -26,4 +27,6 @@ public interface ExpressionVisitor {
     Object visitCommaExpression(CommaExpr commaExpr);
 
     Object visitLogicalExpression(LogicalExpr logicalExpr);
+
+    Object visitCall(CallExpr callExpr);
 }
