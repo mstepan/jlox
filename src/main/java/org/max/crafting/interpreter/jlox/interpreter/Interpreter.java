@@ -71,7 +71,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
 
     public String interpret(Expression expr) {
         try {
-            return stringify(expr.accept(this));
+            return stringify(eval(expr));
         }
         catch (RuntimeInterpreterException ex) {
             Lox.runtimeError(ex);
@@ -89,7 +89,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
     /**
      * Evaluate single expression.
      */
-    private Object eval(Expression expr){
+    private Object eval(Expression expr) {
         return expr.accept(this);
     }
 
@@ -99,7 +99,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
         Object val = null;
 
         if (stmt.initExpr != null) {
-            val = stmt.initExpr.accept(this);
+            val = eval(stmt.initExpr);
         }
         environment.define(stmt.name.lexeme, val);
 
@@ -108,13 +108,13 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
 
     @Override
     public Void visitExpressionStmt(ExpressionStmt stmt) {
-        stmt.expr.accept(this);
+        eval(stmt.expr);
         return null;
     }
 
     @Override
     public Void visitPrintStmt(PrintStmt stmt) {
-        Object value = stmt.expr.accept(this);
+        Object value = eval(stmt.expr);
         System.out.println(stringify(value));
         return null;
     }
@@ -136,7 +136,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
     @Override
     public Void visitIfStatement(IfStmt ifStmt) {
 
-        boolean conditionTrue = isTrue(ifStmt.condition.accept(this));
+        boolean conditionTrue = isTrue(eval(ifStmt.condition));
 
         if (conditionTrue) {
             return ifStmt.thenBranch.accept(this);
@@ -150,7 +150,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
 
     @Override
     public Void visitWhileStatement(WhileStmt whileStmt) {
-        while (isTrue(whileStmt.condition.accept(this))) {
+        while (isTrue(eval(whileStmt.condition))) {
             whileStmt.body.accept(this);
         }
 
@@ -161,13 +161,13 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
     public Object visitCommaExpression(CommaExpr commaExpr) {
         // IMPORTANT: left side evaluated, but returned value ignored
         // this is important for assignments if any
-        commaExpr.left.accept(this);
-        return commaExpr.right.accept(this);
+        eval(commaExpr.left);
+        return eval(commaExpr.right);
     }
 
     @Override
     public Object visitAssignmentExpression(Assignment assignment) {
-        Object value = assignment.value.accept(this);
+        Object value = eval(assignment.value);
         environment.assign(assignment.name, value);
         return value;
     }
@@ -175,7 +175,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
     @Override
     public Object visitLogicalExpression(LogicalExpr logicalExpr) {
 
-        Object left = logicalExpr.left.accept(this);
+        Object left = eval(logicalExpr.left);
 
         // short-circuit AND
         if ((logicalExpr.operator.type == TokenType.AND) && isFalse(left)) {
@@ -187,14 +187,14 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
             return left;
         }
 
-        return logicalExpr.right.accept(this);
+        return eval(logicalExpr.right);
     }
 
     @Override
     public Object visitBinaryExpression(BinaryExpr binaryExp) {
 
-        Object left = binaryExp.left.accept(this);
-        Object right = binaryExp.right.accept(this);
+        Object left = eval(binaryExp.left);
+        Object right = eval(binaryExp.right);
 
         return switch (binaryExp.operator.type) {
             case MINUS -> {
@@ -317,7 +317,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
 
     @Override
     public Object visitUnaryExpression(UnaryExpr unaryExp) {
-        Object res = unaryExp.expression.accept(this);
+        Object res = eval(unaryExp.expression);
 
         return switch (unaryExp.operation.type) {
             case MINUS -> {
@@ -384,8 +384,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
                                                                 func.arity(), arguments.size()));
         }
 
-        Object res = func.call(this, arguments);
-        return res;
+        return func.call(this, arguments);
     }
 
     @Override
@@ -395,16 +394,18 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
 
     @Override
     public Object visitParentheses(Grouping grouping) {
-        return grouping.expression.accept(this);
+        return eval(grouping.expression);
     }
 
     @Override
     public Object visitVariableExpression(VariableExpr varExpr) {
 
-        if(globals.isDefined(varExpr.name)){
+        // check global space first
+        if (globals.isDefined(varExpr.name)) {
             return globals.get(varExpr.name);
         }
 
+        // check lexical scopes
         return environment.get(varExpr.name);
     }
 
