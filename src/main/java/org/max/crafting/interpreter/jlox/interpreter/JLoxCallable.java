@@ -6,4 +6,5 @@ public interface JLoxCallable {
 
     Object call(Interpreter interpreter, List<Object> params);
 
+    int arity();
 }

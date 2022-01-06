@@ -49,6 +49,12 @@ public final class Environment {
         return curScope.get(varName);
     }
 
+    boolean isDefined(Token name){
+        String varName = name.lexeme;
+        Map<String, Object> curScope = findScopeForVar(varName);
+        return curScope.containsKey(varName);
+    }
+
     /**
      * Reassign value to already existing variable.
      */

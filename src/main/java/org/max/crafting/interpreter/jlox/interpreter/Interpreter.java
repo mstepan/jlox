@@ -21,6 +21,7 @@ import org.max.crafting.interpreter.jlox.ast.WhileStmt;
 import org.max.crafting.interpreter.jlox.model.Token;
 import org.max.crafting.interpreter.jlox.model.TokenType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,7 +29,30 @@ import java.util.List;
  */
 public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
 
+    /**
+     * Store all globally visible values.
+     */
+    private final Environment globals = new Environment();
+
+    /**
+     * Store all context dependant values.
+     */
     private final Environment environment = new Environment();
+
+    public Interpreter() {
+        globals.define("max", new JLoxCallable() {
+            @Override
+            public Object call(Interpreter interpreter, List<Object> params) {
+                Object res = Math.max((int) params.get(0), (int) params.get(1));
+                return res;
+            }
+
+            @Override
+            public int arity() {
+                return 2;
+            }
+        });
+    }
 
     public void clearState() {
         environment.clear();
@@ -55,8 +79,18 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
         return stringify(null);
     }
 
+    /**
+     * Execute single statement.
+     */
     private void execute(Stmt singleStmt) {
         singleStmt.accept(this);
+    }
+
+    /**
+     * Evaluate single expression.
+     */
+    private Object eval(Expression expr){
+        return expr.accept(this);
     }
 
     @Override
@@ -328,10 +362,30 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
     @Override
     public Object visitCall(CallExpr callExpr) {
 
+        Object callee = eval(callExpr.callee);
 
+        if (!(callee instanceof JLoxCallable)) {
+            throw new RuntimeInterpreterException(callExpr.rightParen, "Can only call function or class.");
+        }
 
-        //TODO: visit function call
-        return null;
+        List<Object> arguments = new ArrayList<>();
+
+        for (Expression singleArg : callExpr.arguments) {
+            arguments.add(eval(singleArg));
+        }
+
+        JLoxCallable func = (JLoxCallable) callee;
+
+        // check parameters count declared in function actually corresponds to passed arguments count
+        // better to use Python like behaviour here, just fail if parameters count != arguments count
+        if (func.arity() != arguments.size()) {
+            throw new RuntimeInterpreterException(callExpr.rightParen,
+                                                  String.format("Expected %d arguments, but passed %d.",
+                                                                func.arity(), arguments.size()));
+        }
+
+        Object res = func.call(this, arguments);
+        return res;
     }
 
     @Override
@@ -346,6 +400,11 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
 
     @Override
     public Object visitVariableExpression(VariableExpr varExpr) {
+
+        if(globals.isDefined(varExpr.name)){
+            return globals.get(varExpr.name);
+        }
+
         return environment.get(varExpr.name);
     }
 
