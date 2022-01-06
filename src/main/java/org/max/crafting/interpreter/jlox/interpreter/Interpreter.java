@@ -18,6 +18,8 @@ import org.max.crafting.interpreter.jlox.ast.UnaryExpr;
 import org.max.crafting.interpreter.jlox.ast.VarStmt;
 import org.max.crafting.interpreter.jlox.ast.VariableExpr;
 import org.max.crafting.interpreter.jlox.ast.WhileStmt;
+import org.max.crafting.interpreter.jlox.interpreter.global.ClockFunction;
+import org.max.crafting.interpreter.jlox.interpreter.global.MaxFunction;
 import org.max.crafting.interpreter.jlox.model.Token;
 import org.max.crafting.interpreter.jlox.model.TokenType;
 
@@ -40,18 +42,9 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
     private final Environment environment = new Environment();
 
     public Interpreter() {
-        globals.define("max", new JLoxCallable() {
-            @Override
-            public Object call(Interpreter interpreter, List<Object> params) {
-                Object res = Math.max((int) params.get(0), (int) params.get(1));
-                return res;
-            }
-
-            @Override
-            public int arity() {
-                return 2;
-            }
-        });
+        // define all native functions in global scope
+        globals.define("max", new MaxFunction());
+        globals.define("clock", new ClockFunction());
     }
 
     public void clearState() {
