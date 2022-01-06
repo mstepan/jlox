@@ -420,6 +420,8 @@ public class RecursiveDescentParser {
         return calleeExpr;
     }
 
+    private static final int MAX_ARGUMENTS_IN_FUNCTION_CALL_THRESHOLD = 255;
+
     private Expression finishCall(Expression calleeExpr) {
 
         List<Expression> arguments = new ArrayList<>();
@@ -427,7 +429,13 @@ public class RecursiveDescentParser {
         // no arguments function call possible here
         if (!check(TokenType.RIGHT_PAREN)) {
             do {
-                arguments.addAll(commaToExpressionsList(expression()));
+                Expression singleArg = expression();
+                arguments.addAll(commaToExpressionsList(singleArg));
+
+                if( arguments.size() >= MAX_ARGUMENTS_IN_FUNCTION_CALL_THRESHOLD ){
+                    error(peek(), String.format("Arguments list max value reached: %d arguments.",
+                                                      MAX_ARGUMENTS_IN_FUNCTION_CALL_THRESHOLD));
+                }
             }
             while (matchAny(TokenType.COMMA));
         }

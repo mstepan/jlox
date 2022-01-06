@@ -1,5 +1,6 @@
 package org.max.crafting.interpreter.jlox;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -9,14 +10,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 final class CallExprTest extends LoxBaseTest {
 
     @Test
+    @Disabled("disabled till function call will be interpreted properly")
     void simpleCall() {
         Lox.runScript("""
-                              maxValue(x, y, 133);
+                              var x = 10;
+                              var y = 20;
+                              var z = maxValue(x, y, 133);
+                              print z;
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
         assertEquals(
                 """
+                        133
                         """,
                 output());
     }
