@@ -25,7 +25,7 @@ public class Lox {
 
     static String lastErrorMsg;
 
-    private static final Interpreter interpreter = new Interpreter();
+    private static Interpreter interpreter = new Interpreter();
 
     public static void main(String[] args) {
         // running in REPL mode
@@ -155,7 +155,7 @@ public class Lox {
     }
 
     private static void clearState() {
-        interpreter.clearState();
+        interpreter = new Interpreter();
         hadSyntaxError = false;
         hadRuntimeError = false;
         lastErrorMsg = null;

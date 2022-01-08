@@ -28,7 +28,6 @@ import org.max.crafting.interpreter.jlox.model.TokenType;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 /**
  * Traverse Abstract Syntax Tree in post-order and evaluate nodes.
@@ -43,17 +42,13 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
     /**
      * Store all context dependant values.
      */
-    private Environment environment = new Environment();
+    private Environment environment = globals;
 
     public Interpreter() {
         // define all native functions in global scope
         globals.define("max", new MaxFunction());
         globals.define("clock", new ClockFunction());
         globals.define("sleep", new SleepFunction());
-    }
-
-    public void clearState() {
-        environment.clear();
     }
 
     public void interpret(List<Stmt> statements) {
@@ -426,13 +421,6 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
 
     @Override
     public Object visitVariableExpression(VariableExpr varExpr) {
-
-        // check global space first
-        if (globals.isDefined(varExpr.name)) {
-            return globals.get(varExpr.name);
-        }
-
-        // check lexical scopes
         return environment.get(varExpr.name);
     }
 

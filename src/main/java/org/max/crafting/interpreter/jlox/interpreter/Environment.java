@@ -20,13 +20,6 @@ public final class Environment {
     }
 
     /**
-     * Remove all bindings from scope.
-     */
-    void clear() {
-        scope.clear();
-    }
-
-    /**
      * Declare new variable.
      */
     void define(String name, Object value) {
@@ -45,11 +38,6 @@ public final class Environment {
         }
 
         return curScope.get(varName);
-    }
-
-    boolean isDefined(Token name) {
-        String varName = name.lexeme;
-        return findScopeForVar(varName) != null;
     }
 
     /**

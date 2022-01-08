@@ -117,8 +117,6 @@ final class CallExprTest extends LoxBaseTest {
                 output());
     }
 
-
-
     @Test
     void callMaxNativeFunction() {
         Lox.runScript("""
