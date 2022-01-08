@@ -55,7 +55,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
         environment.clear();
     }
 
-    public void intepret(List<Stmt> statements) {
+    public void interpret(List<Stmt> statements) {
         try {
             for (Stmt singleStmt : statements) {
                 execute(singleStmt);
@@ -66,7 +66,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
         }
     }
 
-    public String executeBlock(Expression expr) {
+    public String interpret(Expression expr) {
         try {
             return stringify(eval(expr));
         }
@@ -140,7 +140,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
     }
 
     /**
-     * Execute list of statements within current scope.
+     * Execute list of statements using current scope.
      */
     void executeStatements(List<Stmt> statements) {
         for (Stmt singleStmt : statements) {
@@ -175,18 +175,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
     @Override
     public Void visitReturnStmt(ReturnStmt returnStmt) {
         Object value = (returnStmt.expr == null) ? null : eval(returnStmt.expr);
-
         throw new Return(value);
-    }
-
-    static final class Return extends RuntimeException {
-        final Object value;
-
-        public Return(Object value) {
-            // call below constructor, to do not fill-in stack traces
-            super(null, null, false, false);
-            this.value = value;
-        }
     }
 
     @Override
@@ -473,16 +462,5 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
 
     private static boolean isDouble(Object value) {
         return value instanceof Double;
-    }
-
-    // Runtime exception during AST evaluation
-    public static final class RuntimeInterpreterException extends RuntimeException {
-
-        public final Token operator;
-
-        RuntimeInterpreterException(Token operator, String errorMsg) {
-            super(errorMsg);
-            this.operator = operator;
-        }
     }
 }

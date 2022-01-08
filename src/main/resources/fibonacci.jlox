@@ -9,9 +9,11 @@ fun fib(n){
 	return fib(n-1) + fib(n-2);
 }
 
-var i;
-for( i = 0; i < 10; i = i + 1 ){
-	print "fib(" + i +") = " + fib(i);
+fun main(){
+	var i;
+	for( i = 0; i < 10; i = i + 1 ){
+		print "fib(" + i +") = " + fib(i);
+	}
 }
 
-
+main();

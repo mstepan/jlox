@@ -33,7 +33,7 @@ final class LoxFunction implements JLoxCallable {
             try {
                 interpreter.executeStatements(fnDeclaration.body.statements);
             }
-            catch (Interpreter.Return returnVal) {
+            catch (Return returnVal) {
                 return returnVal.value;
             }
         }

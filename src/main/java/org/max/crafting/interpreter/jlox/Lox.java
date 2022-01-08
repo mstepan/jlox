@@ -3,6 +3,7 @@ package org.max.crafting.interpreter.jlox;
 import org.max.crafting.interpreter.jlox.ast.Expression;
 import org.max.crafting.interpreter.jlox.ast.Stmt;
 import org.max.crafting.interpreter.jlox.interpreter.Interpreter;
+import org.max.crafting.interpreter.jlox.interpreter.RuntimeInterpreterException;
 import org.max.crafting.interpreter.jlox.lexer.Lexer;
 import org.max.crafting.interpreter.jlox.model.Token;
 import org.max.crafting.interpreter.jlox.model.TokenType;
@@ -117,7 +118,7 @@ public class Lox {
             if (hasError()) {
                 return;
             }
-            interpreter.intepret(statements);
+            interpreter.interpret(statements);
         }
         else {
             // expression
@@ -125,7 +126,7 @@ public class Lox {
             if (hasError()) {
                 return;
             }
-            System.out.println(interpreter.executeBlock(expr));
+            System.out.println(interpreter.interpret(expr));
         }
     }
 
@@ -150,7 +151,7 @@ public class Lox {
         }
 
         // evaluate AST
-        interpreter.intepret(statements);
+        interpreter.interpret(statements);
     }
 
     private static void clearState() {
@@ -176,7 +177,7 @@ public class Lox {
     /**
      * Report dynamic (runtime) error from parser evaluation.
      */
-    public static void runtimeError(Interpreter.RuntimeInterpreterException error) {
+    public static void runtimeError(RuntimeInterpreterException error) {
         lastErrorMsg = String.format("[line %s]: %s", error.operator.lineNumber, error.getMessage());
         System.err.println(lastErrorMsg);
         hadRuntimeError = true;
