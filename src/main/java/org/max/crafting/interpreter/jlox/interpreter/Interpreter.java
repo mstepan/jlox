@@ -174,12 +174,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
 
     @Override
     public Void visitReturnStmt(ReturnStmt returnStmt) {
-
-        Object value = null;
-
-        if (returnStmt.expr != null) {
-            value = eval(returnStmt.expr);
-        }
+        Object value = (returnStmt.expr == null) ? null : eval(returnStmt.expr);
 
         throw new Return(value);
     }

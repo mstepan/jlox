@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * All user-defined functions will use this function objects as a backbone.
+ * All user-defined functions will use this function object as a backbone.
  */
 final class LoxFunction implements JLoxCallable {
 
