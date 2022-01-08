@@ -14,6 +14,7 @@ import org.max.crafting.interpreter.jlox.ast.IfStmt;
 import org.max.crafting.interpreter.jlox.ast.Literal;
 import org.max.crafting.interpreter.jlox.ast.LogicalExpr;
 import org.max.crafting.interpreter.jlox.ast.PrintStmt;
+import org.max.crafting.interpreter.jlox.ast.ReturnStmt;
 import org.max.crafting.interpreter.jlox.ast.Stmt;
 import org.max.crafting.interpreter.jlox.ast.UnaryExpr;
 import org.max.crafting.interpreter.jlox.ast.VarStmt;
@@ -115,7 +116,7 @@ public class RecursiveDescentParser {
         consume(TokenType.LEFT_BRACE, "Expected '{' before " + type + " body.");
         Block fnBody = block();
 
-        return new FunctionStmt(fnName, parameters, fnBody.statements);
+        return new FunctionStmt(fnName, parameters, fnBody);
     }
 
     /**
@@ -137,7 +138,7 @@ public class RecursiveDescentParser {
     }
 
     /**
-     * statement -> exprStmt | printStmt | block | ifStatement | whileStatement
+     * statement -> exprStmt | printStmt | block | ifStatement | whileStatement | returnStatement
      */
     private Stmt statement() {
         if (matchAny(TokenType.PRINT)) {
@@ -154,6 +155,9 @@ public class RecursiveDescentParser {
         }
         if (matchAny(TokenType.FOR)) {
             return forStatement();
+        }
+        if (matchAny(TokenType.RETURN)) {
+            return returnStatement();
         }
 
         return expressionStatement();
@@ -289,6 +293,23 @@ public class RecursiveDescentParser {
         combinedBlock.add(whileStmt);
 
         return combinedBlock;
+    }
+
+    /**
+     * returnStatement -> "return" expression? ";"
+     */
+    private Stmt returnStatement() {
+        Token keyword = previous();
+
+        Expression expr = null;
+
+        if (!check(TokenType.SEMICOLON)) {
+            expr = expression();
+        }
+
+        consume(TokenType.SEMICOLON, "Expected ';' after return value.");
+
+        return new ReturnStmt(keyword, expr);
     }
 
 

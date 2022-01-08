@@ -33,6 +33,6 @@ public final class SleepFunction implements JLoxCallable {
 
     @Override
     public String toString() {
-        return "<native fn>";
+        return "<native fun>";
     }
 }

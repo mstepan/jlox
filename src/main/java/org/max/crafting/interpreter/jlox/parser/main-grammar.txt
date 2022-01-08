@@ -18,7 +18,7 @@ parameters -> IDENTIFIER (", " IDENTIFIER)*
 
 varDeclaration -> "var" IDENTIFIER ("=" expression)? ";"
 
-statement -> exprStmt | printStmt | block | ifStatement | whileStatement | forStatement
+statement -> exprStmt | printStmt | block | ifStatement | whileStatement | forStatement | returnStatement
 
 exprStmt -> expression ";"
 
@@ -31,6 +31,8 @@ ifStatement -> "if" "(" expression ")" statement ("else" statement)?
 whileStatement -> "while" "(" expression ")" statement
 
 forStatement -> "for" "(" (varDeclaration | exprStmt | ";") expression? ";" expression?  ")" statement
+
+returnStatement -> "return" expression? ";"
 
 //====== EXPRESSIONS (all expression are left recursive by default) ============
 

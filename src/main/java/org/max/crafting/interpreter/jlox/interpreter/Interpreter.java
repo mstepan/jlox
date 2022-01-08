@@ -14,6 +14,7 @@ import org.max.crafting.interpreter.jlox.ast.IfStmt;
 import org.max.crafting.interpreter.jlox.ast.Literal;
 import org.max.crafting.interpreter.jlox.ast.LogicalExpr;
 import org.max.crafting.interpreter.jlox.ast.PrintStmt;
+import org.max.crafting.interpreter.jlox.ast.ReturnStmt;
 import org.max.crafting.interpreter.jlox.ast.Stmt;
 import org.max.crafting.interpreter.jlox.ast.UnaryExpr;
 import org.max.crafting.interpreter.jlox.ast.VarStmt;
@@ -54,7 +55,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
         environment.clear();
     }
 
-    public void executeBlock(List<Stmt> statements) {
+    public void intepret(List<Stmt> statements) {
         try {
             for (Stmt singleStmt : statements) {
                 execute(singleStmt);
@@ -127,7 +128,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
         return null;
     }
 
-    private void executeBlock(Block blockStmt) {
+    void executeBlock(Block blockStmt) {
         try (Environment.Scope ignored = environment.newScope()) {
             for (Stmt innerStmt : blockStmt.statements) {
                 innerStmt.accept(this);
@@ -156,6 +157,12 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
             whileStmt.body.accept(this);
         }
 
+        return null;
+    }
+
+    @Override
+    public Void visitReturnStmt(ReturnStmt returnStmt) {
+        //TODO:
         return null;
     }
 

@@ -24,6 +24,29 @@ final class CallExprTest extends LoxBaseTest {
                 output());
     }
 
+    @Test
+    void callRecursiveFunction() {
+        Lox.runScript("""
+                              fun countAndPrint(cur, boundary){
+                                if( cur != boundary ){
+                                    print cur;
+                                    countAndPrint(cur+1, boundary);
+                                }                             
+                              }
+                              countAndPrint(0, 5);
+                              """);
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        0
+                        1
+                        2
+                        3
+                        4
+                        """,
+                output());
+    }
+
 
     @Test
     void callMaxNativeFunction() {
@@ -47,14 +70,14 @@ final class CallExprTest extends LoxBaseTest {
                               sleep(1);
                               var after = clock();
                               var timeElapsed = after - before;
-                              
+                                                            
                               if( timeElapsed > 0.0 ){
                                 print true;
                               }
                               else {
                                 print false;
                               }
-                              
+                                                            
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");

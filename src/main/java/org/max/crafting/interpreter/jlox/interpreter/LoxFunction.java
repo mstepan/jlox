@@ -6,7 +6,10 @@ import org.max.crafting.interpreter.jlox.model.Token;
 import java.util.List;
 import java.util.Objects;
 
-public class LoxFunction implements JLoxCallable {
+/**
+ * All user-defined functions will use this function objects as a backbone.
+ */
+final class LoxFunction implements JLoxCallable {
 
     private final FunctionStmt fnDeclaration;
 
@@ -35,5 +38,10 @@ public class LoxFunction implements JLoxCallable {
     @Override
     public int arity() {
         return fnDeclaration.parameters.size();
+    }
+
+    @Override
+    public String toString() {
+        return "<fun " + fnDeclaration.name.lexeme + ">";
     }
 }

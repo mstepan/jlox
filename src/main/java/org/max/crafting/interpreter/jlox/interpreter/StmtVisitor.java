@@ -5,6 +5,7 @@ import org.max.crafting.interpreter.jlox.ast.ExpressionStmt;
 import org.max.crafting.interpreter.jlox.ast.FunctionStmt;
 import org.max.crafting.interpreter.jlox.ast.IfStmt;
 import org.max.crafting.interpreter.jlox.ast.PrintStmt;
+import org.max.crafting.interpreter.jlox.ast.ReturnStmt;
 import org.max.crafting.interpreter.jlox.ast.VarStmt;
 import org.max.crafting.interpreter.jlox.ast.WhileStmt;
 
@@ -23,4 +24,6 @@ public interface StmtVisitor<T> {
     T visitWhileStatement(WhileStmt whileStmt);
 
     T visitFunction(FunctionStmt functionStmt);
+
+    T visitReturnStmt(ReturnStmt returnStmt);
 }

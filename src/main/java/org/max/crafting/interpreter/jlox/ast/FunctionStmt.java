@@ -9,9 +9,9 @@ public class FunctionStmt implements Stmt {
 
     public final Token name;
     public List<Token> parameters;
-    public List<Stmt> body;
+    public Block body;
 
-    public FunctionStmt(Token name, List<Token> parameters, List<Stmt> body) {
+    public FunctionStmt(Token name, List<Token> parameters, Block body) {
         this.name = name;
         this.parameters = parameters;
         this.body = body;

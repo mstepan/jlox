@@ -22,6 +22,6 @@ public final class ClockFunction implements JLoxCallable {
 
     @Override
     public String toString() {
-        return "<native fn>";
+        return "<native fun>";
     }
 }
