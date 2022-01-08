@@ -12,31 +12,34 @@ import java.util.Objects;
 final class LoxFunction implements JLoxCallable {
 
     private final FunctionStmt fnDeclaration;
+    private final Environment closure;
 
-    public LoxFunction(FunctionStmt fnDeclaration) {
+    public LoxFunction(FunctionStmt fnDeclaration, Environment closure) {
         this.fnDeclaration = Objects.requireNonNull(fnDeclaration, "'null' fnDeclaration detected");
+        this.closure = Objects.requireNonNull(closure, "'null' closure environment detected");
     }
 
     @Override
     public Object call(Interpreter interpreter, List<Object> arguments) {
 
-        try (Environment.Scope fnScope = interpreter.globals.newScope()) {
-            for (int i = 0; i < fnDeclaration.parameters.size(); ++i) {
-                Token singleParam = fnDeclaration.parameters.get(i);
-                Object singleArg = arguments.get(i);
+        Environment fnEnv = new Environment(closure);
 
-                // bind arguments to parameters inside function scope
-                fnScope.define(singleParam.lexeme, singleArg);
-            }
+        for (int i = 0; i < fnDeclaration.parameters.size(); ++i) {
+            Token singleParam = fnDeclaration.parameters.get(i);
+            Object singleArg = arguments.get(i);
 
-            // handle RETURN statement flow
-            try {
-                interpreter.executeStatements(fnDeclaration.body.statements);
-            }
-            catch (Return returnVal) {
-                return returnVal.value;
-            }
+            // bind arguments to parameters inside function scope
+            fnEnv.define(singleParam.lexeme, singleArg);
         }
+
+        // handle RETURN statement flow
+        try {
+            interpreter.executeStatements(fnDeclaration.body.statements, fnEnv);
+        }
+        catch (Return returnVal) {
+            return returnVal.value;
+        }
+
 
         return null;
     }

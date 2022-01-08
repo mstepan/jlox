@@ -42,7 +42,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
     /**
      * Store all context dependant values.
      */
-    private final Environment environment = new Environment();
+    private Environment environment = new Environment();
 
     public Interpreter() {
         // define all native functions in global scope
@@ -92,7 +92,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
 
     @Override
     public Void visitFunction(FunctionStmt fnStmt) {
-        environment.define(fnStmt.name.lexeme, new LoxFunction(fnStmt));
+        environment.define(fnStmt.name.lexeme, new LoxFunction(fnStmt, environment));
         return null;
     }
 
@@ -132,19 +132,33 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
      * Create new scope and execute list of statements within this new scope.
      */
     void executeBlock(Block blockStmt) {
-        try (Environment.Scope ignored = environment.newScope()) {
+        final Environment prev = environment;
+        environment = new Environment(environment);
+
+        try {
             for (Stmt innerStmt : blockStmt.statements) {
                 innerStmt.accept(this);
             }
         }
+        finally {
+            environment = prev;
+        }
     }
 
     /**
-     * Execute list of statements using current scope.
+     * Execute list of statements using provided scope.
      */
-    void executeStatements(List<Stmt> statements) {
-        for (Stmt singleStmt : statements) {
-            singleStmt.accept(this);
+    void executeStatements(List<Stmt> statements, Environment curScope) {
+        final Environment prev = environment;
+        environment = curScope;
+
+        try {
+            for (Stmt singleStmt : statements) {
+                singleStmt.accept(this);
+            }
+        }
+        finally {
+            environment = prev;
         }
     }
 
