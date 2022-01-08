@@ -22,7 +22,7 @@ final class LoxFunction implements JLoxCallable {
     @Override
     public Object call(Interpreter interpreter, List<Object> arguments) {
 
-        Environment fnEnv = new Environment(closure);
+        final Environment fnEnv = new Environment(closure);
 
         for (int i = 0; i < fnDeclaration.parameters.size(); ++i) {
             Token singleParam = fnDeclaration.parameters.get(i);
@@ -32,10 +32,10 @@ final class LoxFunction implements JLoxCallable {
             fnEnv.define(singleParam.lexeme, singleArg);
         }
 
-        // handle RETURN statement flow
         try {
             interpreter.executeStatements(fnDeclaration.body.statements, fnEnv);
         }
+        // handle RETURN statement flow
         catch (Return returnVal) {
             return returnVal.value;
         }

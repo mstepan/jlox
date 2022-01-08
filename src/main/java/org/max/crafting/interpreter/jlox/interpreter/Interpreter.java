@@ -28,6 +28,7 @@ import org.max.crafting.interpreter.jlox.model.TokenType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * Traverse Abstract Syntax Tree in post-order and evaluate nodes.
@@ -92,7 +93,8 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
 
     @Override
     public Void visitFunction(FunctionStmt fnStmt) {
-        environment.define(fnStmt.name.lexeme, new LoxFunction(fnStmt, environment));
+        final LoxFunction function = new LoxFunction(fnStmt, environment);
+        environment.define(fnStmt.name.lexeme, function);
         return null;
     }
 
@@ -132,17 +134,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
      * Create new scope and execute list of statements within this new scope.
      */
     void executeBlock(Block blockStmt) {
-        final Environment prev = environment;
-        environment = new Environment(environment);
-
-        try {
-            for (Stmt innerStmt : blockStmt.statements) {
-                innerStmt.accept(this);
-            }
-        }
-        finally {
-            environment = prev;
-        }
+        executeStatements(blockStmt.statements, new Environment(environment));
     }
 
     /**
