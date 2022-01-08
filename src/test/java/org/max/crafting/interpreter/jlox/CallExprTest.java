@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 final class CallExprTest extends LoxBaseTest {
 
     @Test
-    void callNativeFunction() {
+    void callMaxNativeFunction() {
         Lox.runScript("""
                               var x = 10;
                               var z = max(x, 133);
@@ -19,6 +19,31 @@ final class CallExprTest extends LoxBaseTest {
         assertEquals(
                 """
                         133
+                        """,
+                output());
+    }
+
+    @Test
+    void callClockAndSleepFunctions() {
+        Lox.runScript("""
+                              var before = clock();
+                              sleep(1);
+                              var after = clock();
+                              var timeElapsed = after - before;
+                              
+                              if( timeElapsed > 0.0 ){
+                                print true;
+                              }
+                              else {
+                                print false;
+                              }
+                              
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """ 
+                        true
                         """,
                 output());
     }

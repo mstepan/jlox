@@ -20,6 +20,7 @@ import org.max.crafting.interpreter.jlox.ast.VariableExpr;
 import org.max.crafting.interpreter.jlox.ast.WhileStmt;
 import org.max.crafting.interpreter.jlox.interpreter.global.ClockFunction;
 import org.max.crafting.interpreter.jlox.interpreter.global.MaxFunction;
+import org.max.crafting.interpreter.jlox.interpreter.global.SleepFunction;
 import org.max.crafting.interpreter.jlox.model.Token;
 import org.max.crafting.interpreter.jlox.model.TokenType;
 
@@ -45,6 +46,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
         // define all native functions in global scope
         globals.define("max", new MaxFunction());
         globals.define("clock", new ClockFunction());
+        globals.define("sleep", new SleepFunction());
     }
 
     public void clearState() {
