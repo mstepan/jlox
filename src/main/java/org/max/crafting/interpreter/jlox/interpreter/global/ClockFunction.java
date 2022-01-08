@@ -11,7 +11,7 @@ import java.util.List;
 public final class ClockFunction implements JLoxCallable {
 
     @Override
-    public Object call(Interpreter interpreter, List<Object> params) {
+    public Object call(Interpreter interpreter, List<Object> arguments) {
         return System.currentTimeMillis() / 1000.0;
     }
 

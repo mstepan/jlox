@@ -49,7 +49,7 @@ public final class Environment {
         return curScope.get(varName);
     }
 
-    boolean isDefined(Token name){
+    boolean isDefined(Token name) {
         String varName = name.lexeme;
         Map<String, Object> curScope = findScopeForVar(varName);
         return curScope.containsKey(varName);
@@ -92,5 +92,18 @@ public final class Environment {
         public void close() {
             removeLastScope();
         }
+
+        public void define(String name, Object value) {
+            Environment.this.define(name, value);
+        }
+
+        public void assign(Token name, Object newValue) {
+            Environment.this.assign(name, newValue);
+        }
+
+        public Object get(Token name) {
+            return Environment.this.get(name);
+        }
+
     }
 }

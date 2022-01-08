@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface JLoxCallable {
 
-    Object call(Interpreter interpreter, List<Object> params);
+    Object call(Interpreter interpreter, List<Object> arguments);
 
     int arity();
 }

@@ -117,7 +117,7 @@ public class Lox {
             if (hasError()) {
                 return;
             }
-            interpreter.interpret(statements);
+            interpreter.executeBlock(statements);
         }
         else {
             // expression
@@ -125,7 +125,7 @@ public class Lox {
             if (hasError()) {
                 return;
             }
-            System.out.println(interpreter.interpret(expr));
+            System.out.println(interpreter.executeBlock(expr));
         }
     }
 
@@ -150,7 +150,7 @@ public class Lox {
         }
 
         // evaluate AST
-        interpreter.interpret(statements);
+        interpreter.executeBlock(statements);
     }
 
     private static void clearState() {

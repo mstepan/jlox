@@ -9,6 +9,23 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 final class CallExprTest extends LoxBaseTest {
 
     @Test
+    void declareAndCallCustomFunction() {
+        Lox.runScript("""
+                              fun sumOfTwo(x, y){
+                                print "res: " + (x + y);                              
+                              }
+                              sumOfTwo(1, 2);
+                              """);
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        res: 3
+                        """,
+                output());
+    }
+
+
+    @Test
     void callMaxNativeFunction() {
         Lox.runScript("""
                               var x = 10;

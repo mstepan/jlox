@@ -8,6 +8,7 @@ import org.max.crafting.interpreter.jlox.ast.CallExpr;
 import org.max.crafting.interpreter.jlox.ast.CommaExpr;
 import org.max.crafting.interpreter.jlox.ast.Expression;
 import org.max.crafting.interpreter.jlox.ast.ExpressionStmt;
+import org.max.crafting.interpreter.jlox.ast.FunctionStmt;
 import org.max.crafting.interpreter.jlox.ast.Grouping;
 import org.max.crafting.interpreter.jlox.ast.IfStmt;
 import org.max.crafting.interpreter.jlox.ast.Literal;
@@ -35,7 +36,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
     /**
      * Store all globally visible values.
      */
-    private final Environment globals = new Environment();
+    public final Environment globals = new Environment();
 
     /**
      * Store all context dependant values.
@@ -53,7 +54,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
         environment.clear();
     }
 
-    public void interpret(List<Stmt> statements) {
+    public void executeBlock(List<Stmt> statements) {
         try {
             for (Stmt singleStmt : statements) {
                 execute(singleStmt);
@@ -64,7 +65,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
         }
     }
 
-    public String interpret(Expression expr) {
+    public String executeBlock(Expression expr) {
         try {
             return stringify(eval(expr));
         }
@@ -86,6 +87,12 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
      */
     private Object eval(Expression expr) {
         return expr.accept(this);
+    }
+
+    @Override
+    public Void visitFunction(FunctionStmt fnStmt) {
+        environment.define(fnStmt.name.lexeme, new LoxFunction(fnStmt));
+        return null;
     }
 
     @Override

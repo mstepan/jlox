@@ -8,6 +8,7 @@ import org.max.crafting.interpreter.jlox.ast.CallExpr;
 import org.max.crafting.interpreter.jlox.ast.CommaExpr;
 import org.max.crafting.interpreter.jlox.ast.Expression;
 import org.max.crafting.interpreter.jlox.ast.ExpressionStmt;
+import org.max.crafting.interpreter.jlox.ast.FunctionStmt;
 import org.max.crafting.interpreter.jlox.ast.Grouping;
 import org.max.crafting.interpreter.jlox.ast.IfStmt;
 import org.max.crafting.interpreter.jlox.ast.Literal;
@@ -59,10 +60,13 @@ public class RecursiveDescentParser {
     }
 
     /**
-     * declaration -> varDeclaration | statement
+     * declaration -> funcDeclaration | varDeclaration | statement
      */
     private Stmt declaration() {
         try {
+            if (matchAny(TokenType.FUN)) {
+                return funcDeclaration("function");
+            }
             if (matchAny(TokenType.VAR)) {
                 return varDeclaration();
             }
@@ -73,6 +77,45 @@ public class RecursiveDescentParser {
             synchronize();
             return null;
         }
+    }
+
+    /**
+     * funcDeclaration -> "fn" function
+     *
+     * @param type - can be 'function' or 'method'
+     */
+    private Stmt funcDeclaration(String type) {
+        return function(type);
+    }
+
+    /**
+     * function -> IDENTIFIER "(" parameter? ")" block
+     */
+    private Stmt function(String type) {
+
+        Token fnName = consume(TokenType.IDENTIFIER, "Expect " + type + "name.");
+
+        consume(TokenType.LEFT_PAREN, "Expected '(' after " + type + " name.");
+
+        // read all parameters if any
+        List<Token> parameters = new ArrayList<>();
+        if (!check(TokenType.RIGHT_PAREN)) {
+            do {
+                if (parameters.size() >= MAX_ARGUMENTS_IN_FUNCTION_CALL_THRESHOLD) {
+                    error(peek(), "Can't have more than " + MAX_ARGUMENTS_IN_FUNCTION_CALL_THRESHOLD + " parameters.");
+                }
+
+                parameters.add(consume(TokenType.IDENTIFIER, "Expected parameter name"));
+            }
+            while (matchAny(TokenType.COMMA));
+        }
+
+        consume(TokenType.RIGHT_PAREN, "Expected ')' after " + type + " parameters.");
+
+        consume(TokenType.LEFT_BRACE, "Expected '{' before " + type + " body.");
+        Block fnBody = block();
+
+        return new FunctionStmt(fnName, parameters, fnBody.statements);
     }
 
     /**
@@ -432,9 +475,9 @@ public class RecursiveDescentParser {
                 Expression singleArg = expression();
                 arguments.addAll(commaToExpressionsList(singleArg));
 
-                if( arguments.size() >= MAX_ARGUMENTS_IN_FUNCTION_CALL_THRESHOLD ){
+                if (arguments.size() >= MAX_ARGUMENTS_IN_FUNCTION_CALL_THRESHOLD) {
                     error(peek(), String.format("Arguments list max value reached: %d arguments.",
-                                                      MAX_ARGUMENTS_IN_FUNCTION_CALL_THRESHOLD));
+                                                MAX_ARGUMENTS_IN_FUNCTION_CALL_THRESHOLD));
                 }
             }
             while (matchAny(TokenType.COMMA));

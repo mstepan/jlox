@@ -2,6 +2,7 @@ package org.max.crafting.interpreter.jlox.interpreter;
 
 import org.max.crafting.interpreter.jlox.ast.Block;
 import org.max.crafting.interpreter.jlox.ast.ExpressionStmt;
+import org.max.crafting.interpreter.jlox.ast.FunctionStmt;
 import org.max.crafting.interpreter.jlox.ast.IfStmt;
 import org.max.crafting.interpreter.jlox.ast.PrintStmt;
 import org.max.crafting.interpreter.jlox.ast.VarStmt;
@@ -20,4 +21,6 @@ public interface StmtVisitor<T> {
     T visitIfStatement(IfStmt ifStmt);
 
     T visitWhileStatement(WhileStmt whileStmt);
+
+    T visitFunction(FunctionStmt functionStmt);
 }

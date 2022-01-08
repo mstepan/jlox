@@ -12,9 +12,9 @@ import java.util.concurrent.TimeUnit;
 public final class SleepFunction implements JLoxCallable {
 
     @Override
-    public Object call(Interpreter interpreter, List<Object> params) {
+    public Object call(Interpreter interpreter, List<Object> arguments) {
 
-        Integer secondsToSleep = (Integer) params.get(0);
+        Integer secondsToSleep = (Integer) arguments.get(0);
 
         try {
             TimeUnit.SECONDS.sleep(secondsToSleep);
