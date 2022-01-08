@@ -9,24 +9,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 final class CallExprTest extends LoxBaseTest {
 
     @Test
-    void argumentsCountLessThanActualParametersCountShouldFail() {
-        Lox.runScript("""
-                              fun sum(x, y, z){
-                                return x + y + z;
-                              }
-                                  
-                              sum(1, 2);                        
-                              """);
-
-        assertTrue(Lox.hasError(), "Expected error here");
-        assertEquals(
-                """
-                        [line 5]: Expected 3 parameters for <fun sum>, but passed 2.
-                        """,
-                errorOutput());
-    }
-
-    @Test
     void functionWithClosure() {
         Lox.runScript("""
                               fun createIncrement(){                              
@@ -52,6 +34,29 @@ final class CallExprTest extends LoxBaseTest {
                         0
                         1
                         2
+                        """,
+                output());
+    }
+
+    @Test
+    void callRecursiveFunctionWithoutReturn() {
+        Lox.runScript("""
+                              fun countAndPrint(cur, boundary){
+                                if( cur != boundary ){
+                                    print cur;
+                                    countAndPrint(cur+1, boundary);
+                                }                             
+                              }
+                              countAndPrint(0, 5);
+                              """);
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        0
+                        1
+                        2
+                        3
+                        4
                         """,
                 output());
     }
@@ -112,28 +117,6 @@ final class CallExprTest extends LoxBaseTest {
                 output());
     }
 
-    @Test
-    void callRecursiveFunction() {
-        Lox.runScript("""
-                              fun countAndPrint(cur, boundary){
-                                if( cur != boundary ){
-                                    print cur;
-                                    countAndPrint(cur+1, boundary);
-                                }                             
-                              }
-                              countAndPrint(0, 5);
-                              """);
-        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
-        assertEquals(
-                """
-                        0
-                        1
-                        2
-                        3
-                        4
-                        """,
-                output());
-    }
 
 
     @Test
@@ -186,6 +169,42 @@ final class CallExprTest extends LoxBaseTest {
         assertEquals(
                 """
                         [line 1] Expected ')' after arguments list.
+                        """,
+                errorOutput());
+    }
+
+    @Test
+    void moreArgumentThanParametersShouldFail() {
+        Lox.runScript("""
+                              fun sum(x, y, z){
+                                return x + y + z;
+                              }
+                                  
+                              sum(1, 2, 3, 4, 5);                        
+                              """);
+
+        assertTrue(Lox.hasError(), "Expected error here");
+        assertEquals(
+                """
+                        [line 5]: Expected 3 parameters for <fun sum>, but passed 5.
+                        """,
+                errorOutput());
+    }
+
+    @Test
+    void lessArgumentsThanParametersShouldFail() {
+        Lox.runScript("""
+                              fun sum(x, y, z){
+                                return x + y + z;
+                              }
+                                  
+                              sum(1, 2);                        
+                              """);
+
+        assertTrue(Lox.hasError(), "Expected error here");
+        assertEquals(
+                """
+                        [line 5]: Expected 3 parameters for <fun sum>, but passed 2.
                         """,
                 errorOutput());
     }
