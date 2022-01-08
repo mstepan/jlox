@@ -6,7 +6,7 @@ import org.max.crafting.interpreter.jlox.model.Token;
 public class ReturnStmt implements Stmt {
 
     public final Token keyword;
-    private final Expression expr;
+    public final Expression expr;
 
     public ReturnStmt(Token keyword, Expression expr) {
         this.keyword = keyword;

@@ -128,11 +128,23 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
         return null;
     }
 
+    /**
+     * Create new scope and execute list of statements within this new scope.
+     */
     void executeBlock(Block blockStmt) {
         try (Environment.Scope ignored = environment.newScope()) {
             for (Stmt innerStmt : blockStmt.statements) {
                 innerStmt.accept(this);
             }
+        }
+    }
+
+    /**
+     * Execute list of statements within current scope.
+     */
+    void executeStatements(List<Stmt> statements) {
+        for (Stmt singleStmt : statements) {
+            singleStmt.accept(this);
         }
     }
 
@@ -162,8 +174,24 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
 
     @Override
     public Void visitReturnStmt(ReturnStmt returnStmt) {
-        //TODO:
-        return null;
+
+        Object value = null;
+
+        if (returnStmt.expr != null) {
+            value = eval(returnStmt.expr);
+        }
+
+        throw new Return(value);
+    }
+
+    static final class Return extends RuntimeException {
+        final Object value;
+
+        public Return(Object value) {
+            // call below constructor, to do not fill-in stack traces
+            super(null, null, false, false);
+            this.value = value;
+        }
     }
 
     @Override

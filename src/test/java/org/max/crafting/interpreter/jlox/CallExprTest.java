@@ -8,6 +8,46 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 final class CallExprTest extends LoxBaseTest {
 
+    /**
+     * First 5 fibonacci numbers, counting from zero: 1, 1, 2, 3, 5, 8
+     */
+    @Test
+    void fibonacciRecursive() {
+        Lox.runScript("""
+                              fun fib(n){                              
+                                if( n <= 1 ){
+                                    return 1;
+                                }
+                                                            
+                                return fib(n-1) + fib(n-2);                            
+                              }
+                              print fib(5);
+                              """);
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        8
+                        """,
+                output());
+    }
+
+
+    @Test
+    void declareAndCallFunctionWithReturnStatement() {
+        Lox.runScript("""
+                              fun add(x, y){
+                                return x + y;                            
+                              }
+                              print add(1, 2);
+                              """);
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        3
+                        """,
+                output());
+    }
+
     @Test
     void declareAndCallCustomFunction() {
         Lox.runScript("""

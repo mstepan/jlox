@@ -29,7 +29,13 @@ final class LoxFunction implements JLoxCallable {
                 fnScope.define(singleParam.lexeme, singleArg);
             }
 
-            interpreter.executeBlock(fnDeclaration.body);
+            // handle RETURN statement flow
+            try {
+                interpreter.executeStatements(fnDeclaration.body.statements);
+            }
+            catch (Interpreter.Return returnVal) {
+                return returnVal.value;
+            }
         }
 
         return null;
