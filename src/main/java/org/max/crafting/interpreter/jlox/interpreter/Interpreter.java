@@ -407,8 +407,8 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
         // better to use Python like behaviour here, just fail if parameters count != arguments count
         if (func.arity() != arguments.size()) {
             throw new RuntimeInterpreterException(callExpr.rightParen,
-                                                  String.format("Expected %d arguments, but passed %d.",
-                                                                func.arity(), arguments.size()));
+                                                  String.format("Expected %d parameters for %s, but passed %d.",
+                                                                func.arity(), func.toString(), arguments.size()));
         }
 
         return func.call(this, arguments);

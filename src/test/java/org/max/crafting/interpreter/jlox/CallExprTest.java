@@ -9,6 +9,24 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 final class CallExprTest extends LoxBaseTest {
 
     @Test
+    void argumentsCountLessThanActualParametersCountShouldFail() {
+        Lox.runScript("""
+                              fun sum(x, y, z){
+                                return x + y + z;
+                              }
+                                  
+                              sum(1, 2);                        
+                              """);
+
+        assertTrue(Lox.hasError(), "Expected error here");
+        assertEquals(
+                """
+                        [line 5]: Expected 3 parameters for <fun sum>, but passed 2.
+                        """,
+                errorOutput());
+    }
+
+    @Test
     void functionWithClosure() {
         Lox.runScript("""
                               fun createIncrement(){                              
