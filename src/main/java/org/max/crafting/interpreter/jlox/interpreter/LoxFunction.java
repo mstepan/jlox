@@ -29,7 +29,7 @@ final class LoxFunction implements JLoxCallable {
             Object singleArg = arguments.get(i);
 
             // bind arguments to parameters inside function scope
-            fnEnv.define(singleParam.lexeme, singleArg);
+            fnEnv.defineInPlace(singleParam.lexeme, singleArg);
         }
 
         try {
