@@ -1,5 +1,6 @@
 package org.max.crafting.interpreter.jlox;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -7,6 +8,33 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 final class CallExprTest extends LoxBaseTest {
+
+    @Test
+    @Disabled("leaking closure scope, should be fixed by immutable Environment and/or " +
+            "semantic analysis pass with variable binding")
+    void leakingClosureScope() {
+        Lox.runScript("""
+                              var str = "global"; 
+                              {                            
+                                fun printMe(){
+                                    print str;                                 
+                                }
+                                
+                                printMe();
+                                var str = "local";
+                                printMe();                                 
+                              }                             
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        global
+                        global
+                        """,
+                output());
+    }
+
 
     @Test
     void functionWithClosure() {
