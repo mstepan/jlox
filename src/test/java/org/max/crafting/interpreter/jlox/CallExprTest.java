@@ -9,7 +9,43 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 final class CallExprTest extends LoxBaseTest {
 
     @Test
-    void leakingClosureScope() {
+    void notLeakingClosureScopeWithAssignment() {
+        Lox.runScript("""
+                              var str = "global"; 
+                              
+                              fun createClosure(){
+                                var str = "local-1";
+                                
+                                fun printMe(){
+                                    print str;
+                                }
+                                
+                                str = "local-2";
+                                
+                                return printMe;
+                              }
+                              
+                              var someFn = createClosure();
+                              
+                              var str = "global";                               
+                              someFn();  
+                              
+                              var str = "global";                                                           
+                              someFn();
+                                                       
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        local-2
+                        local-2
+                        """,
+                output());
+    }
+
+    @Test
+    void notLeakingClosureScopeWithVarDeclaration() {
         Lox.runScript("""
                               var str = "global"; 
                               {                            

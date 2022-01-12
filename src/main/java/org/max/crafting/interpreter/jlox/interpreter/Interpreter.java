@@ -89,8 +89,6 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
     @Override
     public Void visitFunction(FunctionStmt fnStmt) {
         final LoxFunction function = new LoxFunction(fnStmt, environment);
-
-        //TODO: we don't need to create a new Environment here
         environment.defineInPlace(fnStmt.name.lexeme, function);
         return null;
     }
@@ -104,7 +102,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
             val = eval(stmt.initExpr);
         }
 
-        //TODO: create new Environment here
+        //Need to create a new Environment here, to remove any closure leakage
         environment  = environment.define(stmt.name.lexeme, val);
 
         return null;
@@ -195,7 +193,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
     public Object visitAssignmentExpression(Assignment assignment) {
         Object value = eval(assignment.value);
 
-        //TODO: create new Environment here
+        //I don't need to create new Environment, assignment should always change current Environment
         environment.assign(assignment.name, value);
         return value;
     }
