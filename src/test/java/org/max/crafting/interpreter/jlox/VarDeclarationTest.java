@@ -12,6 +12,28 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 final class VarDeclarationTest extends LoxBaseTest {
 
     @Test
+    void declareVariableForFunction() {
+        Lox.runScript("""
+                              fun add(x, y){
+                                return x+y;
+                              }                              
+                              var add2 = add;
+                              
+                              print add2(1, 2);
+
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+
+        assertEquals(
+                """
+                        3
+                        """,
+                output());
+
+    }
+
+    @Test
     void varDeclaration() {
         Lox.runScript("""
                               var x = 1; // with init expression
