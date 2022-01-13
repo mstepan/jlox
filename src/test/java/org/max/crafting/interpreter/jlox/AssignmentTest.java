@@ -12,6 +12,29 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 final class AssignmentTest extends LoxBaseTest {
 
     @Test
+    void assignmentForFunction() {
+        Lox.runScript("""
+                              fun add(x, y){
+                                return x+y;
+                              }                              
+                              var add2 = 133;
+                              
+                              add2 = add;
+                              
+                              print add2(1, 2);
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+
+        assertEquals(
+                """
+                        3
+                        """,
+                output());
+
+    }
+
+    @Test
     void assignments() {
         Lox.runScript("""
                               var x = 1;
