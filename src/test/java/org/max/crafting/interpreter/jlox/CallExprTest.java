@@ -1,6 +1,5 @@
 package org.max.crafting.interpreter.jlox;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -10,9 +9,43 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 final class CallExprTest extends LoxBaseTest {
 
     @Test
-    @Disabled("leaking closure scope, should be fixed by immutable Environment and/or " +
-            "semantic analysis pass with variable binding")
-    void leakingClosureScope() {
+    void notLeakingClosureScopeWithAssignment() {
+        Lox.runScript("""
+                              var str = "global"; 
+                              
+                              fun createClosure(){
+                                var str = "local-1";
+                                
+                                fun printMe(){
+                                    print str;
+                                }
+                                
+                                str = "local-2";
+                                
+                                return printMe;
+                              }
+                              
+                              var someFn = createClosure();
+                              
+                              var str = "global";                               
+                              someFn();  
+                              
+                              var str = "global";                                                           
+                              someFn();
+                                                       
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        local-2
+                        local-2
+                        """,
+                output());
+    }
+
+    @Test
+    void notLeakingClosureScopeWithVarDeclaration() {
         Lox.runScript("""
                               var str = "global"; 
                               {                            

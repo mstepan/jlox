@@ -46,9 +46,9 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
 
     public Interpreter() {
         // define all native functions in global scope
-        globals.define("max", new MaxFunction());
-        globals.define("clock", new ClockFunction());
-        globals.define("sleep", new SleepFunction());
+        globals.defineInPlace("max", new MaxFunction());
+        globals.defineInPlace("clock", new ClockFunction());
+        globals.defineInPlace("sleep", new SleepFunction());
     }
 
     public void interpret(List<Stmt> statements) {
@@ -89,7 +89,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
     @Override
     public Void visitFunction(FunctionStmt fnStmt) {
         final LoxFunction function = new LoxFunction(fnStmt, environment);
-        environment.define(fnStmt.name.lexeme, function);
+        environment.defineInPlace(fnStmt.name.lexeme, function);
         return null;
     }
 
@@ -101,7 +101,9 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
         if (stmt.initExpr != null) {
             val = eval(stmt.initExpr);
         }
-        environment.define(stmt.name.lexeme, val);
+
+        //Need to create a new Environment here, to remove any closure leakage
+        environment  = environment.define(stmt.name.lexeme, val);
 
         return null;
     }
@@ -190,6 +192,8 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
     @Override
     public Object visitAssignmentExpression(Assignment assignment) {
         Object value = eval(assignment.value);
+
+        //I don't need to create new Environment, assignment should always change current Environment
         environment.assign(assignment.name, value);
         return value;
     }

@@ -20,12 +20,25 @@ public final class Environment {
     }
 
     /**
-     * Declare new variable.
+     * Declare new variable inside new Environment.
      */
-    void define(String name, Object value) {
+    Environment define(String name, Object value) {
+        Environment newEnvironment = new Environment(this);
+        defineInScope(name, value, newEnvironment);
+        return newEnvironment;
+    }
+
+    /**
+     * Declare new variable modifying current environment.
+     */
+    void defineInPlace(String name, Object value) {
+        defineInScope(name, value, this);
+    }
+
+    private void defineInScope(String name, Object value, Environment env){
         // 1. we do not check if variable already declared, so we allow double declaration
         // 2. we also allow declared, but undefined variables with 'null' values
-        scope.put(name, value);
+        env.scope.put(name, value);
     }
 
     Object get(Token name) {
