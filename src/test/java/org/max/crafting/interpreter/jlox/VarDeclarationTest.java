@@ -19,7 +19,7 @@ final class VarDeclarationTest extends LoxBaseTest {
                               }                              
                               var add2 = add;
                               
-                              print add2(1, 2);
+                              print(add2(1, 2));
 
                               """);
 
@@ -39,8 +39,8 @@ final class VarDeclarationTest extends LoxBaseTest {
                               var x = 1; // with init expression
                               var y; // without init
                                               
-                              print x;
-                              print y;
+                              print(x);
+                              print(y);
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -61,11 +61,11 @@ final class VarDeclarationTest extends LoxBaseTest {
                               var y = 2;
                               var x = 133;
                                               
-                              print x;
-                              print y;
+                              print(x);
+                              print(y);
                                               
                               var x = 155;
-                              print x;
+                              print(x);
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");

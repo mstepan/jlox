@@ -17,7 +17,7 @@ final class CallExprTest extends LoxBaseTest {
                                 var str = "local-1";
                                 
                                 fun printMe(){
-                                    print str;
+                                    print(str);
                                 }
                                 
                                 str = "local-2";
@@ -50,7 +50,7 @@ final class CallExprTest extends LoxBaseTest {
                               var str = "global"; 
                               {                            
                                 fun printMe(){
-                                    print str;                                 
+                                    print(str);                                 
                                 }
                                 
                                 printMe();
@@ -77,7 +77,7 @@ final class CallExprTest extends LoxBaseTest {
                                 var cnt = 0;
                                 
                                 fun inc(){
-                                    print cnt;
+                                    print(cnt);
                                     cnt = cnt + 1;                                    
                                 }
                                                             
@@ -104,7 +104,7 @@ final class CallExprTest extends LoxBaseTest {
         Lox.runScript("""
                               fun countAndPrint(cur, boundary){
                                 if( cur != boundary ){
-                                    print cur;
+                                    print(cur);
                                     countAndPrint(cur+1, boundary);
                                 }                             
                               }
@@ -135,7 +135,8 @@ final class CallExprTest extends LoxBaseTest {
                                                             
                                 return fib(n-1) + fib(n-2);                            
                               }
-                              print fib(5);
+                              var res = fib(5);
+                              print(res);
                               """);
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
         assertEquals(
@@ -152,7 +153,7 @@ final class CallExprTest extends LoxBaseTest {
                               fun add(x, y){
                                 return x + y;                            
                               }
-                              print add(1, 2);
+                              print(add(1, 2));
                               """);
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
         assertEquals(
@@ -166,7 +167,7 @@ final class CallExprTest extends LoxBaseTest {
     void declareAndCallCustomFunction() {
         Lox.runScript("""
                               fun sumOfTwo(x, y){
-                                print "res: " + (x + y);                              
+                                print("res: " + (x + y));                              
                               }
                               sumOfTwo(1, 2);
                               """);
@@ -183,7 +184,7 @@ final class CallExprTest extends LoxBaseTest {
         Lox.runScript("""
                               var x = 10;
                               var z = max(x, 133);
-                              print z;
+                              print(z);
                               """);
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
         assertEquals(
@@ -202,10 +203,10 @@ final class CallExprTest extends LoxBaseTest {
                               var timeElapsed = after - before;
                                                             
                               if( timeElapsed > 0.0 ){
-                                print true;
+                                print(true);
                               }
                               else {
-                                print false;
+                                print(false);
                               }
                                                             
                               """);

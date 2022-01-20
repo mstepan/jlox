@@ -14,7 +14,8 @@ final class CommaExpressionTest extends LoxBaseTest {
     void commaExpression() {
         Lox.runScript("""            
                                               
-                              print 10 + 20, 30 + 40;
+                              var res = 10 + 20, 30 + 40;
+                              print(res);
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -36,7 +37,7 @@ final class CommaExpressionTest extends LoxBaseTest {
                                               
                               var res = (y = z), (x = y), x + y + z;               
                                               
-                              print res;
+                              print(res);
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -58,10 +59,10 @@ final class CommaExpressionTest extends LoxBaseTest {
                               var d;               
                               a = 1, b = 2, c = 3, d = 4;               
                                               
-                              print a;
-                              print b;
-                              print c;
-                              print d;
+                              print(a);
+                              print(b);
+                              print(c);
+                              print(d);
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -82,7 +83,7 @@ final class CommaExpressionTest extends LoxBaseTest {
         Lox.runScript("""              
                               var res = (10, 20, 30);               
                                               
-                              print res;
+                              print(res);
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");

@@ -15,7 +15,7 @@ final class GroupingTest extends LoxBaseTest {
     void complexExpressionWithGroupingAndUnaryMinus() {
         Lox.runScript("""
                               var res = ((10+20) * 33.24) - 177.45 + (-20);
-                              print res;
+                              print(res);
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -30,7 +30,7 @@ final class GroupingTest extends LoxBaseTest {
     void groupingWithoutMatchingParenthesesShouldFail() {
         Lox.runScript("""
                               var res = (3*6 + 2 != 50;
-                              print res;
+                              print(res);
                               """);
 
         assertTrue(Lox.hasError(), "Expected error here");

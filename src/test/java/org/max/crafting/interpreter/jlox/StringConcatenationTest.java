@@ -14,7 +14,7 @@ final class StringConcatenationTest extends LoxBaseTest {
     void stringConcatenation() {
         Lox.runScript("""
                               var res = "hello " + "world " + "!!!";
-                              print res;
+                              print(res);
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -29,7 +29,7 @@ final class StringConcatenationTest extends LoxBaseTest {
     void stringAndNumberConcatenation() {
         Lox.runScript("""
                               var res = "hello " + 133;
-                              print res;
+                              print(res);
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -44,7 +44,7 @@ final class StringConcatenationTest extends LoxBaseTest {
     void stringAndBooleanConcatenation() {
         Lox.runScript("""
                               var res = "hello " + true;
-                              print res;
+                              print(res);
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -59,7 +59,7 @@ final class StringConcatenationTest extends LoxBaseTest {
     void stringAndNilConcatenation() {
         Lox.runScript("""
                               var res = "hello " + nil;
-                              print res;
+                              print(res);
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -74,7 +74,7 @@ final class StringConcatenationTest extends LoxBaseTest {
     void numberAndStringConcatenation() {
         Lox.runScript("""
                               var res = 133 + " hello";
-                              print res;
+                              print(res);
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -89,7 +89,7 @@ final class StringConcatenationTest extends LoxBaseTest {
     void booleanAndStringConcatenation() {
         Lox.runScript("""
                               var res = false + " hello";
-                              print res;
+                              print(res);
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");

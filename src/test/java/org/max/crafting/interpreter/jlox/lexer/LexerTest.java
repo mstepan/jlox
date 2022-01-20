@@ -44,7 +44,7 @@ final class LexerTest {
 
         List<Token> tokens = lexer.tokenize();
 
-        final int tokensCount = 39;
+        final int tokensCount = 36;
 
         Token[] expectedTokens = new TokenBuilder().
 
@@ -81,16 +81,11 @@ final class LexerTest {
                         rightBrace().
                         newLine().
 
-                //print z;  line 13
-                        print().identifier("z").semicolon().
-                        newLine().
-                        newLine().
-
-                // var printMe; line 15
+                // var printMe; line 13
                         var().identifier("printMe").semicolon().
                         newLine().
 
-                // line 16
+                // line 15
                         eof().
 
                         build();
@@ -168,11 +163,6 @@ final class LexerTest {
 
         TokenBuilder greater() {
             tokens.add(new Token(TokenType.GREATER, null, null, lineNumber));
-            return this;
-        }
-
-        TokenBuilder print() {
-            tokens.add(new Token(TokenType.PRINT, null, null, lineNumber));
             return this;
         }
 

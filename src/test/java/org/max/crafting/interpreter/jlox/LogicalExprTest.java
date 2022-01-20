@@ -14,8 +14,8 @@ final class LogicalExprTest extends LoxBaseTest {
     @Test
     void equalsForStrings() {
         Lox.runScript("""
-                              print "hello" == "hello";
-                              print "Hello" == "hello";
+                              print("hello" == "hello");
+                              print("Hello" == "hello");
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -30,7 +30,7 @@ final class LogicalExprTest extends LoxBaseTest {
     @Test
     void equalsForInt() {
         Lox.runScript("""
-                              print (3*6) + 2 == 20;
+                              print((3*6) + 2 == 20);
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -44,7 +44,7 @@ final class LogicalExprTest extends LoxBaseTest {
     @Test
     void equalsForDouble() {
         Lox.runScript("""
-                              print 30.0 / 5.0 == 6.0;
+                              print(30.0 / 5.0 == 6.0);
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -58,7 +58,7 @@ final class LogicalExprTest extends LoxBaseTest {
     @Test
     void singleNotEqLogicalExpression() {
         Lox.runScript("""
-                              print (3*6) + 2 != 50;
+                              print((3*6) + 2 != 50);
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -72,7 +72,7 @@ final class LogicalExprTest extends LoxBaseTest {
     @Test
     void lessForIntegers() {
         Lox.runScript("""
-                              print (3*3) + 2 < 20;
+                              print((3*3) + 2 < 20);
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -86,9 +86,9 @@ final class LogicalExprTest extends LoxBaseTest {
     @Test
     void lessEqualsForIntegers() {
         Lox.runScript("""
-                              print 3+3 <= 20;
-                              print 10+10 <= 20;
-                              print 20 + 20 <= 20;
+                              print(3+3 <= 20);
+                              print(10+10 <= 20);
+                              print(20 + 20 <= 20);
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -104,7 +104,7 @@ final class LogicalExprTest extends LoxBaseTest {
     @Test
     void greaterForIntegers() {
         Lox.runScript("""
-                              print (3*3) + 2 > 20;
+                              print((3*3) + 2 > 20);
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -118,9 +118,9 @@ final class LogicalExprTest extends LoxBaseTest {
     @Test
     void greaterEqualsForIntegers() {
         Lox.runScript("""
-                              print 20 + 20 >= 20;
-                              print 10 + 10 >= 20;
-                              print 1 + 1 >= 20;
+                              print(20 + 20 >= 20);
+                              print(10 + 10 >= 20);
+                              print(1 + 1 >= 20);
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -136,7 +136,7 @@ final class LogicalExprTest extends LoxBaseTest {
     @Test
     void nilEqualsToNil() {
         Lox.runScript("""
-                              print nil == nil;
+                              print(nil == nil);
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -150,7 +150,7 @@ final class LogicalExprTest extends LoxBaseTest {
     @Test
     void nilShouldNotBeEqualToNumber() {
         Lox.runScript("""
-                              print nil == 133;
+                              print(nil == 133);
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -166,7 +166,7 @@ final class LogicalExprTest extends LoxBaseTest {
     void comparingNansShouldReturnFalse() {
         Lox.runScript("""
                               var res = 0.0/0.0 == 0.0/0.0;
-                              print "res: " + res;
+                              print("res: " + res);
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");

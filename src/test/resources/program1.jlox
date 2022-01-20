@@ -10,6 +10,4 @@ var z = x;
 if(y > z){
 	z = y;
 }
-print z;
-
 var printMe;

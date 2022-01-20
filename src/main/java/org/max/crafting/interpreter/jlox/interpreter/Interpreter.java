@@ -13,7 +13,6 @@ import org.max.crafting.interpreter.jlox.ast.Grouping;
 import org.max.crafting.interpreter.jlox.ast.IfStmt;
 import org.max.crafting.interpreter.jlox.ast.Literal;
 import org.max.crafting.interpreter.jlox.ast.LogicalExpr;
-import org.max.crafting.interpreter.jlox.ast.PrintStmt;
 import org.max.crafting.interpreter.jlox.ast.ReturnStmt;
 import org.max.crafting.interpreter.jlox.ast.Stmt;
 import org.max.crafting.interpreter.jlox.ast.UnaryExpr;
@@ -22,6 +21,7 @@ import org.max.crafting.interpreter.jlox.ast.VariableExpr;
 import org.max.crafting.interpreter.jlox.ast.WhileStmt;
 import org.max.crafting.interpreter.jlox.interpreter.global.ClockFunction;
 import org.max.crafting.interpreter.jlox.interpreter.global.MaxFunction;
+import org.max.crafting.interpreter.jlox.interpreter.global.PrintFunction;
 import org.max.crafting.interpreter.jlox.interpreter.global.SleepFunction;
 import org.max.crafting.interpreter.jlox.model.Token;
 import org.max.crafting.interpreter.jlox.model.TokenType;
@@ -46,6 +46,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
 
     public Interpreter() {
         // define all native functions in global scope
+        globals.defineInPlace("print", new PrintFunction());
         globals.defineInPlace("max", new MaxFunction());
         globals.defineInPlace("clock", new ClockFunction());
         globals.defineInPlace("sleep", new SleepFunction());
@@ -111,13 +112,6 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
     @Override
     public Void visitExpressionStmt(ExpressionStmt stmt) {
         eval(stmt.expr);
-        return null;
-    }
-
-    @Override
-    public Void visitPrintStmt(PrintStmt stmt) {
-        Object value = eval(stmt.expr);
-        System.out.println(stringify(value));
         return null;
     }
 
@@ -428,7 +422,7 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
         return environment.get(varExpr.name);
     }
 
-    private static String stringify(Object value) {
+    public static String stringify(Object value) {
         if (value == null) {
             return "nil";
         }

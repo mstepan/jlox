@@ -16,7 +16,7 @@ final class PlusExpressionTest extends LoxBaseTest {
     void plusForIntegers() {
         Lox.runScript("""
                               var res = 10 + 20 + 30;
-                              print res;
+                              print(res);
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -31,7 +31,7 @@ final class PlusExpressionTest extends LoxBaseTest {
     void plusForFloatingNumbers() {
         Lox.runScript("""
                               var res = 10.2 + 20.2 + 30.4;
-                              print res;
+                              print(res);
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -46,7 +46,7 @@ final class PlusExpressionTest extends LoxBaseTest {
     void plusForIntegersAndFloats() {
         Lox.runScript("""
                               var res = 100 + 10.4 + 20.4 + 200 + 30.4;
-                              print res;
+                              print(res);
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -61,7 +61,7 @@ final class PlusExpressionTest extends LoxBaseTest {
     void plusForTwoBooleansShouldFail() {
         Lox.runScript("""
                               var res = true + false;
-                              print res;
+                              print(res);
                               """);
 
         assertTrue(Lox.hasError(), "Expected error here");
@@ -76,7 +76,7 @@ final class PlusExpressionTest extends LoxBaseTest {
     void plusForBooleanAndIntegerShouldFail() {
         Lox.runScript("""
                               var res = true + 133;
-                              print res;
+                              print(res);
                               """);
 
         assertTrue(Lox.hasError(), "Expected error here");

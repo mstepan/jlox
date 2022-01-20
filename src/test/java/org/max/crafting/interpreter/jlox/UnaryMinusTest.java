@@ -15,7 +15,7 @@ final class UnaryMinusTest extends LoxBaseTest {
     void unaryMinusForInt() {
         Lox.runScript("""
                               var res = 2 * (6 / -3);
-                              print res;
+                              print(res);
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -30,7 +30,7 @@ final class UnaryMinusTest extends LoxBaseTest {
     void unaryMinusForDoubleAndInt() {
         Lox.runScript("""
                               var res = -20.2 * (6 / -3);
-                              print res;
+                              print(res);
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -45,7 +45,7 @@ final class UnaryMinusTest extends LoxBaseTest {
     void negateStringShouldFail() {
         Lox.runScript("""
                               var res = -"hello, world";
-                              print res;
+                              print(res);
                               """);
 
         assertTrue(Lox.hasError(), "Expected error here");

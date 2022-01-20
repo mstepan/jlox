@@ -1,6 +1,5 @@
 package org.max.crafting.interpreter.jlox;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,7 +23,7 @@ final class IfElseTest extends LoxBaseTest {
                                   z = y;
                               }
                                               
-                              print z;
+                              print(z);
 
                               """);
 
@@ -51,7 +50,7 @@ final class IfElseTest extends LoxBaseTest {
                                   z = y;
                               }
                                               
-                              print z;
+                              print(z);
 
                               """);
 
@@ -73,7 +72,7 @@ final class IfElseTest extends LoxBaseTest {
                                               
                               if( y > maxValue ) maxValue = y;
                                         
-                              print maxValue;
+                              print(maxValue);
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -103,7 +102,7 @@ final class IfElseTest extends LoxBaseTest {
                                 }
                               }
                                         
-                              print maxValue;
+                              print(maxValue);
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -121,10 +120,10 @@ final class IfElseTest extends LoxBaseTest {
                               var y = 0;
                                               
                               if( x == 0 or y == 0 ){
-                                  print "YES";
+                                  print("YES");
                               }
                               else {
-                                  print "NO";
+                                  print("NO");
                               }
                               """);
 
@@ -140,7 +139,7 @@ final class IfElseTest extends LoxBaseTest {
     void ifWithLogicalOrCheckShortCircuit() {
         Lox.runScript("""
                               // logical OR should short-circuit here and print true
-                              print true or 2;
+                              print(true or 2);
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -158,10 +157,10 @@ final class IfElseTest extends LoxBaseTest {
                               var y = 0;
                                               
                               if( x == 0 and y == 0 ){
-                                  print "YES";
+                                  print("YES");
                               }
                               else {
-                                  print "NO";
+                                  print("NO");
                               }
 
                               """);
@@ -178,10 +177,10 @@ final class IfElseTest extends LoxBaseTest {
     void ifWithLogicalAndCheckShortCircuit() {
         Lox.runScript("""
                               // logical AND should short-circuit here and print false
-                              print false and 2;
+                              print(false and 2);
                               
                               // nil is FALSE, so logical AND should short-circuit here
-                              print nil and 2;
+                              print(nil and 2);
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");

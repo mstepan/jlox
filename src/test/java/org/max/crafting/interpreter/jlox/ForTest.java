@@ -12,7 +12,7 @@ final class ForTest extends LoxBaseTest {
     void forSimpleLoop() {
         Lox.runScript("""
                               for(var x = 0; x < 5; x = x + 1){
-                                print "x = " + x;
+                                print("x = " + x);
                               }
 
                               """);
@@ -36,7 +36,7 @@ final class ForTest extends LoxBaseTest {
                               var b;
                               var it;
                               for(it = 0, a = 1, b = 1; it < 5; it = it + 1){
-                                    print "it-" + it + ", value: " + a;
+                                    print("it-" + it + ", value: " + a);
                                     var temp = a+b;
                                     a = b;
                                     b = temp;

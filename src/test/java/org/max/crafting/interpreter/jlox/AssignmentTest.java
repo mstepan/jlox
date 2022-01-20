@@ -21,7 +21,7 @@ final class AssignmentTest extends LoxBaseTest {
                               
                               add2 = add;
                               
-                              print add2(1, 2);
+                              print(add2(1, 2));
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -43,11 +43,11 @@ final class AssignmentTest extends LoxBaseTest {
                               var z;
                                               
                               z = x;
-                              print "z = " + z;
+                              print("z = " + z);
                                               
                               z = (2*3) + 4;
                                               
-                              print "z = " + z;
+                              print("z = " + z);
 
                               """);
 
@@ -66,7 +66,7 @@ final class AssignmentTest extends LoxBaseTest {
     void assignmentAsExpressionShouldReturnValue() {
         Lox.runScript("""
                               var x = 10;
-                              print x = 20;
+                              print(x = 20);
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -83,19 +83,19 @@ final class AssignmentTest extends LoxBaseTest {
     void assignDifferentTypeValuesToSameVariable() {
         Lox.runScript("""
                               var x = 10;
-                              print x;
+                              print(x);
                                               
                               x = "hello";
-                              print x;
+                              print(x);
                                               
                               x = 133.33;
-                              print x;
+                              print(x);
                                               
                               x = true;
-                              print x;
+                              print(x);
                                               
                               x = "string again";
-                              print x;
+                              print(x);
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -146,7 +146,7 @@ final class AssignmentTest extends LoxBaseTest {
         Lox.runScript("""
                               var y = 10 + 20;
                               x = 133;
-                              print x;
+                              print(x);
                               """);
 
         assertTrue(Lox.hasError(), "Expected error here");

@@ -13,10 +13,10 @@ final class UnaryBangTest extends LoxBaseTest {
     @Test
     void unaryBangForBoolean() {
         Lox.runScript("""
-                              print !true;
-                              print !false;
-                              print !!true;
-                              print !!false;
+                              print(!true);
+                              print(!false);
+                              print(!!true);
+                              print(!!false);
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
