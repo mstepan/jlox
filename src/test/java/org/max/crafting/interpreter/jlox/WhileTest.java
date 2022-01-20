@@ -14,11 +14,11 @@ final class WhileTest extends LoxBaseTest {
                               var x = 0;
                                               
                               while( x < 5 ){
-                                print "x = " + x;
+                                print("x = " + x);
                                 x = x + 1;
                               }
                                                             
-                              print "after loop: " + x;
+                              print("after loop: " + x);
 
                               """);
 
@@ -44,14 +44,14 @@ final class WhileTest extends LoxBaseTest {
                               var it = 0;
                                               
                               while( it < 10 ){
-                                print first;
+                                print(first);
                                 var temp = first + second;
                                 first = second;
                                 second = temp;
                                 
                                 it = it + 1;
                               }
-                              print "all completed";
+                              print("all completed");
 
                               """);
 

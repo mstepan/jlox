@@ -16,7 +16,7 @@ final class DivisionExpressionTest extends LoxBaseTest {
     @Test
     void intDivision() {
         Lox.runScript("""
-                              print 10/2; 
+                              print(10/2); 
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -31,7 +31,7 @@ final class DivisionExpressionTest extends LoxBaseTest {
     @Test
     void intDivisionWithRemaining() {
         Lox.runScript("""
-                              print 10/3; 
+                              print(10/3); 
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -63,7 +63,7 @@ final class DivisionExpressionTest extends LoxBaseTest {
     @Test
     void doubleDivision() {
         Lox.runScript("""
-                              print 10.0/2.0; 
+                              print(10.0/2.0); 
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -78,7 +78,7 @@ final class DivisionExpressionTest extends LoxBaseTest {
     @Test
     void doubleDivisionWithRemaining() {
         Lox.runScript("""
-                              print 10.0/4.0; 
+                              print(10.0/4.0); 
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -94,7 +94,7 @@ final class DivisionExpressionTest extends LoxBaseTest {
     @Test
     void mixedDivisionDoubleByInt() {
         Lox.runScript("""
-                              print 30.0/5; 
+                              print(30.0/5); 
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -109,7 +109,7 @@ final class DivisionExpressionTest extends LoxBaseTest {
     @Test
     void mixedDivisionIntByDouble() {
         Lox.runScript("""
-                              print 20/4.0; 
+                              print(20/4.0); 
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");

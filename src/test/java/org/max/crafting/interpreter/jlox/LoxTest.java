@@ -17,20 +17,20 @@ final class LoxTest extends LoxBaseTest {
                 var y = 20;
                 var z;
                             
-                print "x = " + x;
-                print "y = " + y;
-                print "Uninitialized variable is set to: " + z;
+                print("x = " + x);
+                print("y = " + y);
+                print("Uninitialized variable is set to: " + z);
                             
                 // assignment var to var
                 x = y;
                             
-                print "x = " + x;
-                print "y = " + y;
+                print("x = " + x);
+                print("y = " + y);
                             
                 // assigment var to expression
                 x = (2*3) + 4;
                             
-                print "x = " + x;
+                print("x = " + x);
                             
                 // radius for a circle as int
                 var r = 10;
@@ -39,11 +39,11 @@ final class LoxTest extends LoxBaseTest {
                 var pi = 3.14;
                             
                 // printing some message
-                print "calculating area for circle with radius: " + r + " m";
+                print("calculating area for circle with radius: " + r + " m");
                             
                 var area = pi * r * r;
                             
-                print "area: " + area + " m^2";
+                print("area: " + area + " m^2");
 
                 """;
 
@@ -70,7 +70,7 @@ final class LoxTest extends LoxBaseTest {
     void singleNumericalExpression() {
         Lox.runScript("""
                               var res = (3*6) + 2;
-                              print res;
+                              print(res);
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");

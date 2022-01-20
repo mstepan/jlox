@@ -27,7 +27,7 @@ public enum TokenType {
     TRUE("true"), FALSE("false"), NIL("nil"),
     FUN("fun"), RETURN("return"),
     CLASS("class"), THIS("this"), SUPER("super"),
-    PRINT("print"), VAR("var"),
+    VAR("var"),
 
     EOF("eof");
 
@@ -53,7 +53,6 @@ public enum TokenType {
         KEYWORDS.put("class", CLASS);
         KEYWORDS.put("this", THIS);
         KEYWORDS.put("super", SUPER);
-        KEYWORDS.put("print", PRINT);
         KEYWORDS.put("var", VAR);
     }
 

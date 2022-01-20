@@ -18,11 +18,9 @@ parameters -> IDENTIFIER (", " IDENTIFIER)*
 
 varDeclaration -> "var" IDENTIFIER ("=" expression)? ";"
 
-statement -> exprStmt | printStmt | block | ifStatement | whileStatement | forStatement | returnStatement
+statement -> exprStmt | block | ifStatement | whileStatement | forStatement | returnStatement
 
 exprStmt -> expression ";"
-
-printStmt -> "print" expression ";"
 
 block -> "{" declaration* "}"
 

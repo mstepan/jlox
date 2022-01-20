@@ -14,7 +14,7 @@ final class MinusExpressionTest extends LoxBaseTest {
     @Test
     void minusForIntegers() {
         Lox.runScript("""
-                              print 10 - 20 - 30;
+                              print(10 - 20 - 30);
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -28,7 +28,7 @@ final class MinusExpressionTest extends LoxBaseTest {
     @Test
     void minusForDoubles() {
         Lox.runScript("""
-                              print 30.50 - 10.25;
+                              print(30.50 - 10.25);
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -42,7 +42,7 @@ final class MinusExpressionTest extends LoxBaseTest {
     @Test
     void minusForTwoBooleansShouldFail() {
         Lox.runScript("""
-                              print true - false;
+                              print(true - false);
                               """);
 
         assertTrue(Lox.hasError(), "Expected error here");
@@ -56,7 +56,7 @@ final class MinusExpressionTest extends LoxBaseTest {
     @Test
     void minusForBooleanAndIntegerShouldFail() {
         Lox.runScript("""
-                              print true - 133;
+                              print(true - 133);
                               """);
 
         assertTrue(Lox.hasError(), "Expected error here");

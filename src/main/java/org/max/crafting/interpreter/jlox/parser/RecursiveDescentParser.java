@@ -13,7 +13,6 @@ import org.max.crafting.interpreter.jlox.ast.Grouping;
 import org.max.crafting.interpreter.jlox.ast.IfStmt;
 import org.max.crafting.interpreter.jlox.ast.Literal;
 import org.max.crafting.interpreter.jlox.ast.LogicalExpr;
-import org.max.crafting.interpreter.jlox.ast.PrintStmt;
 import org.max.crafting.interpreter.jlox.ast.ReturnStmt;
 import org.max.crafting.interpreter.jlox.ast.Stmt;
 import org.max.crafting.interpreter.jlox.ast.UnaryExpr;
@@ -138,12 +137,9 @@ public class RecursiveDescentParser {
     }
 
     /**
-     * statement -> exprStmt | printStmt | block | ifStatement | whileStatement | returnStatement
+     * statement -> exprStmt  | block | ifStatement | whileStatement | returnStatement
      */
     private Stmt statement() {
-        if (matchAny(TokenType.PRINT)) {
-            return printStatement();
-        }
         if (matchAny(TokenType.LEFT_BRACE)) {
             return block();
         }
@@ -163,14 +159,6 @@ public class RecursiveDescentParser {
         return expressionStatement();
     }
 
-    /**
-     * printStmt -> "print" expression ";"
-     */
-    private Stmt printStatement() {
-        Expression expr = expression();
-        consume(TokenType.SEMICOLON, "Expected ';' after print statement.");
-        return new PrintStmt(expr);
-    }
 
     /**
      * block -> "{" declaration* "}"
@@ -636,7 +624,7 @@ public class RecursiveDescentParser {
             }
 
             switch (peek().type) {
-                case CLASS, FUN, VAR, FOR, IF, WHILE, PRINT, RETURN, LEFT_BRACE:
+                case CLASS, FUN, VAR, FOR, IF, WHILE, RETURN, LEFT_BRACE:
                     return;
             }
 

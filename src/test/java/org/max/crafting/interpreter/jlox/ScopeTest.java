@@ -18,8 +18,8 @@ final class ScopeTest extends LoxBaseTest {
                               var x = 1;
                               {
                                   var y = 2;
-                                  print x;
-                                  print y;
+                                  print(x);
+                                  print(y);
                               }                  
                               """);
 
@@ -40,17 +40,17 @@ final class ScopeTest extends LoxBaseTest {
                               var x = 1;
                               var y = 20;
                                               
-                              print x;
-                              print y;
+                              print(x);
+                              print(y);
                               {
                                   var x = x + 10;
                                   var y = 30;
                                   
-                                  print "inner x: " + x;                   
-                                  print "inner y: " + y;
+                                  print("inner x: " + x);                   
+                                  print("inner y: " + y);
                               }   
-                              print x;   
-                              print y;             
+                              print(x);   
+                              print(y);             
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -75,9 +75,9 @@ final class ScopeTest extends LoxBaseTest {
                               var y = 20;
                               var z = 30;
                                               
-                              print "outer x: " + x;
-                              print "outer y: " +y;
-                              print "outer z: " + z;
+                              print("outer x: " + x);
+                              print("outer y: " +y);
+                              print("outer z: " + z);
                               {
                                   var x = 11;
                                   
@@ -86,20 +86,20 @@ final class ScopeTest extends LoxBaseTest {
                                       
                                       {
                                           var z = 33;
-                                          print "deep inner x: " + x;
-                                          print "deep inner y: " + y;
-                                          print "deep inner z: " + z;
+                                          print("deep inner x: " + x);
+                                          print("deep inner y: " + y);
+                                          print("deep inner z: " + z);
                                       }
                                       
                                    }
                                   
-                                  print "inner x: " + x;
-                                  print "inner y: " + y;
-                                  print "inner z: " + z;
+                                  print("inner x: " + x);
+                                  print("inner y: " + y);
+                                  print("inner z: " + z);
                               }   
-                              print "last x: " + x;   
-                              print "last y: " + y;
-                              print "last z: " + z;           
+                              print("last x: " + x);   
+                              print("last y: " + y);
+                              print("last z: " + z);           
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -127,14 +127,14 @@ final class ScopeTest extends LoxBaseTest {
     void assignToGlobalVariableFromNestedScope() {
         Lox.runScript("""
                               var x = 1;
-                              print "outer x: " + x;
+                              print("outer x: " + x);
                               {
                                   var y = 2;
                                   x = 10;
-                                  print "inner x: " + x;
-                                  print "inner y: " + y;
+                                  print("inner x: " + x);
+                                  print("inner y: " + y);
                               } 
-                              print "last x: " + x;               
+                              print("last x: " + x);               
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
@@ -172,7 +172,7 @@ final class ScopeTest extends LoxBaseTest {
     void synchronizationPointWorkingWithinNestedScope() {
         Lox.runScript("""
                               var x = 1;
-                              print x;
+                              print(x);
                               {
                                   var y = 2
                               }
