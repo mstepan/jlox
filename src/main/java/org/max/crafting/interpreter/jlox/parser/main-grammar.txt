@@ -53,9 +53,9 @@ term -> factor (("+" | "-") factor)*
 
 factor -> unary (("*" | "/" ) unary)*
 
-// unary operator has highest precedence
 unary -> ("!" | "-") unary | call
 
+// function call has highest precedence
 call -> primary ( "(" arguments? ")" )*
 
 arguments -> expression (", " expression)*
