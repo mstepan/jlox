@@ -1,6 +1,6 @@
 // print first 10 fibonacci numbers
 
-print "Calculating and printing first 10 fibonacci numbers";
+print("Calculating and printing first 10 fibonacci numbers");
 
 fun fib(n){
 	if( n <= 1 ){
@@ -12,7 +12,7 @@ fun fib(n){
 fun main(){
 	var i;
 	for( i = 0; i < 10; i = i + 1 ){
-		print "fib(" + i +") = " + fib(i);
+		print("fib(" + i +") = " + fib(i));
 	}
 }
 

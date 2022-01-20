@@ -3,20 +3,20 @@ var x = 10;
 var y = 20;
 var z;
 
-print "x = " + x;
-print "y = " + y;
-print "Uninitialized variable is set to: " + z;
+print("x = " + x);
+print("y = " + y);
+print("Uninitialized variable is set to: " + z);
 
 // assignment var to var
 x = y;
 
-print "x = " + x;
-print "y = " + y;
+print("x = " + x);
+print("y = " + y);
 
 // assigment var to expression
 x = (2*3) + 4;
 
-print "x = " + x;
+print("x = " + x);
 
 // radius for a circle as int
 var r = 10;
@@ -25,11 +25,11 @@ var r = 10;
 var pi = 3.14;
 
 // printing some message
-print "calculating area for circle with radius: " + r + " m";
+print("calculating area for circle with radius: " + r + " m");
 
 var area = pi * r * r;
 
-print "area: " + area + " m^2";
+print("area: " + area + " m^2");
 
 
 var first = 10;
@@ -40,6 +40,6 @@ if ( second > maxValue ){
 	maxValue = second;
 }
 
-print "max(" + first + ", " + second + ") = " + maxValue;
+print("max(" + first + ", " + second + ") = " + maxValue);
 
 
