@@ -8,6 +8,7 @@ import org.max.crafting.interpreter.jlox.ast.CallExpr;
 import org.max.crafting.interpreter.jlox.ast.CommaExpr;
 import org.max.crafting.interpreter.jlox.ast.Expression;
 import org.max.crafting.interpreter.jlox.ast.ExpressionStmt;
+import org.max.crafting.interpreter.jlox.ast.FunctionExpr;
 import org.max.crafting.interpreter.jlox.ast.FunctionStmt;
 import org.max.crafting.interpreter.jlox.ast.Grouping;
 import org.max.crafting.interpreter.jlox.ast.IfStmt;
@@ -454,8 +455,43 @@ public class RecursiveDescentParser {
             Expression right = unary();
             return new UnaryExpr(op, right);
         }
+        //TODO:
+        if( matchAny(TokenType.FUN) ){
+            return functionExpr();
+        }
 
         return call();
+    }
+
+
+    private FunctionExpr functionExpr(){
+
+        // ==============================  cut-and-paste from functionDeclaration
+
+        consume(TokenType.LEFT_PAREN, "Expected '(' after function name.");
+
+        // read all parameters if any
+        List<Token> parameters = new ArrayList<>();
+        if (!check(TokenType.RIGHT_PAREN)) {
+            do {
+                if (parameters.size() >= MAX_ARGUMENTS_IN_FUNCTION_CALL_THRESHOLD) {
+                    error(peek(), "Can't have more than " + MAX_ARGUMENTS_IN_FUNCTION_CALL_THRESHOLD + " parameters.");
+                }
+
+                parameters.add(consume(TokenType.IDENTIFIER, "Expected parameter name"));
+            }
+            while (matchAny(TokenType.COMMA));
+        }
+
+        consume(TokenType.RIGHT_PAREN, "Expected ')' after function parameters.");
+
+        consume(TokenType.LEFT_BRACE, "Expected '{' before function body.");
+        Block fnBody = block();
+
+        // ==============================
+
+        //TODO: refactor above code
+        return new FunctionExpr(parameters, fnBody);
     }
 
     /**

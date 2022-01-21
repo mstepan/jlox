@@ -1,21 +1,37 @@
 package org.max.crafting.interpreter.jlox.interpreter;
 
+import org.max.crafting.interpreter.jlox.ast.Block;
+import org.max.crafting.interpreter.jlox.ast.FunctionExpr;
 import org.max.crafting.interpreter.jlox.ast.FunctionStmt;
 import org.max.crafting.interpreter.jlox.model.Token;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * All user-defined functions will use this function object as a backbone.
  */
 final class LoxFunction implements JLoxCallable {
 
-    private final FunctionStmt fnDeclaration;
+    private final String name;
+    private final List<Token> params;
+    private final Block fnBody;
     private final Environment closure;
 
     public LoxFunction(FunctionStmt fnDeclaration, Environment closure) {
-        this.fnDeclaration = Objects.requireNonNull(fnDeclaration, "'null' fnDeclaration detected");
+        Objects.requireNonNull(fnDeclaration, "'null' fnDeclaration detected");
+        this.name = fnDeclaration.name.lexeme;
+        this.params = fnDeclaration.parameters;
+        this.fnBody = fnDeclaration.body;
+        this.closure = Objects.requireNonNull(closure, "'null' closure environment detected");
+    }
+
+    public LoxFunction(FunctionExpr fnExpr, Environment closure) {
+        Objects.requireNonNull(fnExpr, "'null' fnExpr detected");
+        this.name = "lambda-" + UUID.randomUUID();
+        this.params = fnExpr.parameters;
+        this.fnBody = fnExpr.body;
         this.closure = Objects.requireNonNull(closure, "'null' closure environment detected");
     }
 
@@ -24,8 +40,8 @@ final class LoxFunction implements JLoxCallable {
 
         final Environment fnEnv = new Environment(closure);
 
-        for (int i = 0; i < fnDeclaration.parameters.size(); ++i) {
-            Token singleParam = fnDeclaration.parameters.get(i);
+        for (int i = 0; i < params.size(); ++i) {
+            Token singleParam = params.get(i);
             Object singleArg = arguments.get(i);
 
             // bind arguments to parameters inside function scope
@@ -33,7 +49,7 @@ final class LoxFunction implements JLoxCallable {
         }
 
         try {
-            interpreter.executeStatements(fnDeclaration.body.statements, fnEnv);
+            interpreter.executeStatements(fnBody.statements, fnEnv);
         }
         // handle RETURN statement flow
         catch (Return returnVal) {
@@ -46,11 +62,11 @@ final class LoxFunction implements JLoxCallable {
 
     @Override
     public int arity() {
-        return fnDeclaration.parameters.size();
+        return params.size();
     }
 
     @Override
     public String toString() {
-        return "<fun " + fnDeclaration.name.lexeme + ">";
+        return "<fun " + name + ">";
     }
 }

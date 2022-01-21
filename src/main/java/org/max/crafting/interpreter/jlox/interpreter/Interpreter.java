@@ -8,6 +8,7 @@ import org.max.crafting.interpreter.jlox.ast.CallExpr;
 import org.max.crafting.interpreter.jlox.ast.CommaExpr;
 import org.max.crafting.interpreter.jlox.ast.Expression;
 import org.max.crafting.interpreter.jlox.ast.ExpressionStmt;
+import org.max.crafting.interpreter.jlox.ast.FunctionExpr;
 import org.max.crafting.interpreter.jlox.ast.FunctionStmt;
 import org.max.crafting.interpreter.jlox.ast.Grouping;
 import org.max.crafting.interpreter.jlox.ast.IfStmt;
@@ -28,6 +29,7 @@ import org.max.crafting.interpreter.jlox.model.TokenType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Traverse Abstract Syntax Tree in post-order and evaluate nodes.
@@ -92,6 +94,12 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
         final LoxFunction function = new LoxFunction(fnStmt, environment);
         environment.defineInPlace(fnStmt.name.lexeme, function);
         return null;
+    }
+
+    @Override
+    public Object visitFunctionExpression(FunctionExpr functionExpr) {
+        //TODO: visit lambda function
+        return new LoxFunction(functionExpr, environment);
     }
 
     @Override

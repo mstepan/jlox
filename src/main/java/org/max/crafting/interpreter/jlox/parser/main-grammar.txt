@@ -53,7 +53,9 @@ term -> factor (("+" | "-") factor)*
 
 factor -> unary (("*" | "/" ) unary)*
 
-unary -> ("!" | "-") unary | call
+unary -> ("!" | "-") unary | call | functionExpr
+
+functionExpr -> "fn" "(" parameters? ")" block
 
 // function call has highest precedence
 call -> primary ( "(" arguments? ")" )*
