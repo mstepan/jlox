@@ -8,6 +8,7 @@ import org.max.crafting.interpreter.jlox.ast.CallExpr;
 import org.max.crafting.interpreter.jlox.ast.CommaExpr;
 import org.max.crafting.interpreter.jlox.ast.Expression;
 import org.max.crafting.interpreter.jlox.ast.ExpressionStmt;
+import org.max.crafting.interpreter.jlox.ast.FnParamsAndBody;
 import org.max.crafting.interpreter.jlox.ast.FunctionExpr;
 import org.max.crafting.interpreter.jlox.ast.FunctionStmt;
 import org.max.crafting.interpreter.jlox.ast.Grouping;
@@ -90,12 +91,21 @@ public class RecursiveDescentParser {
     }
 
     /**
-     * function -> IDENTIFIER "(" parameter? ")" block
+     * function -> IDENTIFIER fnParamsAndBody
      */
     private Stmt function(String type) {
 
         Token fnName = consume(TokenType.IDENTIFIER, "Expect " + type + "name.");
 
+        FnParamsAndBody paramsAndBody = fnParamsAndBody(type);
+
+        return new FunctionStmt(fnName, paramsAndBody.parameters, paramsAndBody.body);
+    }
+
+    /**
+     * fnParamsAndBody -> "(" parameters? ")" block
+     */
+    private FnParamsAndBody fnParamsAndBody(String type){
         consume(TokenType.LEFT_PAREN, "Expected '(' after " + type + " name.");
 
         // read all parameters if any
@@ -116,7 +126,7 @@ public class RecursiveDescentParser {
         consume(TokenType.LEFT_BRACE, "Expected '{' before " + type + " body.");
         Block fnBody = block();
 
-        return new FunctionStmt(fnName, parameters, fnBody);
+        return new FnParamsAndBody(parameters, fnBody);
     }
 
     /**
@@ -447,7 +457,7 @@ public class RecursiveDescentParser {
     }
 
     /**
-     * unary -> ("!" | "-") unary | call
+     * unary -> ("!" | "-") unary | call | functionExpr
      */
     private Expression unary() {
         if (matchAny(TokenType.BANG, TokenType.MINUS)) {
@@ -455,7 +465,6 @@ public class RecursiveDescentParser {
             Expression right = unary();
             return new UnaryExpr(op, right);
         }
-        //TODO:
         if( matchAny(TokenType.FUN) ){
             return functionExpr();
         }
@@ -463,35 +472,12 @@ public class RecursiveDescentParser {
         return call();
     }
 
-
+    /**
+     * functionExpr -> "fn" fnParamsAndBody
+     */
     private FunctionExpr functionExpr(){
-
-        // ==============================  cut-and-paste from functionDeclaration
-
-        consume(TokenType.LEFT_PAREN, "Expected '(' after function name.");
-
-        // read all parameters if any
-        List<Token> parameters = new ArrayList<>();
-        if (!check(TokenType.RIGHT_PAREN)) {
-            do {
-                if (parameters.size() >= MAX_ARGUMENTS_IN_FUNCTION_CALL_THRESHOLD) {
-                    error(peek(), "Can't have more than " + MAX_ARGUMENTS_IN_FUNCTION_CALL_THRESHOLD + " parameters.");
-                }
-
-                parameters.add(consume(TokenType.IDENTIFIER, "Expected parameter name"));
-            }
-            while (matchAny(TokenType.COMMA));
-        }
-
-        consume(TokenType.RIGHT_PAREN, "Expected ')' after function parameters.");
-
-        consume(TokenType.LEFT_BRACE, "Expected '{' before function body.");
-        Block fnBody = block();
-
-        // ==============================
-
-        //TODO: refactor above code
-        return new FunctionExpr(parameters, fnBody);
+        FnParamsAndBody paramsAndBody = fnParamsAndBody("function");
+        return new FunctionExpr(paramsAndBody.parameters, paramsAndBody.body);
     }
 
     /**

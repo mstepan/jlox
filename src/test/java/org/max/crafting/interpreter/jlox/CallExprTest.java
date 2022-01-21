@@ -1,5 +1,6 @@
 package org.max.crafting.interpreter.jlox;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -9,7 +10,24 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 final class CallExprTest extends LoxBaseTest {
 
     @Test
-    void callLambdaFunction() {
+    @Disabled("not working yet")
+    void callLambdaFunctionImmediately() {
+        Lox.runScript("""                        
+                              fun(msg){ 
+                                print(msg); 
+                              }("hello-111");                                                    
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        hello-111
+                        """,
+                output());
+    }
+
+    @Test
+    void callLambdaFunctionWithBindingToVariable() {
         Lox.runScript("""                        
                               var someFun = fun(msg){ 
                                 print(msg); 
@@ -43,6 +61,26 @@ final class CallExprTest extends LoxBaseTest {
         assertEquals(
                 """
                         hello
+                        hello
+                        """,
+                output());
+    }
+
+    @Test
+    void returnLambdaFromFunction() {
+        Lox.runScript("""              
+                              fun factory(){
+                                return fun(msg){
+                                    print(msg);
+                                };
+                              }          
+                              var someFn1 = factory(); 
+                              someFn1("hello");                                                    
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
                         hello
                         """,
                 output());

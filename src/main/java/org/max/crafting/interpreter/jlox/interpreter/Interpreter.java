@@ -98,7 +98,6 @@ public class Interpreter implements ExpressionVisitor, StmtVisitor<Void> {
 
     @Override
     public Object visitFunctionExpression(FunctionExpr functionExpr) {
-        //TODO: visit lambda function
         return new LoxFunction(functionExpr, environment);
     }
 
