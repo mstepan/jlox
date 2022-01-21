@@ -12,7 +12,9 @@ declaration -> funcDeclaration | varDeclaration | statement
 
 funcDeclaration -> "fn" function
 
-function -> IDENTIFIER "(" parameters? ")" block
+function -> IDENTIFIER fnParamsAndBody
+
+fnParamsAndBody -> "(" parameters? ")" block
 
 parameters -> IDENTIFIER (", " IDENTIFIER)*
 
@@ -53,7 +55,9 @@ term -> factor (("+" | "-") factor)*
 
 factor -> unary (("*" | "/" ) unary)*
 
-unary -> ("!" | "-") unary | call
+unary -> ("!" | "-") unary | call | functionExpr
+
+functionExpr -> "fn" fnParamsAndBody
 
 // function call has highest precedence
 call -> primary ( "(" arguments? ")" )*

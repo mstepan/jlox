@@ -1,5 +1,6 @@
 package org.max.crafting.interpreter.jlox;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -7,6 +8,83 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 final class CallExprTest extends LoxBaseTest {
+
+    @Test
+    @Disabled("not working yet")
+    void callLambdaFunctionImmediately() {
+        Lox.runScript("""                        
+                              fun(msg){ 
+                                print(msg); 
+                              }("hello-111");                                                    
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        hello-111
+                        """,
+                output());
+    }
+
+    @Test
+    void callLambdaFunctionWithBindingToVariable() {
+        Lox.runScript("""                        
+                              var someFun = fun(msg){ 
+                                print(msg); 
+                              };   
+                              someFun("hello-123");                                                    
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        hello-123
+                        """,
+                output());
+    }
+
+    @Test
+    void callLambdaFunctionAsArgumentForAnotherFunction() {
+        Lox.runScript("""                        
+                             fun print2Times( fnToCall ){
+                                for(var i = 0; i < 2; i = i + 1){
+                                    fnToCall();
+                                }
+                              }
+
+                              print2Times(fun(){
+                                print("hello");
+                                });                                                  
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        hello
+                        hello
+                        """,
+                output());
+    }
+
+    @Test
+    void returnLambdaFromFunction() {
+        Lox.runScript("""              
+                              fun factory(){
+                                return fun(msg){
+                                    print(msg);
+                                };
+                              }          
+                              var someFn1 = factory(); 
+                              someFn1("hello");                                                    
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        hello
+                        """,
+                output());
+    }
 
     @Test
     void notLeakingClosureScopeWithAssignment() {

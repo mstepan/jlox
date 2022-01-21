@@ -4,6 +4,7 @@ import org.max.crafting.interpreter.jlox.ast.Assignment;
 import org.max.crafting.interpreter.jlox.ast.BinaryExpr;
 import org.max.crafting.interpreter.jlox.ast.CallExpr;
 import org.max.crafting.interpreter.jlox.ast.CommaExpr;
+import org.max.crafting.interpreter.jlox.ast.FunctionExpr;
 import org.max.crafting.interpreter.jlox.ast.Literal;
 import org.max.crafting.interpreter.jlox.ast.Grouping;
 import org.max.crafting.interpreter.jlox.ast.LogicalExpr;
@@ -29,4 +30,6 @@ public interface ExpressionVisitor {
     Object visitLogicalExpression(LogicalExpr logicalExpr);
 
     Object visitCall(CallExpr callExpr);
+
+    Object visitFunctionExpression(FunctionExpr functionExpr);
 }

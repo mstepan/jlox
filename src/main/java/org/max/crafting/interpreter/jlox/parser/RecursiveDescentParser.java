@@ -8,6 +8,8 @@ import org.max.crafting.interpreter.jlox.ast.CallExpr;
 import org.max.crafting.interpreter.jlox.ast.CommaExpr;
 import org.max.crafting.interpreter.jlox.ast.Expression;
 import org.max.crafting.interpreter.jlox.ast.ExpressionStmt;
+import org.max.crafting.interpreter.jlox.ast.FnParamsAndBody;
+import org.max.crafting.interpreter.jlox.ast.FunctionExpr;
 import org.max.crafting.interpreter.jlox.ast.FunctionStmt;
 import org.max.crafting.interpreter.jlox.ast.Grouping;
 import org.max.crafting.interpreter.jlox.ast.IfStmt;
@@ -89,12 +91,21 @@ public class RecursiveDescentParser {
     }
 
     /**
-     * function -> IDENTIFIER "(" parameter? ")" block
+     * function -> IDENTIFIER fnParamsAndBody
      */
     private Stmt function(String type) {
 
         Token fnName = consume(TokenType.IDENTIFIER, "Expect " + type + "name.");
 
+        FnParamsAndBody paramsAndBody = fnParamsAndBody(type);
+
+        return new FunctionStmt(fnName, paramsAndBody.parameters, paramsAndBody.body);
+    }
+
+    /**
+     * fnParamsAndBody -> "(" parameters? ")" block
+     */
+    private FnParamsAndBody fnParamsAndBody(String type){
         consume(TokenType.LEFT_PAREN, "Expected '(' after " + type + " name.");
 
         // read all parameters if any
@@ -115,7 +126,7 @@ public class RecursiveDescentParser {
         consume(TokenType.LEFT_BRACE, "Expected '{' before " + type + " body.");
         Block fnBody = block();
 
-        return new FunctionStmt(fnName, parameters, fnBody);
+        return new FnParamsAndBody(parameters, fnBody);
     }
 
     /**
@@ -446,7 +457,7 @@ public class RecursiveDescentParser {
     }
 
     /**
-     * unary -> ("!" | "-") unary | call
+     * unary -> ("!" | "-") unary | call | functionExpr
      */
     private Expression unary() {
         if (matchAny(TokenType.BANG, TokenType.MINUS)) {
@@ -454,8 +465,19 @@ public class RecursiveDescentParser {
             Expression right = unary();
             return new UnaryExpr(op, right);
         }
+        if( matchAny(TokenType.FUN) ){
+            return functionExpr();
+        }
 
         return call();
+    }
+
+    /**
+     * functionExpr -> "fn" fnParamsAndBody
+     */
+    private FunctionExpr functionExpr(){
+        FnParamsAndBody paramsAndBody = fnParamsAndBody("function");
+        return new FunctionExpr(paramsAndBody.parameters, paramsAndBody.body);
     }
 
     /**
