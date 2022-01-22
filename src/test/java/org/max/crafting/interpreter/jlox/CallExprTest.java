@@ -1,6 +1,5 @@
 package org.max.crafting.interpreter.jlox;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -10,18 +9,46 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 final class CallExprTest extends LoxBaseTest {
 
     @Test
-    @Disabled("not working yet")
-    void callLambdaFunctionImmediately() {
+    void callNestedLambdaFunctionsWithClosuresImmediately() {
         Lox.runScript("""                        
-                              fun(msg){ 
-                                print(msg); 
-                              }("hello-111");                                                    
+                              fun(msg1){ 
+                                return fun(msg2) {
+                                    print("prefix: " + msg1 + msg2);
+                                };
+                              }("hello")("123");                                                    
                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
         assertEquals(
                 """
-                        hello-111
+                        prefix: hello123
+                        """,
+                output());
+    }
+
+
+    @Test
+    void lambdaExpression() {
+        Lox.runScript("""
+                              fun(){};
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals("", output());
+    }
+
+    @Test
+    void callLambdaFunctionImmediately() {
+        Lox.runScript("""                        
+                              fun(msg){ 
+                                print(msg); 
+                              }("hello-lambda-111");                                                    
+                              """);
+
+        assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
+        assertEquals(
+                """
+                        hello-lambda-111
                         """,
                 output());
     }
@@ -46,16 +73,16 @@ final class CallExprTest extends LoxBaseTest {
     @Test
     void callLambdaFunctionAsArgumentForAnotherFunction() {
         Lox.runScript("""                        
-                             fun print2Times( fnToCall ){
-                                for(var i = 0; i < 2; i = i + 1){
-                                    fnToCall();
-                                }
-                              }
+                              fun print2Times( fnToCall ){
+                                 for(var i = 0; i < 2; i = i + 1){
+                                     fnToCall();
+                                 }
+                               }
 
-                              print2Times(fun(){
-                                print("hello");
-                                });                                                  
-                              """);
+                               print2Times(fun(){
+                                 print("hello");
+                                 });                                                  
+                               """);
 
         assertFalse(Lox.hasError(), "Unexpected error(-s) detected");
         assertEquals(
@@ -90,7 +117,7 @@ final class CallExprTest extends LoxBaseTest {
     void notLeakingClosureScopeWithAssignment() {
         Lox.runScript("""
                               var str = "global"; 
-                              
+                                                            
                               fun createClosure(){
                                 var str = "local-1";
                                 
@@ -102,12 +129,12 @@ final class CallExprTest extends LoxBaseTest {
                                 
                                 return printMe;
                               }
-                              
+                                                            
                               var someFn = createClosure();
-                              
+                                                            
                               var str = "global";                               
                               someFn();  
-                              
+                                                            
                               var str = "global";                                                           
                               someFn();
                                                        

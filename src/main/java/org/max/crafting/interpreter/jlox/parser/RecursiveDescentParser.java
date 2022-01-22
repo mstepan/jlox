@@ -67,7 +67,28 @@ public class RecursiveDescentParser {
     private Stmt declaration() {
         try {
             if (matchAny(TokenType.FUN)) {
-                return funcDeclaration("function");
+
+                // case-1: if we have IDENTIFIER as our next token, we are parsing function declaration
+                if( check(TokenType.IDENTIFIER) ) {
+                    return funcDeclaration("function");
+                }
+
+                // otherwise we have function expression (lambda function)
+                Expression functionExpr = functionExpr();
+
+                // case-2: we have something like this: "fun(){};"
+                if(check(TokenType.SEMICOLON) ) {
+                    consume(TokenType.SEMICOLON, "Expected ';' after expression.");
+                    return new ExpressionStmt(functionExpr);
+                }
+
+                // case-3: we have lambda function(-s) call(-s), something like "fun(){}();"
+                while (matchAny(TokenType.LEFT_PAREN)) {
+                    functionExpr = finishCall(functionExpr);
+                }
+
+                consume(TokenType.SEMICOLON, "Expected ';' after expression.");
+                return new ExpressionStmt(functionExpr);
             }
             if (matchAny(TokenType.VAR)) {
                 return varDeclaration();
@@ -466,6 +487,7 @@ public class RecursiveDescentParser {
             return new UnaryExpr(op, right);
         }
         if( matchAny(TokenType.FUN) ){
+            //TODO:
             return functionExpr();
         }
 
