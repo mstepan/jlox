@@ -19,6 +19,9 @@ final class LoxFunction implements JLoxCallable {
     private final Block fnBody;
     private final Environment closure;
 
+    /**
+     * Create from function declaration.
+     */
     public LoxFunction(FunctionStmt fnDeclaration, Environment closure) {
         Objects.requireNonNull(fnDeclaration, "'null' fnDeclaration detected");
         this.name = fnDeclaration.name.lexeme;
@@ -27,6 +30,9 @@ final class LoxFunction implements JLoxCallable {
         this.closure = Objects.requireNonNull(closure, "'null' closure environment detected");
     }
 
+    /**
+     * Create from function expression, a.k.a lambda function.
+     */
     public LoxFunction(FunctionExpr fnExpr, Environment closure) {
         Objects.requireNonNull(fnExpr, "'null' fnExpr detected");
         this.name = "lambda-" + UUID.randomUUID();
