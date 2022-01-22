@@ -1,0 +1,35 @@
+// print first 10 fibonacci numbers
+
+fun fibRec(n){
+	if( n <= 1 ){
+		return 1;
+	}
+	return fibRec(n-1) + fibRec(n-2);
+}
+
+fun fibFast(n){
+	var a = 1;
+	var b = 1;
+
+	for(var it = 0; it < n; it = it+1){
+		var temp = a+b;
+		a = b;
+		b = temp;
+	}
+
+	return a;
+}
+
+fun main(){
+	print("Calculating and printing first 10 fibonacci numbers recursively:");
+	for( var i = 0; i < 10; i = i + 1 ){
+		print("fib(" + i +") = " + fibRec(i));
+	}
+
+	print("Using iterative function:");
+	for( var i = 0; i < 10; i = i + 1 ){
+    	print("fibFast(" + i +") = " + fibFast(i));
+    }
+}
+
+main();

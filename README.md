@@ -1,5 +1,8 @@
-# jlox walking tree interpreter implementation
+# JLox walking tree interpreter implementation
 
+jlox is dynamically typed language that supports functional style of programming with lambdas, closures, higher-order functions 
+as well as OOP programming paradigms using classes. Language doesn't use any compact bytecode representation and just creates
+AST directly from source code. A dedicated tree-walking interpreter used to execute the AST nodes. 
 
 ## Build
 
@@ -24,9 +27,5 @@ Build interpreter first and just run:
 ```
 As a quick example, just run 
 ```
-./jlox src/main/resources/program1.jlox
-```
-or 
-```
-./jlox src/main/resources/fibonacci.jlox
+./jlox examples/fibonacci.jlox
 ```
