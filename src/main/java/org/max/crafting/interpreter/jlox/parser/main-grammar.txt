@@ -55,13 +55,12 @@ term -> factor (("+" | "-") factor)*
 
 factor -> unary (("*" | "/" ) unary)*
 
-unary -> ("!" | "-") unary | call | functionExpr
+unary -> ("!" | "-") unary | call
 
-functionExpr -> "fn" fnParamsAndBody
-
-// function call has highest precedence
 call -> primary ( "(" arguments? ")" )*
 
 arguments -> expression (", " expression)*
 
-primary -> STRING | NUMBER | "true" | "false" | nil | "(" expression ")" | IDENTIFIER
+functionExpr -> "fn" fnParamsAndBody
+
+primary -> STRING | NUMBER | "true" | "false" | nil | "(" expression ")" | IDENTIFIER | functionExpr

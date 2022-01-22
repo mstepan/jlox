@@ -73,22 +73,9 @@ public class RecursiveDescentParser {
                     return funcDeclaration("function");
                 }
 
-                // otherwise we have function expression (lambda function)
-                Expression functionExpr = functionExpr();
-
-                // case-2: we have something like this: "fun(){};"
-                if(check(TokenType.SEMICOLON) ) {
-                    consume(TokenType.SEMICOLON, "Expected ';' after expression.");
-                    return new ExpressionStmt(functionExpr);
-                }
-
-                // case-3: we have lambda function(-s) call(-s), something like "fun(){}();"
-                while (matchAny(TokenType.LEFT_PAREN)) {
-                    functionExpr = finishCall(functionExpr);
-                }
-
-                consume(TokenType.SEMICOLON, "Expected ';' after expression.");
-                return new ExpressionStmt(functionExpr);
+                // case-2: we have lambda function, so return 1 position back and proceed with call to statement()
+                cur -= 1;
+                return statement();
             }
             if (matchAny(TokenType.VAR)) {
                 return varDeclaration();
@@ -478,7 +465,7 @@ public class RecursiveDescentParser {
     }
 
     /**
-     * unary -> ("!" | "-") unary | call | functionExpr
+     * unary -> ("!" | "-") unary | call
      */
     private Expression unary() {
         if (matchAny(TokenType.BANG, TokenType.MINUS)) {
@@ -486,27 +473,14 @@ public class RecursiveDescentParser {
             Expression right = unary();
             return new UnaryExpr(op, right);
         }
-        if( matchAny(TokenType.FUN) ){
-            //TODO:
-            return functionExpr();
-        }
 
         return call();
-    }
-
-    /**
-     * functionExpr -> "fn" fnParamsAndBody
-     */
-    private FunctionExpr functionExpr(){
-        FnParamsAndBody paramsAndBody = fnParamsAndBody("function");
-        return new FunctionExpr(paramsAndBody.parameters, paramsAndBody.body);
     }
 
     /**
      * call -> primary ("(" arguments? ")")*
      */
     private Expression call() {
-
         Expression calleeExpr = primary();
 
         while (matchAny(TokenType.LEFT_PAREN)) {
@@ -569,9 +543,8 @@ public class RecursiveDescentParser {
         return flatExpressions;
     }
 
-
     /**
-     * primary -> STRING | NUMBER | "true" | "false" | nil | "(" expression ")" | IDENTIFIER
+     * primary -> STRING | NUMBER | "true" | "false" | nil | "(" expression ")" | IDENTIFIER | functionExpr
      */
     private Expression primary() {
         if (matchAny(TokenType.NUMBER, TokenType.STRING)) {
@@ -594,8 +567,19 @@ public class RecursiveDescentParser {
         if (matchAny(TokenType.IDENTIFIER)) {
             return new VariableExpr(previous());
         }
+        if( matchAny(TokenType.FUN) ){
+            return functionExpr();
+        }
 
         throw error(previous(), "Expected expression.");
+    }
+
+    /**
+     * functionExpr -> "fn" fnParamsAndBody
+     */
+    private FunctionExpr functionExpr(){
+        FnParamsAndBody paramsAndBody = fnParamsAndBody("function");
+        return new FunctionExpr(paramsAndBody.parameters, paramsAndBody.body);
     }
 
     // ========================= utilities below =========================
