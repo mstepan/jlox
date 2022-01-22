@@ -1,0 +1,18 @@
+// print factorial values
+
+fun fac(n){
+	var res = 1;
+
+	for(var value = 2; value <= n; value = value+1){
+		res = res * value;
+	}
+	return res;
+}
+
+fun(){
+	print("Calculating factorial:");
+	for( var i = 0; i < 10; i = i + 1 ){
+		print("fac(" + i +") = " + fac(i));
+	}
+}();
+

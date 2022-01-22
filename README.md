@@ -28,4 +28,6 @@ Build interpreter first and just run:
 As a quick example, just run 
 ```
 ./jlox examples/fibonacci.jlox
+
+./jlox examples/factorial.jlox
 ```
