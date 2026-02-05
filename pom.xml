@@ -9,7 +9,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <assertj.version>3.15.0</assertj.version>
+        <assertj.version>3.27.7</assertj.version>
         <error.prone.core.version>2.3.2</error.prone.core.version>
         <java.version>15</java.version>
         <junit.version>5.5.2</junit.version>
